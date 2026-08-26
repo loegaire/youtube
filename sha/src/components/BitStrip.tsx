@@ -5,10 +5,12 @@ export interface BitStripProps extends NodeProps {
   bits?: string;
 }
 
+import {Reference} from '@motion-canvas/core';
+
 export class BitStrip extends Node {
   public readonly bg = createRef<Rect>();
   public readonly bitContainer = createRef<Node>();
-  public bitTexts: Txt[] = [];
+  public bitTexts: Reference<Txt>[] = [];
 
   public constructor(props?: BitStripProps) {
     super({
@@ -31,7 +33,7 @@ export class BitStrip extends Node {
         <Node ref={this.bitContainer}>
           {bits.split('').map((bit, i) => {
             const t = createRef<Txt>();
-            this.bitTexts.push(t() as Txt);
+            this.bitTexts.push(t);
             return (
               <Txt
                 ref={t}
@@ -51,7 +53,7 @@ export class BitStrip extends Node {
   public *highlightOnes(counterRef: any) {
     let count = 0;
     for (let i = 0; i < this.bitTexts.length; i++) {
-      const bitNode = this.bitTexts[i];
+      const bitNode = this.bitTexts[i]();
       if (bitNode.text() === '1') {
         yield* all(
           bitNode.fill('#ffff00', 0.2),

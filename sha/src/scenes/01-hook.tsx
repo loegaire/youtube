@@ -14,7 +14,7 @@ export default makeScene2D(function* (view) {
   const loginPanel = createRef<LoginPanel>();
   const bulletContainer = createRef<Node>();
 
-  const byteTxts: Txt[] = [];
+  const byteTexts: import('@motion-canvas/core').Reference<Txt>[] = [];
   const byteStrings = ['68', '75', '6E', '74', '65', '72', '32'];
 
   view.add(
@@ -42,7 +42,7 @@ export default makeScene2D(function* (view) {
       <Node ref={bulletContainer} opacity={0}>
         {byteStrings.map((byte, i) => {
           const t = createRef<Txt>();
-          byteTxts.push(t());
+          byteTexts.push(t);
           return (
             <Txt
               ref={t}
@@ -86,7 +86,7 @@ export default makeScene2D(function* (view) {
   // 02: Break apart into ASCII byte values
   yield* sequence(
     0.1,
-    ...byteTxts.map((textRef, i) => textRef.text(byteStrings[i], 0.5))
+    ...byteTexts.map((textRef, i) => textRef().text(byteStrings[i], 0.5))
   );
 
   // 02: Byte stream accelerates into cyan tunnel
