@@ -5,3 +5,4 @@ export * from './CodeEditor';
 export * from './BitStrip';
 export * from './RegisterBank';
 export * from './MessageSchedule';
+export * from './HashRound';
