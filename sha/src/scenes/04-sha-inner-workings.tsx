@@ -1,127 +1,30 @@
-import {makeScene2D, Node, Rect, Txt, Layout, Circle, Line} from '@motion-canvas/2d';
-import {createRef, all, waitFor, chain, easeInOutCubic, sequence} from '@motion-canvas/core';
-import {RegisterBank, MessageSchedule} from '../components';
+import {makeScene2D, Node, Txt} from '@motion-canvas/2d';
+import {all, createRef, sequence, waitFor} from '@motion-canvas/core';
+import {C, FONT, TechPanel, bg, bytePacket, label, rail, register, scanlines} from '../components';
 
 export default makeScene2D(function* (view) {
-  // Palette
-  const BG_COLOR = '#000000';
-  const TEAL = '#008080';
-  const YELLOW = '#ffff00';
-  const CYAN = '#00ffff';
+  view.add(<Node>{bg()}</Node>);
+  const intro = createRef<Node>();
+  view.add(<Node ref={intro}>{label('1', C.yellow, 220)}{label('→ SHA-256', C.lime, 88, {x: 310})}</Node>);
+  yield* all(intro().scale(1.2, 0.8), intro().rotation(6, 0.8));
+  yield* all(intro().position.x(-2100, 0.8), intro().opacity(0, 0.5));
 
-  view.add(<Rect width={1920} height={1080} fill={BG_COLOR} />);
+  const engine = createRef<Node>();
+  view.add(<Node ref={engine} opacity={0}>{label('SHA-256', C.yellow, 86, {y: -390})}{bytePacket('512 BITS', C.cyan, {x: -560, y: -80, scale: 1.5})}{rail(-400, -80, 290, -80, C.lime)}{bytePacket('256 BITS', C.yellow, {x: 520, y: -80, scale: 1.5})}{['a','b','c','d','e','f','g','h'].map((r, i) => register(r, ['6a09e667','bb67ae85','3c6ef372','a54ff53a','510e527f','9b05688c','1f83d9ab','5be0cd19'][i], C.lime, {x: -630 + i * 180, y: 170, scale: 0.72}))}</Node>);
+  yield* all(engine().opacity(1, 0.7), engine().scale(1.06, 1));
+  yield* sequence(0.05, ...engine().children().slice(4).map(n => n.position.y(120, 0.35)));
+  yield* waitFor(0.6);
+  yield* all(engine().position.x(-2100, 0.8), engine().opacity(0, 0.6));
 
-  // --- 22: Toy hash cracks apart -> SHA-256 ---
-  const toyOne = createRef<Txt>();
-  view.add(
-    <Txt ref={toyOne} text="1" fill={YELLOW} fontSize={200} fontFamily="monospace" />
-  );
+  const padding = createRef<Node>();
+  view.add(<Node ref={padding} opacity={0}>{label('PADDING', C.yellow, 72, {y: -350})}{bytePacket('61', C.cyan, {x: -360})}{bytePacket('62', C.cyan, {x: -240})}{bytePacket('63', C.cyan, {x: -120})}{bytePacket('80', C.yellow, {x: 40})}<Txt text="00 00 00 ... 0000000000000018" fill={C.lime} fontFamily={FONT} fontSize={36} x={330} /><Txt text="abc → 24 bits" fill={C.orange} fontFamily={FONT} fontSize={34} y={170} /></Node>);
+  yield* all(padding().opacity(1, 0.7), padding().position.x(-40, 1));
+  yield* waitFor(0.8);
+  yield* all(padding().position.y(-650, 0.8), padding().opacity(0, 0.6));
 
-  yield* toyOne().scale(0, 0.5, easeInOutCubic);
-
-  const shaTitle = createRef<Txt>();
-  view.add(
-    <Txt ref={shaTitle} text="SHA-256" fill={YELLOW} fontSize={150} fontFamily="monospace" opacity={0} y={-300} />
-  );
-
-  yield* shaTitle().opacity(1, 1);
-  yield* waitFor(0.5);
-
-  // --- 23 & 24: Input block and Register Bank ---
-  const inputBlock = createRef<Node>();
-  const regBankNode = createRef<Node>();
-
-  view.add(
-    <Node ref={inputBlock} opacity={0} x={-400}>
-      <Rect width={200} height={600} stroke={TEAL} lineWidth={4} fill={BG_COLOR} justifyContent="center" alignItems="center">
-        <Txt text="512 BITS" fill={CYAN} rotation={-90} fontFamily="monospace" fontSize={60} />
-      </Rect>
-    </Node>
-  );
-
-  view.add(
-    <Node ref={regBankNode} opacity={0} x={400}>
-      <RegisterBank initialValues={['6a09e667','bb67ae85','3c6ef372','a54ff53a','510e527f','9b05688c','1f83d9ab','5be0cd19']} />
-      <Txt text="256 BITS" fill={YELLOW} y={-350} fontFamily="monospace" fontSize={40} />
-    </Node>
-  );
-
-  yield* all(
-    inputBlock().opacity(1, 1),
-    regBankNode().opacity(1, 1),
-    shaTitle().position.y(-450, 1, easeInOutCubic)
-  );
-
-  yield* waitFor(1.5);
-
-  yield* all(
-    inputBlock().opacity(0, 0.5),
-    regBankNode().opacity(0, 0.5),
-    shaTitle().opacity(0, 0.5)
-  );
-
-  // --- 25 & 26: Padding ---
-  const paddingGroup = createRef<Node>();
-  const lengthField = createRef<Txt>();
-
-  view.add(
-    <Node ref={paddingGroup} opacity={0}>
-      <Txt text="abc" fill={TEAL} y={-200} fontSize={150} fontFamily="monospace" />
-      <Txt text="61 62 63" fill={CYAN} y={0} fontSize={80} fontFamily="monospace" />
-
-      <Layout direction="row" y={200} gap={10} alignItems="center">
-        <Txt text="1" fill={YELLOW} fontFamily="monospace" fontSize={50} />
-        <Txt text="000...000" fill={CYAN} fontFamily="monospace" fontSize={50} />
-        <Txt ref={lengthField} text="11000" fill={YELLOW} fontFamily="monospace" fontSize={50} />
-      </Layout>
-    </Node>
-  );
-
-  yield* paddingGroup().opacity(1, 1);
-  yield* waitFor(1);
-
-  // rack focus on length field
-  yield* all(
-    paddingGroup().scale(1.5, 1, easeInOutCubic),
-    paddingGroup().position.y(-100, 1, easeInOutCubic),
-    lengthField().scale(1.5, 1, easeInOutCubic)
-  );
-
-  yield* waitFor(1.5);
-  yield* paddingGroup().opacity(0, 1);
-
-  // --- 27 & 28: Message Schedule (16 to 64 words) ---
-  const scheduleNode = createRef<MessageSchedule>();
-  view.add(
-    <MessageSchedule ref={scheduleNode} opacity={0} />
-  );
-
-  yield* scheduleNode().opacity(1, 1);
-  yield* waitFor(0.5);
-
-  yield* scheduleNode().expandSchedule();
-
-  yield* waitFor(1);
-  yield* scheduleNode().opacity(0, 1);
-
-  // --- 29: Schedule generation lane ---
-  const laneNode = createRef<Node>();
-  view.add(
-    <Node ref={laneNode} opacity={0}>
-      <Txt text="W[t-16] ─┐" fill={CYAN} fontFamily="monospace" fontSize={40} x={-300} y={-50} />
-      <Txt text="W[t-15] ─┼─ σ0 / σ1 ── + ── W[t-7] ── W[t-2] ──> W[t]" fill={TEAL} fontFamily="monospace" fontSize={40} x={0} y={50} />
-    </Node>
-  );
-
-  yield* laneNode().opacity(1, 1);
-
-  // Highlight sigma
-  const sigmaBox = createRef<Rect>();
-  view.add(
-    <Rect ref={sigmaBox} width={200} height={60} x={-150} y={50} stroke={YELLOW} lineWidth={4} opacity={0} />
-  );
-  yield* sigmaBox().opacity(1, 0.5);
-  yield* sigmaBox().scale(1.2, 0.5).to(1, 0.5);
-
-  yield* waitFor(1.5);
+  const schedule = createRef<Node>();
+  view.add(<Node ref={schedule} opacity={0}>{label('W0 … W63 MESSAGE SCHEDULE', C.yellow, 56, {y: -400})}{Array.from({length: 16}, (_, i) => bytePacket(`W${i}`, i < 4 ? C.cyan : C.lime, {x: -720 + (i % 8) * 205, y: -130 + Math.floor(i / 8) * 115}))}<Txt text="W[t] = σ1(W[t-2]) + W[t-7] + σ0(W[t-15]) + W[t-16]" fill={C.cyan} fontFamily={FONT} fontSize={33} y={170} /><Txt text="rotations + shifts + modular addition" fill={C.orange} fontFamily={FONT} fontSize={31} y={245} /></Node>);
+  yield* all(schedule().opacity(1, 0.7), schedule().scale(1.04, 1));
+  yield* sequence(0.03, ...schedule().children().slice(1, 17).map(n => n.rotation(360, 0.55)));
+  yield* waitFor(0.8);
 });

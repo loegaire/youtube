@@ -1,174 +1,50 @@
-import {makeScene2D, Node, Rect, Txt, View2D, Circle, Line} from '@motion-canvas/2d';
-import {createRef, all, waitFor, chain, easeInOutCubic, sequence} from '@motion-canvas/core';
-import {LoginPanel} from '../components/LoginPanel';
+import {makeScene2D, Node, Rect, Txt} from '@motion-canvas/2d';
+import {all, createRef, easeInOutCubic, sequence, waitFor} from '@motion-canvas/core';
+import {C, FONT, TechPanel, bg, bytePacket, exitLeft, label, rail, scanlines} from '../components';
 
 export default makeScene2D(function* (view) {
-  // Colors based on rules
-  const BG_COLOR = '#000000';
-  const TEAL = '#008080';
-  const YELLOW = '#ffff00';
-  const CYAN = '#00ffff';
-
-  // Scene elements
-  const lockIcon = createRef<Txt>();
-  const loginPanel = createRef<LoginPanel>();
-  const bulletContainer = createRef<Node>();
-
-  const byteTexts: import('@motion-canvas/core').Reference<Txt>[] = [];
-  const byteStrings = ['68', '75', '6E', '74', '65', '72', '32'];
-
-  view.add(
-    <Node>
-      <Rect width={1920} height={1080} fill={BG_COLOR} />
-
-      {/* 01: Lock icon */}
-      <Txt
-        ref={lockIcon}
-        text="\uf023"
-        fontFamily="monospace"
-        fill={CYAN}
-        fontSize={10} // Tiny point
-        opacity={1}
-      />
-
-      {/* 01: Login Panel (initially hidden) */}
-      <LoginPanel
-        ref={loginPanel}
-        opacity={0}
-        scale={0.1}
-      />
-
-      {/* 02: Bullet elements for the transition */}
-      <Node ref={bulletContainer} opacity={0}>
-        {byteStrings.map((byte, i) => {
-          const t = createRef<Txt>();
-          byteTexts.push(t);
-          return (
-            <Txt
-              ref={t}
-              text="•"
-              fill={TEAL}
-              fontFamily="monospace"
-              fontSize={100}
-              x={(i - 3) * 80}
-              y={0}
-            />
-          );
-        })}
-      </Node>
-    </Node>
-  );
-
-  // 01: Macro push-in and expand to login
-  yield* all(
-    lockIcon().scale(50, 2),
-    lockIcon().opacity(0, 2, easeInOutCubic)
-  );
-
-  yield* all(
-    loginPanel().opacity(1, 1),
-    loginPanel().scale(1, 1, easeInOutCubic)
-  );
-
-  // 01: Cursor types hunter2
-  yield* loginPanel().typePassword('hunter2');
-
-  // 01: Transform into bullets
-  yield* loginPanel().transformToBullets();
-
-  // 02: Freeze login, push through bullets
-  yield* loginPanel().scale(3, 2, easeInOutCubic);
-  yield* loginPanel().opacity(0, 1);
-
-  yield* bulletContainer().opacity(1, 0.5);
-  yield* bulletContainer().scale(2, 2);
-
-  // 02: Break apart into ASCII byte values
-  yield* sequence(
-    0.1,
-    ...byteTexts.map((textRef, i) => textRef().text(byteStrings[i], 0.5))
-  );
-
-  // 02: Byte stream accelerates into cyan tunnel
+  const lock = createRef<Txt>();
+  const login = createRef<TechPanel>();
+  const bullets = createRef<Node>();
   const tunnel = createRef<Node>();
-  view.add(
-    <Node ref={tunnel} opacity={0}>
-      <Rect width={1000} height={200} stroke={CYAN} lineWidth={4} />
-      <Txt text="PROCESSING..." fill={CYAN} fontFamily="monospace" y={-150} fontSize={40} />
-    </Node>
-  );
+  const digest = createRef<Txt>();
+  const orbit = createRef<Node>();
+  const hash = createRef<Txt>();
+  const bytes = ['68', '75', '6E', '74', '65', '72', '32'];
+  const digestText = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
 
-  yield* all(
-    bulletContainer().scale(0.2, 2, easeInOutCubic),
-    tunnel().opacity(1, 1)
-  );
+  view.add(<Node>{bg()}<Txt ref={lock} text="\uf023" fill={C.cyan} fontFamily={FONT} fontSize={10} /></Node>);
+  yield* all(lock().fontSize(420, 1.8, easeInOutCubic), lock().rotation(12, 1.8), lock().opacity(0, 1.8));
 
-  // 02: Fold into long 64-character hexadecimal digest
-  const digestTxt = createRef<Txt>();
-  const digestStr = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
-  view.add(
-    <Txt
-      ref={digestTxt}
-      text={digestStr}
-      fill={CYAN}
-      fontFamily="monospace"
-      fontSize={30}
-      opacity={0}
-      y={150}
-    />
-  );
+  view.add(<TechPanel ref={login} title="SECURE LOGIN" icon="\uf023" w={920} h={560} opacity={0} scale={0.75} />);
+  login().line('USER        hacker', C.lime, 32);
+  login().line('PASSWORD    ', C.lime, 32);
+  login().line('ENTER       [ READY ]', C.cyan, 30);
+  login().line('CLOCK       12:00:00 UTC', C.orange, 25);
+  yield* all(login().opacity(1, 0.8), login().scale(1, 0.8), login().position.y(-20, 0.8));
+  yield* login().typeLine('> hunter2', C.yellow, 34);
+  yield* waitFor(0.2);
+  yield* login().typeLine('> •••••••', C.lime, 40);
 
-  yield* all(
-    tunnel().opacity(0, 1),
-    bulletContainer().opacity(0, 1),
-    digestTxt().opacity(1, 2)
-  );
+  const byteRefs = bytes.map(() => createRef<Rect>());
+  view.add(<Node ref={bullets} opacity={0}>{bytes.map((b, i) => <Rect ref={byteRefs[i]} width={82} height={82} x={(i - 3) * 110} fill={C.bg} stroke={C.lime} lineWidth={3}><Txt text="•" fill={C.lime} fontFamily={FONT} fontSize={58} /></Rect>)}</Node>);
+  yield* all(login().scale(2.8, 1.2), login().opacity(0, 1), bullets().opacity(1, 0.5), bullets().scale(1.3, 1.2));
+  yield* sequence(0.05, ...byteRefs.map((r, i) => all((r().children()[0] as Txt).text(bytes[i], 0.35), r().stroke(C.cyan, 0.35))));
 
-  // 03: Orbiting environments
-  const orbitGroup = createRef<Node>();
-  const title1 = createRef<Txt>();
-  const title2 = createRef<Txt>();
+  view.add(<Node ref={tunnel} opacity={0}>{rail(-760, 0, 760, 0, C.cyan)}<Rect width={1260} height={210} stroke={C.cyan} lineWidth={3} fill={C.bg} /><Txt text="\uf013 PROCESSING TUNNEL" fill={C.cyan} fontFamily={FONT} fontSize={36} y={-150} /></Node>);
+  yield* all(tunnel().opacity(1, 0.6), bullets().scale(0.18, 1.1), bullets().position.x(720, 1.1), tunnel().scale(1.08, 1.1));
+  view.add(<Txt ref={digest} text={digestText} fill={C.cyan} fontFamily={FONT} fontSize={28} y={190} opacity={0} />);
+  yield* all(tunnel().position.x(-2100, 0.9), bullets().opacity(0, 0.4), digest().opacity(1, 0.8), digest().position.y(0, 0.8));
 
-  view.add(
-    <Node ref={orbitGroup} opacity={0}>
-      <Txt text="[Laptop]" fill={CYAN} fontFamily="monospace" x={-400} y={-200} />
-      <Txt text="[Download]" fill={CYAN} fontFamily="monospace" x={400} y={-200} />
-      <Txt text="[Packet Capture]" fill={CYAN} fontFamily="monospace" x={-400} y={200} />
-      <Txt text="[Code Editor]" fill={CYAN} fontFamily="monospace" x={400} y={200} />
-      <Txt text="[Database]" fill={CYAN} fontFamily="monospace" y={300} />
-    </Node>
-  );
+  view.add(<Node ref={orbit} opacity={0}>{['\uf023 LOGIN','\uf15b DOWNLOAD','\uf1eb PCAP','\uf120 CODE','\uf1c0 DATABASE'].map((t, i) => <TechPanel title={t} w={300} h={150} x={Math.cos(i * 1.256) * 520} y={Math.sin(i * 1.256) * 270} scale={0.8} />)}{label('HASH FUNCTIONS', C.lime, 76, {y: -420})}{label('SHA-2', C.yellow, 58, {y: -330})}</Node>);
+  yield* all(digest().rotation(90, 1), orbit().opacity(1, 0.8), orbit().rotation(360, 4), digest().scale(0.82, 1));
+  yield* exitLeft([orbit(), digest()], 0.8);
 
-  view.add(
-    <Node>
-      <Txt ref={title1} text="HASH FUNCTIONS" fill={TEAL} fontFamily="monospace" fontSize={80} y={-300} opacity={0} />
-      <Txt ref={title2} text="SHA-2" fill={YELLOW} fontFamily="monospace" fontSize={60} y={-200} opacity={0} />
-    </Node>
-  );
-
-  yield* all(
-    digestTxt().rotation(90, 1),
-    orbitGroup().opacity(1, 1),
-    orbitGroup().rotation(360, 4, easeInOutCubic),
-    title1().opacity(1, 1),
-    title2().opacity(1, 1)
-  );
-
-  // 04: Whip-pan to black workspace and assemble HASH
-  const hashTxt = createRef<Txt>();
-  view.add(
-    <Txt ref={hashTxt} text="" fill={TEAL} fontFamily="monospace" fontSize={120} opacity={0} />
-  );
-
-  yield* all(
-    digestTxt().position.x(-2000, 1, easeInOutCubic),
-    orbitGroup().position.x(-2000, 1, easeInOutCubic),
-    title1().position.x(-2000, 1, easeInOutCubic),
-    title2().position.x(-2000, 1, easeInOutCubic)
-  );
-
-  yield* hashTxt().opacity(1, 0.5);
-  yield* hashTxt().text('HASH', 1);
-
-  yield* waitFor(1);
+  view.add(<Txt ref={hash} text="" fill={C.lime} fontFamily={FONT} fontSize={145} opacity={0} />);
+  yield* hash().opacity(1, 0.4);
+  for (const ch of ['H', 'A', 'S', 'H']) {
+    hash().text(hash().text() + ch);
+    yield* all(hash().scale(1.08, 0.12), hash().scale(1, 0.12));
+  }
+  yield* waitFor(0.8);
 });

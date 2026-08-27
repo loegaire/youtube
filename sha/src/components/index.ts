@@ -6,3 +6,4 @@ export * from './BitStrip';
 export * from './RegisterBank';
 export * from './MessageSchedule';
 export * from './HashRound';
+export * from './Studio';

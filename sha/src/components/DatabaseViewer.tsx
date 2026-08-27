@@ -25,7 +25,7 @@ export class DatabaseViewer extends Node {
         width={900}
         height={600}
         fill="#000000"
-        stroke="#008080"
+        stroke="#6cf265"
         lineWidth={4}
         opacity={props?.opacity ?? 1}
         scale={props?.scale ?? 1}
@@ -34,9 +34,9 @@ export class DatabaseViewer extends Node {
         <Layout direction="column" alignItems="stretch" width="100%" padding={20}>
           {/* Header */}
           <Layout direction="row" gap={20} marginBottom={20}>
-            <Txt text="user" fill="#008080" fontFamily="monospace" fontSize={30} width={200} />
-            <Txt text="salt" fill="#008080" fontFamily="monospace" fontSize={30} width={200} />
-            <Txt text="password_hash" fill="#008080" fontFamily="monospace" fontSize={30} width={400} />
+            <Txt text="user" fill="#6cf265" fontFamily="monospace" fontSize={30} width={200} />
+            <Txt text="salt" fill="#6cf265" fontFamily="monospace" fontSize={30} width={200} />
+            <Txt text="password_hash" fill="#6cf265" fontFamily="monospace" fontSize={30} width={400} />
           </Layout>
 
           <Node ref={this.rowsContainer} />

@@ -25,7 +25,7 @@ export class BitStrip extends Node {
         width={800}
         height={150}
         fill="#000000"
-        stroke="#008080"
+        stroke="#6cf265"
         lineWidth={4}
         justifyContent="center"
         alignItems="center"

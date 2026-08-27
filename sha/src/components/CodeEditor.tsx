@@ -22,7 +22,7 @@ export class CodeEditor extends Node {
         width={1000}
         height={600}
         fill="#000000"
-        stroke="#008080"
+        stroke="#6cf265"
         lineWidth={4}
         opacity={props?.opacity ?? 1}
         scale={props?.scale ?? 1}

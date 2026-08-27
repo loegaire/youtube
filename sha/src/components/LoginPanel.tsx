@@ -34,7 +34,7 @@ export class LoginPanel extends Node {
             ref={this.usernameField}
             width={600}
             height={80}
-            stroke="#008080"
+            stroke="#6cf265"
             lineWidth={4}
             fill="#000000"
             radius={0}
@@ -43,7 +43,7 @@ export class LoginPanel extends Node {
           >
             <Txt
               text="user"
-              fill="#008080"
+              fill="#6cf265"
               fontFamily="monospace"
               fontSize={40}
               marginRight={0}
@@ -54,7 +54,7 @@ export class LoginPanel extends Node {
             ref={this.passwordField}
             width={600}
             height={80}
-            stroke="#008080"
+            stroke="#6cf265"
             lineWidth={4}
             fill="#000000"
             radius={0}
@@ -65,7 +65,7 @@ export class LoginPanel extends Node {
               <Txt
                 ref={this.typedTxt}
                 text=""
-                fill="#008080"
+                fill="#6cf265"
                 fontFamily="monospace"
                 fontSize={40}
               />
@@ -73,7 +73,7 @@ export class LoginPanel extends Node {
                 ref={this.cursor}
                 width={20}
                 height={50}
-                fill="#008080"
+                fill="#6cf265"
                 marginLeft={10}
                 opacity={0}
               />
@@ -84,7 +84,7 @@ export class LoginPanel extends Node {
             ref={this.enterBtn}
             width={200}
             height={60}
-            stroke="#008080"
+            stroke="#6cf265"
             lineWidth={4}
             fill="#000000"
             radius={0}

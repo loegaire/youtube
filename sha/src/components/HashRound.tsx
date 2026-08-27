@@ -16,7 +16,7 @@ export class HashRound extends Node {
       ...props,
     });
 
-    const TEAL = '#008080';
+    const TEAL = '#6cf265';
     const YELLOW = '#ffff00';
     const BG_COLOR = '#000000';
     const CYAN = '#00ffff';

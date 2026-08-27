@@ -1,125 +1,17 @@
-import {makeScene2D, Node, Rect, Txt, Layout, Circle, Line} from '@motion-canvas/2d';
-import {createRef, all, waitFor, chain, easeInOutCubic, sequence} from '@motion-canvas/core';
-import {RegisterBank, HashRound} from '../components';
+import {makeScene2D, Node, Txt} from '@motion-canvas/2d';
+import {all, createRef, sequence, waitFor} from '@motion-canvas/core';
+import {C, FONT, bg, bytePacket, label, rail, register, scanlines} from '../components';
 
 export default makeScene2D(function* (view) {
-  // Palette
-  const BG_COLOR = '#000000';
-  const TEAL = '#008080';
-  const YELLOW = '#ffff00';
-  const CYAN = '#00ffff';
-
-  view.add(<Rect width={1920} height={1080} fill={BG_COLOR} />);
-
-  // --- 30 & 31: Initialize state ---
-  const regBank = createRef<RegisterBank>();
-  view.add(
-    <Node x={-200} scale={0.8}>
-      <RegisterBank ref={regBank} opacity={0} />
-    </Node>
-  );
-
-  // Sweep animation
-  yield* regBank().opacity(1, 1);
-  yield* regBank().position.x(0, 1, easeInOutCubic);
-  yield* waitFor(1);
-
-  // --- 32 & 33: Logical Functions (Ch) ---
-  const logicalNode = createRef<Node>();
-  view.add(
-    <Node ref={logicalNode} opacity={0} x={400} y={0}>
-      <Txt text="Ch(e,f,g) = (e AND f) XOR ((NOT e) AND g)" fill={YELLOW} fontFamily="monospace" fontSize={30} y={-100} />
-      {/* Simulation of mask passing */}
-      <Rect width={300} height={100} stroke={TEAL} lineWidth={4} />
-      <Txt text="MASKING BITS" fill={CYAN} fontFamily="monospace" fontSize={30} />
-    </Node>
-  );
-
-  yield* all(
-    regBank().position.x(-400, 1, easeInOutCubic),
-    logicalNode().opacity(1, 1)
-  );
-  yield* waitFor(1);
-
-  // --- 34: Majority function ---
-  const majNode = createRef<Node>();
-  view.add(
-    <Node ref={majNode} opacity={0} x={400} y={200}>
-      <Txt text="Maj(a,b,c)" fill={YELLOW} fontFamily="monospace" fontSize={30} y={-50} />
-      <Layout direction="row" gap={20}>
-        <Txt text="0,0,1 -> 0" fill={CYAN} fontFamily="monospace" />
-        <Txt text="1,1,0 -> 1" fill={CYAN} fontFamily="monospace" />
-        <Txt text="1,0,1 -> 1" fill={CYAN} fontFamily="monospace" />
-      </Layout>
-    </Node>
-  );
-
-  yield* majNode().opacity(1, 1);
-  yield* waitFor(1);
-
-  // --- 35: Repeat 64 ---
-  const repeatTxt = createRef<Txt>();
-  view.add(
-    <Txt ref={repeatTxt} text="REPEAT × 64" fill={YELLOW} fontFamily="monospace" fontSize={100} opacity={0} />
-  );
-
-  yield* all(
-    logicalNode().opacity(0, 1),
-    majNode().opacity(0, 1),
-    regBank().scale(0.5, 1, easeInOutCubic),
-    repeatTxt().opacity(1, 1)
-  );
-
-  yield* waitFor(1);
-  yield* repeatTxt().opacity(0, 1);
-
-  // --- 36 & 37: Sigma functions ---
-  const sigmaNode = createRef<Node>();
-  view.add(
-    <Node ref={sigmaNode} opacity={0} x={400}>
-      <Txt text="Σ0(a) = ROTR²(a) XOR ROTR¹³(a) XOR ROTR²²(a)" fill={YELLOW} fontFamily="monospace" fontSize={30} y={-100} />
-      <Txt text="Σ1(e) = ROTR⁶(e) XOR ROTR¹¹(e) XOR ROTR²⁵(e)" fill={YELLOW} fontFamily="monospace" fontSize={30} y={100} />
-    </Node>
-  );
-
-  yield* sigmaNode().opacity(1, 1);
-  yield* waitFor(1.5);
-  yield* sigmaNode().opacity(0, 1);
-
-  // --- 38, 39, 40: One complete round ---
-  const roundIndicator = createRef<Txt>();
-  view.add(
-    <Txt ref={roundIndicator} text="ROUND 17" fill={CYAN} fontFamily="monospace" fontSize={60} y={-400} opacity={0} />
-  );
-
-  const hashRound = createRef<HashRound>();
-  view.add(
-    <HashRound ref={hashRound} x={-100} />
-  );
-
-  yield* all(
-    roundIndicator().opacity(1, 1),
-    regBank().scale(1, 1, easeInOutCubic)
-  );
-
-  yield* hashRound().animateT1();
-  yield* waitFor(0.5);
-  yield* hashRound().animateT2();
-  yield* waitFor(1);
-
-  // --- 41: Shift registers ---
-  // A cinematic shift left
-  yield* all(
-    regBank().position.x(-600, 1.5, easeInOutCubic),
-    hashRound().position.x(-300, 1.5, easeInOutCubic)
-  );
-
-  // --- 42: Next round ---
-  yield* roundIndicator().text('ROUND 18', 0.2);
-  yield* all(
-    regBank().position.x(-800, 1, easeInOutCubic), // accelerates
-    hashRound().position.x(-500, 1, easeInOutCubic)
-  );
-
-  yield* waitFor(1);
+  view.add(<Node>{bg()}</Node>);
+  const regs = createRef<Node>();
+  const values = ['6a09e667','bb67ae85','3c6ef372','a54ff53a','510e527f','9b05688c','1f83d9ab','5be0cd19'];
+  view.add(<Node ref={regs} opacity={0}>{label('COMPRESSION ENGINE // ROUND 17', C.yellow, 54, {y: -410})}{values.map((v, i) => register('abcdefgh'[i], v, i === 0 || i === 4 ? C.yellow : C.lime, {x: -700 + i * 200, y: -220}))}<Txt text="Ch(e,f,g) = (e AND f) XOR ((NOT e) AND g)" fill={C.cyan} fontFamily={FONT} fontSize={32} y={-55} /><Txt text="Maj(a,b,c) = (a AND b) XOR (a AND c) XOR (b AND c)" fill={C.orange} fontFamily={FONT} fontSize={29} y={5} /><Txt text="Σ0(a) = ROTR²(a) XOR ROTR¹³(a) XOR ROTR²²(a)" fill={C.lime} fontFamily={FONT} fontSize={29} y={70} /><Txt text="Σ1(e) = ROTR⁶(e) XOR ROTR¹¹(e) XOR ROTR²⁵(e)" fill={C.lime} fontFamily={FONT} fontSize={29} y={125} /></Node>);
+  yield* all(regs().opacity(1, 0.7), regs().scale(1.04, 0.7));
+  yield* sequence(0.06, ...regs().children().slice(1, 9).map(n => n.rotation(360, 0.45)));
+  const t1 = createRef<Node>();
+  view.add(<Node ref={t1} opacity={0}>{rail(-720, 230, 620, 230, C.lime)}{bytePacket('h', C.lime, {x: -690, y: 230})}{bytePacket('Σ1(e)', C.lime, {x: -370, y: 230})}{bytePacket('Ch', C.lime, {x: -100, y: 230})}{bytePacket('K[t]', C.yellow, {x: 160, y: 230})}{bytePacket('W[t]', C.cyan, {x: 420, y: 230})}<Txt text="T1 = h + Σ1(e) + Ch + K[t] + W[t]   mod 2³²" fill={C.yellow} fontFamily={FONT} fontSize={32} y={345} /></Node>);
+  yield* all(t1().opacity(1, 0.6), t1().position.x(20, 1));
+  yield* all(regs().children()[1].position.x(700, 0.9), regs().children()[2].position.x(500, 0.9), regs().children()[3].position.x(300, 0.9));
+  yield* waitFor(0.8);
 });

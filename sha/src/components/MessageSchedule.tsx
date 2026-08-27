@@ -16,7 +16,7 @@ export class MessageSchedule extends Node {
 
     this.add(
       <Node>
-        <Rect width={1400} height={100} stroke="#008080" lineWidth={4} fill="#000000" clip>
+        <Rect width={1400} height={100} stroke="#6cf265" lineWidth={4} fill="#000000" clip>
           <Node ref={this.conveyor} x={600}>
             {/* Generate initial 16 words visually offscreen and moving through */}
             {Array.from({length: 16}).map((_, i) => {
