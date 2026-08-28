@@ -23,8 +23,8 @@ export class MessageSchedule extends Node {
               const t = createRef<Txt>();
               this.words.push(t);
               return (
-                <Rect x={-i * 150} width={120} height={60} stroke="#00ffff" lineWidth={2} fill="#000000" justifyContent="center" alignItems="center">
-                  <Txt ref={t} text={`W${i}`} fill="#ffff00" fontFamily="monospace" fontSize={30} />
+                <Rect x={-i * 150} width={120} height={60} stroke="#65daf2" lineWidth={2} fill="#000000" justifyContent="center" alignItems="center">
+                  <Txt ref={t} text={`W${i}`} fill="#e6f265" fontFamily="monospace" fontSize={30} />
                 </Rect>
               );
             })}
@@ -34,14 +34,30 @@ export class MessageSchedule extends Node {
     );
   }
 
+  public *addWord(index: number) {
+    const t = createRef<Txt>();
+    this.conveyor().add(
+      <Rect x={-index * 150} width={120} height={60} stroke="#65daf2" lineWidth={2} fill="#000000" justifyContent="center" alignItems="center" opacity={0} scale={0.5}>
+        <Txt ref={t} text={`W${index}`} fill="#e6f265" fontFamily="monospace" fontSize={30} />
+      </Rect>
+    );
+    this.words.push(t);
+    const newRect = this.conveyor().children()[index] as Rect;
+    yield* all(
+      newRect.opacity(1, 0.25),
+      newRect.scale(1, 0.25, easeInOutCubic),
+      this.conveyor().position.x(600 + index * 150, 0.25)
+    );
+  }
+
   public *expandSchedule() {
     // Generate words up to W63 visually shifting the conveyor
     for (let i = 16; i < 64; i++) {
       const t = createRef<Txt>();
 
       this.conveyor().add(
-        <Rect x={-i * 150} width={120} height={60} stroke="#00ffff" lineWidth={2} fill="#000000" justifyContent="center" alignItems="center" opacity={0} scale={0.5}>
-          <Txt ref={t} text={`W${i}`} fill="#ffff00" fontFamily="monospace" fontSize={30} />
+        <Rect x={-i * 150} width={120} height={60} stroke="#65daf2" lineWidth={2} fill="#000000" justifyContent="center" alignItems="center" opacity={0} scale={0.5}>
+          <Txt ref={t} text={`W${i}`} fill="#e6f265" fontFamily="monospace" fontSize={30} />
         </Rect>
       );
 

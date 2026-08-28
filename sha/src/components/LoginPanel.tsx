@@ -93,7 +93,7 @@ export class LoginPanel extends Node {
           >
             <Txt
               text="ENTER"
-              fill="#00ffff"
+              fill="#65daf2"
               fontFamily="monospace"
               fontSize={30}
             />
@@ -101,7 +101,7 @@ export class LoginPanel extends Node {
 
           <Txt
             text="12:00:00"
-            fill="#00ffff"
+            fill="#65daf2"
             fontFamily="monospace"
             fontSize={30}
             marginTop={100}

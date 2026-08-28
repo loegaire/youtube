@@ -1,15 +1,58 @@
-import {makeScene2D, Node, Rect, Txt} from '@motion-canvas/2d';
-import {all, createRef, sequence, waitFor} from '@motion-canvas/core';
-import {C, FONT, bg, label, register, scanlines} from '../components';
+import {makeScene2D, Node, Txt, Rect, Circle, Line} from '@motion-canvas/2d';
+import {all, createRef, easeInOutCubic, sequence, waitFor} from '@motion-canvas/core';
+import {
+  C, FONT, TechPanel, bg, bytePacket, label, rail, register, Caption,
+  LoginPanel, TerminalWindow, CodeEditor, DatabaseViewer, RegisterBank,
+  MessageSchedule, BitStrip, HashRound, ScriptShot
+} from '../components';
+
 
 export default makeScene2D(function* (view) {
   view.add(<Node>{bg()}</Node>);
-  const loop = createRef<Node>();
-  view.add(<Node ref={loop} opacity={0}>{label('64 ROUNDS // CONTROLLED AVALANCHE', C.yellow, 56, {y: -405})}<Rect width={540} height={540} stroke={C.lime} lineWidth={4} rotation={45} />{Array.from({length: 16}, (_, i) => <Txt text={String(i * 4).padStart(2, '0')} fill={i === 4 ? C.yellow : C.cyan} fontFamily={FONT} fontSize={26} x={Math.cos(i / 16 * Math.PI * 2) * 410} y={Math.sin(i / 16 * Math.PI * 2) * 310} />)}<Txt text="ROUND 17" fill={C.yellow} fontFamily={FONT} fontSize={58} /><Txt text="W17  K17  Σ  Ch  Maj" fill={C.cyan} fontFamily={FONT} fontSize={30} y={80} /></Node>);
-  yield* all(loop().opacity(1, 0.7), loop().rotation(360, 3), loop().scale(1.06, 1));
-  const blocks = createRef<Node>();
-  view.add(<Node ref={blocks} opacity={0}>{['BLOCK 01','BLOCK 02','BLOCK 03'].map((b, i) => <Rect width={400} height={180} x={-500 + i * 500} stroke={i === 1 ? C.yellow : C.lime} lineWidth={4} fill={C.bg}><Txt text={b} fill={i === 1 ? C.yellow : C.lime} fontFamily={FONT} fontSize={37} /><Txt text="state → state" fill={C.cyan} fontFamily={FONT} fontSize={23} y={52} /></Rect>)}<Txt text="previous hash state carries forward" fill={C.orange} fontFamily={FONT} fontSize={40} y={250} /></Node>);
-  yield* all(loop().position.y(-650, 0.8), loop().opacity(0, 0.5), blocks().opacity(1, 0.7));
-  yield* all(blocks().position.x(-120, 1.3), blocks().scale(1.04, 1.3));
-  yield* waitFor(0.8);
+  const caption = createRef<Caption>();
+  view.add(<Caption ref={caption} />);
+
+
+  // Shot 43
+  caption().set("And this happens sixty-four times for each 512-bit block.");
+  const stage_43 = createRef<Node>();
+  const visual_43 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_43} opacity={0}>
+      <ScriptShot ref={visual_43} scene={6} shot="43" y={-20} />
+    </Node>
+  );
+  yield* all(stage_43().opacity(1, 2.16), stage_43().position.x(55, 7.199999999999999, easeInOutCubic), stage_43().scale(1.04, 7.199999999999999, easeInOutCubic), visual_43().animateData(7.199999999999999));
+  yield* waitFor(2.16);
+  yield* stage_43().opacity(0, 2.64);
+  stage_43().remove();
+
+  // Shot 44
+  caption().set("Do not imagine a password simply passing through one magic box. Think of it as a tightly controlled avalanche of bit operations.");
+  const stage_44 = createRef<Node>();
+  const visual_44 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_44} opacity={0}>
+      <ScriptShot ref={visual_44} scene={6} shot="44" y={-20} />
+    </Node>
+  );
+  yield* all(stage_44().opacity(1, 2.16), stage_44().position.x(-55, 7.199999999999999, easeInOutCubic), stage_44().scale(1.04, 7.199999999999999, easeInOutCubic), visual_44().animateData(7.199999999999999));
+  yield* waitFor(2.16);
+  yield* stage_44().opacity(0, 2.64);
+  stage_44().remove();
+
+  // Shot 45
+  caption().set("The same engine processes the next block, carrying the previous hash state forward.");
+  const stage_45 = createRef<Node>();
+  const visual_45 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_45} opacity={0}>
+      <ScriptShot ref={visual_45} scene={6} shot="45" y={-20} />
+    </Node>
+  );
+  yield* all(stage_45().opacity(1, 2.16), stage_45().position.x(55, 7.199999999999999, easeInOutCubic), stage_45().scale(1.04, 7.199999999999999, easeInOutCubic), visual_45().animateData(7.199999999999999));
+  yield* waitFor(2.16);
+  yield* stage_45().opacity(0, 2.64);
+  stage_45().remove();
+
 });

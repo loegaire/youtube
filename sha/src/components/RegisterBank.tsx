@@ -25,14 +25,18 @@ export class RegisterBank extends Node {
           this.registers.push(t);
           return (
             <Layout direction="row" gap={30} alignItems="center">
-              <Txt text={label} fill="#ffff00" fontFamily="monospace" fontSize={40} width={40} />
+              <Txt text={label} fill="#e6f265" fontFamily="monospace" fontSize={40} width={40} />
               <Rect width={300} height={50} stroke="#6cf265" lineWidth={2} fill="#000000" padding={10} alignItems="center" justifyContent="center">
-                <Txt ref={t} text={values[i]} fill="#00ffff" fontFamily="monospace" fontSize={30} />
+                <Txt ref={t} text={values[i]} fill="#65daf2" fontFamily="monospace" fontSize={30} />
               </Rect>
             </Layout>
           );
         })}
       </Layout>
     );
+  }
+
+  public *setValues(values: string[]) {
+    yield* all(...this.registers.map((register, index) => register().text(values[index] ?? '00000000', 0.25)));
   }
 }

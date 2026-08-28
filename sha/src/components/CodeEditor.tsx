@@ -4,6 +4,10 @@ import {createRef, all, waitFor} from '@motion-canvas/core';
 export interface CodeEditorProps {
   opacity?: number;
   scale?: number;
+  w?: number;
+  h?: number;
+  x?: number;
+  y?: number;
   ref?: any;
 }
 
@@ -40,7 +44,7 @@ export class CodeEditor extends Node {
       this.codeContainer().add(
         <Txt
           text={line}
-          fill="#00ffff"
+          fill="#65daf2"
           fontFamily="monospace"
           fontSize={30}
           y={i * 40}

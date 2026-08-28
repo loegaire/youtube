@@ -7,3 +7,5 @@ export * from './RegisterBank';
 export * from './MessageSchedule';
 export * from './HashRound';
 export * from './Studio';
+export * from './ScriptShot';
+export * from './ToyHash8';

@@ -38,7 +38,7 @@ export class BitStrip extends Node {
               <Txt
                 ref={t}
                 text={bit}
-                fill="#00ffff"
+                fill="#65daf2"
                 fontFamily="monospace"
                 fontSize={80}
                 x={(i - 3.5) * 80}
@@ -50,13 +50,21 @@ export class BitStrip extends Node {
     );
   }
 
+  public *highlightBit(index: number) {
+    const bitNode = this.bitTexts[index]();
+    yield* all(
+      bitNode.fill('#e6f265', 0.2),
+      bitNode.scale(1.25, 0.2).to(1, 0.2),
+    );
+  }
+
   public *highlightOnes(counterRef: any) {
     let count = 0;
     for (let i = 0; i < this.bitTexts.length; i++) {
       const bitNode = this.bitTexts[i]();
       if (bitNode.text() === '1') {
         yield* all(
-          bitNode.fill('#ffff00', 0.2),
+          bitNode.fill('#e6f265', 0.2),
           bitNode.scale(1.2, 0.2).to(1, 0.2)
         );
         count++;

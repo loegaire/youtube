@@ -6,6 +6,8 @@ import {NodeProps} from '@motion-canvas/2d';
 export interface DatabaseViewerProps extends NodeProps {
   opacity?: number;
   scale?: number;
+  w?: number;
+  h?: number;
   ref?: any;
 }
 
@@ -50,9 +52,9 @@ export class DatabaseViewer extends Node {
 
     this.rowsContainer().add(
       <Layout direction="row" gap={20} y={yOffset}>
-        <Txt text={user} fill="#00ffff" fontFamily="monospace" fontSize={24} width={200} />
-        <Txt text={salt} fill="#ffff00" fontFamily="monospace" fontSize={24} width={200} />
-        <Txt text={hash} fill="#00ffff" fontFamily="monospace" fontSize={24} width={400} />
+        <Txt text={user} fill="#65daf2" fontFamily="monospace" fontSize={24} width={200} />
+        <Txt text={salt} fill="#e6f265" fontFamily="monospace" fontSize={24} width={200} />
+        <Txt text={hash} fill="#65daf2" fontFamily="monospace" fontSize={24} width={400} />
       </Layout>
     );
   }

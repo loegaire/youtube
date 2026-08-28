@@ -1,15 +1,58 @@
-import {makeScene2D, Node, Txt} from '@motion-canvas/2d';
-import {all, createRef, waitFor} from '@motion-canvas/core';
-import {C, FONT, TechPanel, bg, label, scanlines} from '../components';
+import {makeScene2D, Node, Txt, Rect, Circle, Line} from '@motion-canvas/2d';
+import {all, createRef, easeInOutCubic, sequence, waitFor} from '@motion-canvas/core';
+import {
+  C, FONT, TechPanel, bg, bytePacket, label, rail, register, Caption,
+  LoginPanel, TerminalWindow, CodeEditor, DatabaseViewer, RegisterBank,
+  MessageSchedule, BitStrip, HashRound, ScriptShot
+} from '../components';
+
 
 export default makeScene2D(function* (view) {
   view.add(<Node>{bg()}</Node>);
-  const attack = createRef<Node>();
-  const term = createRef<TechPanel>();
-  const code = createRef<TechPanel>();
-  const stamp = createRef<Txt>();
-  view.add(<Node ref={attack} opacity={0}>{label('COLLISION SPACE // TOYHASH8', C.yellow, 54, {y: -410})}<TechPanel ref={term} title="collision search" icon="\uf120" x={-420} y={-40} w={780} h={480} /><TechPanel ref={code} title="toyhash.py" icon="\uf120" x={420} y={-40} w={780} h={480} /><Txt ref={stamp} text="COLLISION FOUND \uf188" fill={C.red} fontFamily={FONT} fontSize={72} y={300} opacity={0} /></Node>);
-  code().line('def toyhash(data):', C.yellow, 28); code().line('    h = 0x6d', C.cyan, 28); code().line('    for x in data:', C.yellow, 28); code().line('        h = (h ^ x) + 0x3d', C.lime, 28); code().line('        h &= 0xff', C.lime, 28); code().line('        h = ((h << 3) & 0xff) | (h >> 5)', C.lime, 28); code().line('    return h', C.orange, 28);
-  yield* all(attack().opacity(1, 0.7), attack().scale(1.05, 0.7));
-  yield* term().typeLine('$ ./toyhash --collision', C.cyan); yield* term().typeLine('...searching 256 outputs', C.lime); yield* term().typeLine('$ ./toyhash y', C.yellow); yield* term().typeLine('8a', C.red); yield* term().typeLine('$ ./toyhash " @"', C.yellow); yield* term().typeLine('8a', C.red); yield* stamp().opacity(1, 0.4); yield* stamp().scale(1.1, 0.4); yield* waitFor(1);
+  const caption = createRef<Caption>();
+  view.add(<Caption ref={caption} />);
+
+
+  // Shot 46
+  caption().set("After the final block, the eight 32-bit state words are concatenated into the 256-bit digest.");
+  const stage_46 = createRef<Node>();
+  const visual_46 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_46} opacity={0}>
+      <ScriptShot ref={visual_46} scene={7} shot="46" y={-20} />
+    </Node>
+  );
+  yield* all(stage_46().opacity(1, 1.98), stage_46().position.x(-55, 6.6, easeInOutCubic), stage_46().scale(1.04, 6.6, easeInOutCubic), visual_46().animateData(6.6));
+  yield* waitFor(1.98);
+  yield* stage_46().opacity(0, 2.42);
+  stage_46().remove();
+
+  // Shot 47
+  caption().set("For the message `abc`, SHA-256 produces this.");
+  const stage_47 = createRef<Node>();
+  const visual_47 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_47} opacity={0}>
+      <ScriptShot ref={visual_47} scene={7} shot="47" y={-20} />
+    </Node>
+  );
+  yield* all(stage_47().opacity(1, 2.16), stage_47().position.x(55, 7.199999999999999, easeInOutCubic), stage_47().scale(1.04, 7.199999999999999, easeInOutCubic), visual_47().animateData(7.199999999999999));
+  yield* waitFor(2.16);
+  yield* stage_47().opacity(0, 2.64);
+  stage_47().remove();
+
+  // Shot 48
+  caption().set("Sixty-four hexadecimal characters. Two hundred and fifty-six bits. And absolutely no visible resemblance to the three characters that went in.");
+  const stage_48 = createRef<Node>();
+  const visual_48 = createRef<ScriptShot>();
+  view.add(
+    <Node ref={stage_48} opacity={0}>
+      <ScriptShot ref={visual_48} scene={7} shot="48" y={-20} />
+    </Node>
+  );
+  yield* all(stage_48().opacity(1, 1.7999999999999998), stage_48().position.x(-55, 6.0, easeInOutCubic), stage_48().scale(1.04, 6.0, easeInOutCubic), visual_48().animateData(6.0));
+  yield* waitFor(1.7999999999999998);
+  yield* stage_48().opacity(0, 2.2);
+  stage_48().remove();
+
 });

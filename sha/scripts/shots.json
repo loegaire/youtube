@@ -1,0 +1,786 @@
+[
+  [
+    "01",
+    "\u201cHello again, hackers. Have you ever wondered how your laptop can check your password without needing to keep the actual password sitting inside the machine?\u201d",
+    "Start on pure black. A single cyan `\\uf023` lock glyph appears as a tiny point in the center. Camera performs an extremely slow macro push-in. The lock suddenly expands into a full-screen hard-edged login interface: username field, password field, `ENTER` key, system clock. A cursor enters the password field. Characters appear for `hunter2`, immediately transforming into seven large teal password bullets. No rounded UI. The camera tracks the cursor from field to field.",
+    "0:00",
+    "0:08"
+  ],
+  [
+    "02",
+    "\u201cYou type characters. The computer turns those characters into numbers. And those numbers are transformed again and again until what comes out looks nothing like what you typed.\u201d",
+    "Freeze the login screen. Camera pushes through the password bullets. Each bullet breaks apart into ASCII byte values: `68 75 6E 74 65 72 32`. The byte stream accelerates toward the center and enters a cyan processing tunnel. The camera follows the data rather than cutting away. The bytes stretch into binary, then fold into a long 64-character hexadecimal digest.",
+    "0:08",
+    "0:18"
+  ],
+  [
+    "03",
+    "\u201cThat process is hashing. And one particular family of hash functions has been hiding inside operating systems, software downloads, signatures, protocols, and security tools for years: SHA.\u201d",
+    "The digest rotates edge-on. Camera pulls back to reveal five separate environments orbiting it: a laptop login, a file download, a packet capture window, a source-code editor, and a database. The central digest remains fixed while the environments rotate around it like a technical carousel. Large title `HASH FUNCTIONS` appears in teal; `SHA-2` appears in yellow.",
+    "0:18",
+    "0:30"
+  ],
+  [
+    "04",
+    "\u201cBut before we touch SHA-256, we need to understand what a hash is actually doing.\u201d",
+    "Whip-pan from the orbiting environments into a black technical workspace. The word `HASH` is assembled from individual hexadecimal characters. Camera lands directly on the first example.",
+    "0:30",
+    "0:38"
+  ],
+  [
+    "05",
+    "\u201cThe first example is the obvious one: passwords.\u201d",
+    "Hard-cut into a simulated Linux-style authentication server. Left side is a terminal with `auth.log`; right side is a database viewer showing columns `user`, `salt`, `password_hash`. The user types `correct-horse-battery-staple`. The password visibly flows toward the hash function and disappears into the digest.",
+    "0:38",
+    "0:48"
+  ],
+  [
+    "06",
+    "\u201cA properly designed password system should not need to store your password as readable text. It stores a verifier instead, allowing a future login attempt to be checked against the stored result.\u201d",
+    "Camera dives into the database row. Replace the plaintext-looking field with a salted password-hashing record. Split-screen comparison appears: left `PLAINTEXT`, right `VERIFIER`. The left side flashes light red and receives a `\\uf00d`; the right receives a yellow `\\uf00c`. Show the conceptual flow `password + unique salt + password KDF \u2192 verifier`.",
+    "0:48",
+    "1:04"
+  ],
+  [
+    "07",
+    "\u201cThere is an important catch, though: SHA-256 itself is not the right tool for storing passwords. It is deliberately fast.\u201d",
+    "The SHA-256 digest on the right accelerates through thousands of simulated guesses per second. Camera shakes subtly with each accelerated iteration. A large red stamp `TOO FAST FOR PASSWORD STORAGE` slams onto the screen. Immediately replace the stamp with `ARGON2ID / SCRYPT / BCRYPT / PBKDF2` in yellow.",
+    "1:04",
+    "1:18"
+  ],
+  [
+    "08",
+    "\u201cThe second use is file integrity. You download a file, calculate its hash, and compare that result with a trusted value.\u201d",
+    "Simulated browser download screen displays `debian-image.iso`. Camera tracks the file into a terminal. Run:\n\n```text\n$ sha256sum debian-image.iso\n...\n```\n\nThe resulting 64-character digest types itself onto the terminal. A web-style release page slides in from the opposite side showing a trusted SHA-256 value. Draw a teal scanning line across both strings. Every character matches.",
+    "1:18",
+    "1:34"
+  ],
+  [
+    "09",
+    "\u201cChange even one bit of the message, and the resulting digest should change dramatically.\u201d",
+    "Camera zooms to one hexadecimal byte. Change one bit in the file from `0` to `1`. The digest does not simply change locally: every displayed hexadecimal character rapidly flickers and resolves to a new value. Use a radial outward ripple made only from hard-edged teal characters.",
+    "1:34",
+    "1:48"
+  ],
+  [
+    "10",
+    "\u201cHashes also sit underneath digital signatures. The hash compresses the message into a fixed-size digest, and the signature mechanism protects that digest.\u201d",
+    "Show a software release package entering a SHA-256 engine. The resulting digest enters a stylized private-key signature operation. The signature file is shown as a second rectangular artifact. Camera rotates around the package and signature together. A verification machine receives both and reconstructs the digest from the downloaded package.",
+    "1:48",
+    "2:06"
+  ],
+  [
+    "11",
+    "\u201cSo the hash by itself is not the identity of the publisher. The signature and its public-key verification are what provide authenticity.\u201d",
+    "Temporarily make the unsigned hash panel light red and label it `INTEGRITY SIGNAL`. Then bring in the public key and verified signature, turning the complete chain into yellow `AUTHENTIC + UNMODIFIED`.",
+    "2:06",
+    "2:18"
+  ],
+  [
+    "12",
+    "\u201cThey also appear in integrity checks around systems and networks, where the hash acts like a compact fingerprint of some larger piece of data.\u201d",
+    "Simulated packet inspector appears. Packets stream across the screen as colored hexadecimal payloads. The payloads converge into a digest indicator. Camera follows one packet from source to destination and performs a diagonal tracking move as the digest is recomputed.",
+    "2:18",
+    "2:30"
+  ],
+  [
+    "13",
+    "\u201cAnd then there is the much broader world of hash tables.\u201d",
+    "Camera pulls away from the packet inspector into a source-code editor. Display:\n\n```cpp\nunordered_map<string, int> users;\n```\n\nAnimate several keys entering the hash function and landing in bucket columns. Show two different keys landing in the same bucket, then being resolved through equality checking.",
+    "2:30",
+    "2:42"
+  ],
+  [
+    "14",
+    "\u201cHash tables use hashing to quickly choose a bucket. That is the same broad idea, but a normal hash-table hash does not automatically have the security properties of a cryptographic hash.\u201d",
+    "Split the screen vertically. Left: `HASH TABLE \u2192 SPEED`. Right: `CRYPTOGRAPHIC HASH \u2192 SECURITY PROPERTIES`. Camera performs a slow horizontal scan across both, stopping on the words `DIFFERENT GOALS`.",
+    "2:42",
+    "2:55"
+  ],
+  [
+    "15",
+    "\u201cSo now we have the vocabulary. Let\u2019s build a hash from the ground up.\u201d",
+    "Everything disappears except one incoming binary stream. The camera pulls far back until the stream becomes a tiny line on a giant black canvas. The title `FROM ONE BIT \u2192 SHA-256` appears in yellow.",
+    "2:55",
+    "3:02"
+  ],
+  [
+    "16",
+    "\u201cForget SHA-256 for a moment. Imagine the entire hash function is just this: count the number of one-bits.\u201d",
+    "Show a giant eight-bit strip:\n\n```text\n10110010\n```\n\nEach `1` lights up sequentially. Camera makes a shallow top-down movement across the bit strip while the counter increments `1\u20262\u20263\u20265`.",
+    "3:02",
+    "3:12"
+  ],
+  [
+    "17",
+    "\u201cIf the count is odd, output one. If it is even, output zero.\u201d",
+    "The number `5` slams into a modulo operation. Result becomes `1`. The entire eight-bit input collapses into a single giant `1`. Camera performs a dramatic pull-back to emphasize the extreme compression.",
+    "3:12",
+    "3:24"
+  ],
+  [
+    "18",
+    "\u201cThat is technically a hash.\u201d",
+    "Tiny label appears: `FIXED OUTPUT`. Then below it: `1 BIT`. A subtle cinematic push-in makes the single bit look absurdly small compared with the original input.",
+    "3:24",
+    "3:30"
+  ],
+  [
+    "19",
+    "\u201cBut it is a terrible cryptographic hash, because millions of different inputs can produce exactly the same answer.\u201d",
+    "Duplicate the input into a cascade of hundreds of binary strings. Half collapse to `0`, half collapse to `1`. Camera rises overhead as the strings form two enormous columns. Use cyan for inputs and light red for collisions.",
+    "3:30",
+    "3:42"
+  ],
+  [
+    "20",
+    "\u201cThis gives us the first security lesson: compression is not enough. Security comes from how difficult it is to manipulate that compressed result in useful ways.\u201d",
+    "The two columns collapse into the labels `PREIMAGE`, `SECOND PREIMAGE`, and `COLLISION`. Each label enters from a different camera direction and locks into a triangular technical diagram.",
+    "3:42",
+    "3:54"
+  ],
+  [
+    "21",
+    "\u201cA cryptographic hash is expected to make finding a chosen input, a second matching input, or a useful collision computationally infeasible.\u201d",
+    "Three attack paths race toward the digest: target-output arrow, known-message arrow, two-message collision arrow. Each gets blocked by an expanding matrix of transformations. Camera orbits once around the blocked paths.",
+    "3:54",
+    "4:08"
+  ],
+  [
+    "22",
+    "\u201cNow replace our pathetic one-bit toy with SHA-256.\u201d",
+    "The single-bit `1` cracks apart. Behind it, a gigantic technical engine assembles from hundreds of hexadecimal symbols. The camera flies directly into its center. Title `SHA-256` appears in yellow.",
+    "4:08",
+    "4:15"
+  ],
+  [
+    "23",
+    "\u201cSHA-256 accepts an arbitrary-length message, processes it in 512-bit blocks, and produces a 256-bit message digest.\u201d",
+    "Show a 64-byte visual strip entering a giant rectangular processing frame. Label the input `512 BITS`. The output becomes eight stacked 32-bit registers totaling `256 BITS`. Camera pans from input to output with a controlled mechanical movement.",
+    "4:15",
+    "4:27"
+  ],
+  [
+    "24",
+    "\u201cInternally, the 256-bit state is represented as eight 32-bit words.\u201d",
+    "Create registers:\n\n```text\na  b  c  d  e  f  g  h\n```\n\nEach receives a 32-bit hexadecimal value. The camera performs an arc over the register bank while the values stabilize.",
+    "4:27",
+    "4:36"
+  ],
+  [
+    "25",
+    "\u201cBefore the real compression begins, SHA-256 pads the message.\u201d",
+    "Display the word:\n\n```text\nabc\n```\n\nbeneath its ASCII bytes:\n\n```text\n61 62 63\n```\n\nCamera pushes into the final byte. Append a binary `1`, then a field of zeros, then a 64-bit message-length field. The camera follows the padding expanding the message until the frame reaches exactly 512 bits.",
+    "4:36",
+    "4:52"
+  ],
+  [
+    "26",
+    "\u201cThe padding ends with the original message length, encoded as a 64-bit value, so the final block carries both the data and information about how long that data originally was.\u201d",
+    "Highlight the final 64 bits in yellow. Morph `24` into binary:\n\n```text\n000...00011000\n```\n\nCamera performs a vertical rack-focus from the original `abc` to the length field.",
+    "4:52",
+    "5:04"
+  ],
+  [
+    "27",
+    "\u201cThat 512-bit block is split into sixteen 32-bit words.\u201d",
+    "The 512-bit strip breaks into `W0` through `W15`. Rather than using simple boxes, render each word as a moving hexadecimal packet traveling along a conveyor with a mechanical indexing cursor.",
+    "5:04",
+    "5:16"
+  ],
+  [
+    "28",
+    "\u201cBut SHA-256 does not stop at sixteen. It expands that data into a message schedule containing sixty-four 32-bit words.\u201d",
+    "Camera follows `W15`. The final word bends into a branching data path that generates `W16`. Continue visually expanding the schedule until the screen contains `W0 \u2026 W63`. The camera continuously tracks the newly generated word instead of cutting.",
+    "5:16",
+    "5:30"
+  ],
+  [
+    "29",
+    "\u201cEach later word is derived from earlier words using rotations, shifts, and modular addition.\u201d",
+    "Show a single schedule-generation lane:\n\n```text\nW[t-16] \u2500\u2510\nW[t-15] \u2500\u253c\u2500 \u03c30 / \u03c31 \u2500\u2500 + \u2500\u2500 W[t-7] \u2500\u2500 W[t-2] \u2500\u2500> W[t]\n```\n\nAnimate the actual bit pattern being rotated and shifted. Use yellow for `\u03c30` and `\u03c31`, teal for ordinary data, cyan for intermediate values. Camera tracks the bit lanes physically.",
+    "5:30",
+    "5:46"
+  ],
+  [
+    "30",
+    "\u201cNow the interesting part. SHA-256 starts with eight predefined 32-bit state values.\u201d",
+    "Eight register rails enter from the left. Each gets an initial hexadecimal constant. Camera performs an overhead sweep across all eight, then locks onto register `a`.",
+    "5:46",
+    "5:56"
+  ],
+  [
+    "31",
+    "\u201cCall them `a`, `b`, `c`, `d`, `e`, `f`, `g`, and `h`.\u201d",
+    "The letters animate into their positions as if stamped onto hardware registers. Immediately behind them, a faint numerical trace shows each register being updated.",
+    "5:56",
+    "6:02"
+  ],
+  [
+    "32",
+    "\u201cSHA-256 uses small Boolean functions to mix individual bits together.\u201d",
+    "Camera zooms inside the `e`, `f`, `g` registers. Individual bits become large square particles. Two logical operations appear: `Ch` and `Maj`.",
+    "6:02",
+    "6:10"
+  ],
+  [
+    "33",
+    "\u201cThe Choose function selects bits from one input or another.\u201d",
+    "Animate:\n\n```text\nCh(e,f,g) = (e AND f) XOR ((NOT e) AND g)\n```\n\nThe `e` bit stream becomes a rapidly moving control mask. Bits from `f` and `g` physically pass through it and emerge as a new stream.",
+    "6:10",
+    "6:22"
+  ],
+  [
+    "34",
+    "\u201cThe Majority function looks at three inputs and chooses the bit value that appears most often.\u201d",
+    "Show three vertically aligned bit columns entering a majority gate. Triple examples animate simultaneously: `0,0,1 \u2192 0`; `1,1,0 \u2192 1`; `1,0,1 \u2192 1`.",
+    "6:22",
+    "6:34"
+  ],
+  [
+    "35",
+    "\u201cThese are tiny operations. The difficulty comes from repeating them across many rounds while constantly changing the state.\u201d",
+    "Pull the camera out from the individual gate to reveal the entire compression engine. Hundreds of small data movements become visible simultaneously. The words `REPEAT \u00d7 64` appear in yellow.",
+    "6:34",
+    "6:44"
+  ],
+  [
+    "36",
+    "\u201cSHA-256 also uses large sigma functions built from bit rotations and XOR.\u201d",
+    "Focus on register `a`. Its 32-bit pattern rotates physically in three separate copies. Overlay:\n\n```text\n\u03a30(a) = ROTR\u00b2(a) XOR ROTR\u00b9\u00b3(a) XOR ROTR\u00b2\u00b2(a)\n```\n\nThe three rotated streams converge into a single XOR network.",
+    "6:44",
+    "6:58"
+  ],
+  [
+    "37",
+    "\u201cFor the `e` side of the state, the rotations are different.\u201d",
+    "Camera whip-pans to `e`. Show:\n\n```text\n\u03a31(e) = ROTR\u2076(e) XOR ROTR\u00b9\u00b9(e) XOR ROTR\u00b2\u2075(e)\n```\n\nThe bit lanes rotate at visibly different speeds before merging.",
+    "6:58",
+    "7:10"
+  ],
+  [
+    "38",
+    "\u201cNow watch one complete round.\u201d",
+    "Everything except the eight working registers and current `W[t]` fades by moving offscreen; no transparency. Camera begins a slow circular orbit around the compression engine. A large `ROUND 17` indicator appears.",
+    "7:10",
+    "7:15"
+  ],
+  [
+    "39",
+    "\u201cFirst, SHA-256 computes `T1` from `h`, the sigma function of `e`, the Choose function, a round constant, and the current message word.\u201d",
+    "Render the equation:\n\n```text\nT1 = h + \u03a31(e) + Ch(e,f,g) + K[t] + W[t]\n```\n\nEvery operand physically travels along its own rail and enters a modular-addition stage. Yellow highlights `K[t]`; cyan highlights `W[t]`. The addition is shown modulo `2^32`.",
+    "7:15",
+    "7:32"
+  ],
+  [
+    "40",
+    "\u201cThen `T2` is computed from the sigma function of `a` and the Majority function.\u201d",
+    "Parallel rail on the upper half:\n\n```text\nT2 = \u03a30(a) + Maj(a,b,c)\n```\n\nThe two intermediate values slam together into `T2`. Camera tracks both paths and meets at the addition node.",
+    "7:32",
+    "7:42"
+  ],
+  [
+    "41",
+    "\u201cThe registers then shift forward, while the new values enter the front of the chain.\u201d",
+    "This is the key cinematic shot. The eight registers move left like a high-speed conveyor. `h` exits. `g` becomes `h`, `f` becomes `g`, and so on. The new `a` becomes `T1 + T2`. The new `e` becomes `d + T1`. Use actual moving register contents rather than merely arrows. Camera travels alongside the register bank at the same velocity.",
+    "7:42",
+    "8:00"
+  ],
+  [
+    "42",
+    "\u201cThen the next round starts immediately.\u201d",
+    "`ROUND 17` flips to `ROUND 18`; `W17` flips to `W18`; the entire register conveyor accelerates. Camera pulls back while the rounds multiply around the frame.",
+    "8:00",
+    "8:06"
+  ],
+  [
+    "43",
+    "\u201cAnd this happens sixty-four times for each 512-bit block.\u201d",
+    "Display a circular progress dial with indices `00` through `63`. Instead of a static progress bar, the current round marker physically races around a circular path. The eight registers update every loop.",
+    "8:06",
+    "8:18"
+  ],
+  [
+    "44",
+    "\u201cDo not imagine a password simply passing through one magic box. Think of it as a tightly controlled avalanche of bit operations.\u201d",
+    "Camera enters the compression loop at extreme close range. Bits split, rotate, collide, XOR, and recombine. The shot deliberately avoids a generic rectangle-and-arrow diagram: every value remains physically attached to its register or operation.",
+    "8:18",
+    "8:30"
+  ],
+  [
+    "45",
+    "\u201cThe same engine processes the next block, carrying the previous hash state forward.\u201d",
+    "Finish block one. Eight final working values merge into eight accumulated state registers. The camera follows them sideways into `BLOCK 2`, then `BLOCK 3`. Show multiple blocks physically chained together.",
+    "8:30",
+    "8:42"
+  ],
+  [
+    "46",
+    "\u201cAfter the final block, the eight 32-bit state words are concatenated into the 256-bit digest.\u201d",
+    "The eight registers slide together into one uninterrupted hexadecimal stream. Camera starts at the left edge and tracks across the complete 64-character output.",
+    "8:42",
+    "8:53"
+  ],
+  [
+    "47",
+    "\u201cFor the message `abc`, SHA-256 produces this.\u201d",
+    "Full-screen black. Centered monospace digest types in:\n\n```text\nba7816bf8f01cfea414140de5dae2223\nb00361a396177a9cb410ff61f20015ad\n```\n\nFirst line appears character-by-character, second line follows. Camera slowly pushes closer until individual hexadecimal symbols occupy most of the frame.",
+    "8:53",
+    "9:05"
+  ],
+  [
+    "48",
+    "\u201cSixty-four hexadecimal characters. Two hundred and fifty-six bits. And absolutely no visible resemblance to the three characters that went in.\u201d",
+    "Split screen: `abc` on left and digest on right. Stretch a thin teal line between them. Camera pulls all the way back until the original `abc` becomes a microscopic input point compared with the digest.",
+    "9:05",
+    "9:15"
+  ],
+  [
+    "49",
+    "\u201cNow let\u2019s build something ourselves. Not SHA-256\u2014because reproducing a secure production hash from scratch is a cryptography project\u2014but a deliberately tiny teaching hash that lets us watch every operation.\u201d",
+    "The real SHA-256 engine exits through the top of the frame. A much smaller engine assembles below it. Large warning label appears: `EDUCATIONAL \u2014 NOT CRYPTOGRAPHICALLY SECURE`.",
+    "9:15",
+    "9:28"
+  ],
+  [
+    "50",
+    "\u201cCall it `ToyHash8`.\u201d",
+    "Title `ToyHash8` is typed into a simulated code editor. Camera moves from the title to line one of the implementation.",
+    "9:28",
+    "9:32"
+  ],
+  [
+    "51",
+    "\u201cWe start with an eight-bit state.\u201d",
+    "Code editor highlights:\n\n```python\nh = 0x6d\n```\n\nThe hexadecimal `6d` instantly appears as binary `01101101` in a hardware register beside the editor.",
+    "9:32",
+    "9:38"
+  ],
+  [
+    "52",
+    "\u201cFor every input byte, XOR it with the state, add a constant, then rotate the result left by three bits.\u201d",
+    "Show the exact implementation:\n\n```python\ndef toyhash(data):\n    h = 0x6d\n\n    for x in data:\n        h = (h ^ x) + 0x3d\n        h &= 0xff\n        h = ((h << 3) & 0xff) | (h >> 5)\n\n    return h\n```\n\nThe code editor highlights exactly one statement at a time. Beside the editor, the current byte physically travels through XOR \u2192 addition \u2192 mask \u2192 rotate. No generic blocks: the actual eight bits move through each operation.",
+    "9:38",
+    "10:00"
+  ],
+  [
+    "53",
+    "\u201cThat is the entire function.\u201d",
+    "Camera rapidly pulls back from the code editor, revealing that the apparently complicated machine is only four operations repeated in a loop. The code remains visible in the corner while the data path dominates the scene.",
+    "10:00",
+    "10:06"
+  ],
+  [
+    "54",
+    "\u201cLet\u2019s hash the text `abc` and watch every byte move.\u201d",
+    "Simulated terminal:\n\n```text\n$ python toyhash.py abc\n```\n\nThe text `abc` is converted to:\n\n```text\n61 62 63\n```\n\nThe three bytes detach from the terminal and travel into the visual execution engine.",
+    "10:06",
+    "10:15"
+  ],
+  [
+    "55",
+    "\u201cFirst byte: `0x61`.\u201d",
+    "`0x61` enters the XOR stage against `0x6d`. Display both binary values vertically and physically align their bits. The XOR result becomes the next packet. Camera performs a macro push into the least significant bits.",
+    "10:15",
+    "10:24"
+  ],
+  [
+    "56",
+    "\u201cXOR the byte with the current state.\u201d",
+    "Show the exact bitwise transformation, bit by bit. Each resulting bit moves into a new horizontal row.",
+    "10:24",
+    "10:30"
+  ],
+  [
+    "57",
+    "\u201cAdd `0x3d`, then keep only the lowest eight bits.\u201d",
+    "The intermediate byte enters a visible modulo-256 arithmetic unit. Higher carry bits physically fall through a trapdoor and disappear off the bottom of frame. The surviving eight bits continue forward. Yellow highlights the discarded overflow.",
+    "10:30",
+    "10:40"
+  ],
+  [
+    "58",
+    "\u201cThen rotate left by three.\u201d",
+    "The eight bits are arranged on an octagonal ring. The entire ring physically rotates three positions clockwise while maintaining bit order. The camera orbits the ring simultaneously.",
+    "10:40",
+    "10:50"
+  ],
+  [
+    "59",
+    "\u201cThat output becomes the state for the next byte.\u201d",
+    "The rotated value lands in the central state register. The camera pulls back enough to reveal bytes `62` and `63` waiting in a queue.",
+    "10:50",
+    "10:56"
+  ],
+  [
+    "60",
+    "\u201cSecond byte: `0x62`. Same machinery. New state.\u201d",
+    "`0x62` accelerates through the exact same operations. Reuse the `ToyHash8` component, but change its internal data, register state, and camera target rather than copying scene code.",
+    "10:56",
+    "11:06"
+  ],
+  [
+    "61",
+    "\u201cThird byte: `0x63`.\u201d",
+    "Repeat the transformation, but faster. Increase camera speed, add a mechanical scanline traveling across the bits, and show intermediate values accumulating in a side trace.",
+    "11:06",
+    "11:16"
+  ],
+  [
+    "62",
+    "\u201cAnd the final eight-bit state becomes our digest.\u201d",
+    "The last register ejects a two-character hexadecimal output into a terminal window. Use an exact scripted output generated by the implementation at render time. The digest grows from two digits into a giant center-screen `0x??`, with `ToyHash8` stamped underneath.",
+    "11:16",
+    "11:24"
+  ],
+  [
+    "63",
+    "\u201cNotice what we just built: fixed-size output, repeated mixing, bitwise operations, and state that changes as the input is processed.\u201d",
+    "Four visual labels orbit the toy engine: `FIXED OUTPUT`, `STATE`, `MIXING`, `ITERATION`. Each locks into a hard rectangular position as the camera completes one orbit.",
+    "11:24",
+    "11:34"
+  ],
+  [
+    "64",
+    "\u201cBut it is nowhere near the security design of SHA-256.\u201d",
+    "Place `ToyHash8` beside `SHA-256`. The toy engine visibly contains an eight-bit state and one byte of output; SHA-256 contains eight 32-bit working variables, a 64-word schedule, and 64 rounds per block. Camera pulls back to show the enormous difference in state and structure.",
+    "11:34",
+    "11:44"
+  ],
+  [
+    "65",
+    "\u201cThe point of the toy is not security. The point is being able to see the algorithm.\u201d",
+    "The large real SHA engine becomes a distant background silhouette while the tiny toy engine takes foreground focus. Camera performs a cinematic rack-focus simulation from the complex engine to the tiny teaching engine.",
+    "11:44",
+    "11:50"
+  ],
+  [
+    "66",
+    "\u201cNow here is where hashing gets counterintuitive: SHA-256 is fast.\u201d",
+    "Terminal benchmark simulation appears:\n\n```text\n$ openssl speed sha256\n```\n\nRows of SHA-256 throughput values rapidly populate the terminal. Camera pans downward through the benchmark table while a live counter climbs.",
+    "11:50",
+    "12:00"
+  ],
+  [
+    "67",
+    "\u201cThat speed is excellent for verifying files and processing data, but it is exactly why raw SHA-256 is a poor password-storage primitive.\u201d",
+    "Split the scene into two synchronized machines. Left machine hashes one file quickly and immediately verifies it. Right machine launches a password-guessing loop. The right side accelerates dramatically. Camera gradually favors the attack side until a red warning `FAST = BAD FOR PASSWORD STORAGE` dominates.",
+    "12:00",
+    "12:14"
+  ],
+  [
+    "68",
+    "\u201cA password database should therefore use a password-hashing scheme designed to make each guess deliberately expensive, such as Argon2id, with salt and appropriate cost parameters.\u201d",
+    "Replace the fast SHA engine with a memory-heavy Argon2-style conceptual machine. Large memory tiles fill the frame while the attacker\u2019s guess pipeline slows. Do not imply SHA-256 is internally part of Argon2id. The labels clearly read `CONCEPTUAL COST MODEL`.",
+    "12:14",
+    "12:28"
+  ],
+  [
+    "69",
+    "\u201cCompare that with simply saving the password.\u201d",
+    "Simulated server file appears:\n\n```text\nusers.db\n\nalice : correct-horse-battery-staple\nbob   : letmein123\n```\n\nCamera slowly approaches the file. A light-red `\\uf188` bug icon appears at the edge of the frame.",
+    "12:28",
+    "12:36"
+  ],
+  [
+    "70",
+    "\u201cIf an attacker gains read access to that database, the secret is already there. No cracking is necessary.\u201d",
+    "Camera crosses the permission boundary and lands directly on the readable password. The text is copied instantly into an attacker terminal. The entire animation takes less than a second to emphasize immediate exposure.",
+    "12:36",
+    "12:45"
+  ],
+  [
+    "71",
+    "\u201cHashing changes the situation: stealing the verifier does not immediately reveal the password, although weak passwords can still be guessed offline.\u201d",
+    "Replace plaintext storage with salted verifier storage. Attacker copies the database again, but receives only salt + verifier. An offline cracking terminal begins trying guesses and comparing derived verifiers. Camera moves between database and cracking terminal.",
+    "12:45",
+    "13:00"
+  ],
+  [
+    "72",
+    "\u201cAnd this distinction matters for side-channel and accidental-leak scenarios too: plaintext copies are dangerous wherever the secret can leak, including configuration, logs, backups, memory, or diagnostic data.\u201d",
+    "Four environments flash around the password: `CONFIG`, `LOG`, `BACKUP`, `MEMORY DUMP`. Each produces a duplicate plaintext copy and turns light red. Then show the verifier surviving as a non-reversible representation. Avoid implying that hashing magically prevents every side-channel.",
+    "13:00",
+    "13:14"
+  ],
+  [
+    "73",
+    "\u201cThe correct lesson is not \u2018SHA is safer than plaintext because SHA is hard.\u2019 The lesson is \u2018use the primitive that matches the threat model.\u2019\u201d",
+    "Camera centers on a large decision matrix:\n\n```text\nFILE INTEGRITY       \u2192 SHA-256\nDIGITAL SIGNATURE    \u2192 HASH + SIGNATURE SCHEME\nHASH TABLE            \u2192 HASH FUNCTION\nPASSWORD STORAGE      \u2192 ARGON2ID / SCRYPT / BCRYPT / PBKDF2\n```\n\nEach row animates in independently.",
+    "13:14",
+    "13:26"
+  ],
+  [
+    "74",
+    "\u201cSo can SHA be broken?\u201d",
+    "Hard cut to a giant red `?`. Camera slowly circles it. The question cracks into four technical labels: `COLLISION`, `PREIMAGE`, `SECOND PREIMAGE`, `IMPLEMENTATION / MISUSE`.",
+    "13:26",
+    "13:32"
+  ],
+  [
+    "75",
+    "\u201cThe answer depends on what attack you mean.\u201d",
+    "Each attack path gets its own small simulated terminal window. The camera travels from one to another in a continuous arc.",
+    "13:32",
+    "13:38"
+  ],
+  [
+    "76",
+    "\u201cA collision means finding two different messages that produce the same digest.\u201d",
+    "Two completely different file names enter separate SHA-like engines. They converge onto one identical digest. Put the word `COLLISION` between them.",
+    "13:38",
+    "13:50"
+  ],
+  [
+    "77",
+    "\u201cThis is the classic failure that eventually destroyed confidence in SHA-1.\u201d",
+    "Label one engine `SHA-1`. Two visually different document icons enter. The digest values converge. Large red text `SHA-1 COLLISION` appears. Camera violently pulls backward after the collision completes.",
+    "13:50",
+    "14:02"
+  ],
+  [
+    "78",
+    "\u201cGoogle and CWI demonstrated a practical SHA-1 collision in 2017, and NIST had already deprecated SHA-1 for collision-sensitive applications.\u201d",
+    "Timeline appears: `2011 \u2192 SHA-1 deprecated` then `2013 \u2192 no new digital signatures` then `2017 \u2192 demonstrated collision`. Camera tracks the timeline horizontally while a SHA-1 badge moves from yellow to light red.",
+    "14:02",
+    "14:15"
+  ],
+  [
+    "79",
+    "\u201cA preimage attack is different: here the attacker is given a target digest and tries to find an input that produces it.\u201d",
+    "Put a fixed 256-bit-looking target on the right. On the left, generate candidate messages at increasing speed. Every failed candidate receives a tiny `\\uf00d` and exits the frame. Camera is locked to the target while the candidates blur past.",
+    "14:15",
+    "14:27"
+  ],
+  [
+    "80",
+    "\u201cFor SHA-256, the idealized generic preimage work is on the order of 2 to the 256 possibilities, which is fundamentally different from a practical collision attack\u2019s roughly 2 to the 128 birthday scale.\u201d",
+    "Show two logarithmic-style scales. One grows to `2^256`; the other to `2^128`. The camera pulls back as each number becomes visually enormous. Add a small footnote: `generic security estimates; real attacks depend on construction and constraints`.",
+    "14:27",
+    "14:43"
+  ],
+  [
+    "81",
+    "\u201cA second-preimage attack starts with one known message and tries to find a different message with the same digest.\u201d",
+    "Original file is pinned to the center with a yellow fingerprint. Attacker generates alternate files around it. One candidate attempts to converge onto the same digest and is rejected repeatedly.",
+    "14:43",
+    "14:53"
+  ],
+  [
+    "82",
+    "\u201cThis distinction matters because SHA-1 and SHA-256 are not interchangeable just because both start with the letters S-H-A.\u201d",
+    "Two vertical algorithm trees appear: SHA-1 on left, SHA-2/SHA-256 on right. The SHA-1 side receives a light-red collision marker. SHA-256 remains yellow/teal.",
+    "14:53",
+    "15:02"
+  ],
+  [
+    "83",
+    "\u201cNIST currently lists SHA-256 among the acceptable SHA-2 hash functions, and its published security-strength guidance gives SHA-256 128-bit collision strength and 256-bit preimage strength.\u201d",
+    "Display a clean technical specification panel. Zoom directly into:\n\n```text\nSHA-256\nOUTPUT       256 bits\nCOLLISION    128-bit strength\nPREIMAGE     256-bit strength\nBLOCK        512 bits\n```\n\nCamera makes a controlled documentary-style push toward the values.",
+    "15:02",
+    "15:16"
+  ],
+  [
+    "84",
+    "\u201cSo the story is not \u2018SHA is broken.\u2019 The story is that different versions, attack goals, and applications have different security margins.\u201d",
+    "The word `SHA` splits into `SHA-1`, `SHA-256`, and `SHA-3`. Each receives a different status indicator.",
+    "15:16",
+    "15:25"
+  ],
+  [
+    "85",
+    "\u201cNow we can actually break something on screen.\u201d",
+    "Camera slams into the `ToyHash8` source code. Terminal opens beside it:\n\n```text\n$ ./toyhash --collision\n```\n\nA red attack cursor blinks.",
+    "15:25",
+    "15:31"
+  ],
+  [
+    "86",
+    "\u201cOur toy hash outputs only eight bits.\u201d",
+    "Display `256 bits` for SHA-256, then physically compress it to `8 bits` for ToyHash8. Camera moves between the two as if comparing processor dies.",
+    "15:31",
+    "15:37"
+  ],
+  [
+    "87",
+    "\u201cThat gives us only 256 possible outputs.\u201d",
+    "Eight binary switches flip through all values. Then display:\n\n```text\n00000000\n...\n11111111\n\n2^8 = 256\n```\n\nCamera pulls back to show the entire output space as a finite grid.",
+    "15:37",
+    "15:45"
+  ],
+  [
+    "88",
+    "\u201cSo instead of attempting some sophisticated cryptanalysis, we can simply generate candidates and search for a collision.\u201d",
+    "Terminal starts a brute-force loop. Candidate strings stream through at high speed. Each candidate is rendered briefly in the code editor before being processed. The camera tracks the newest candidate.",
+    "15:45",
+    "15:55"
+  ],
+  [
+    "89",
+    "\u201cThe first collision we care about is any two different inputs with the same eight-bit result.\u201d",
+    "Two candidate streams branch from one search pipeline. One gets a hash result, the other eventually lands on the same result. A red beam links the two digest values.",
+    "15:55",
+    "16:05"
+  ],
+  [
+    "90",
+    "\u201cFor this deliberately tiny function, `y` and the string containing a space followed by `@` both produce the same eight-bit result: `0x8a`.\u201d",
+    "Show two terminal executions:\n\n```text\n$ ./toyhash y\n8a\n\n$ ./toyhash \" @\"\n8a\n```\n\nThe two outputs merge into one large center-screen `0x8a`. Use `\\uf188` and a light-red `COLLISION FOUND` stamp.",
+    "16:05",
+    "16:16"
+  ],
+  [
+    "91",
+    "\u201cSame digest. Different input. That is a collision.\u201d",
+    "Freeze the two inputs above the shared digest. Camera rotates 90 degrees around them, creating a three-dimensional-feeling reveal while remaining flat 2D geometry.",
+    "16:16",
+    "16:22"
+  ],
+  [
+    "92",
+    "\u201cAnd because the output is only eight bits, this was never a serious challenge.\u201d",
+    "Show a birthday-search visualization where candidate hashes rapidly populate a 256-slot table. One slot gets hit twice almost immediately. Camera zooms directly into that bucket.",
+    "16:22",
+    "16:30"
+  ],
+  [
+    "93",
+    "\u201cThis is why output size matters: shrinking a hash from 256 bits to 8 bits does not merely make the digest shorter. It makes generic collision searching astronomically easier.\u201d",
+    "Camera rapidly zooms backward through scales:\n\n```text\n2^8\n2^16\n2^32\n2^64\n2^128\n```\n\nThe `2^128` collision-security marker disappears into an enormous field of numbers.",
+    "16:30",
+    "16:43"
+  ],
+  [
+    "94",
+    "\u201cAnd here is the part people often miss: real-world hash failures are frequently caused by using a good primitive incorrectly.\u201d",
+    "The SHA-256 engine appears perfectly intact. Around it, four external attack vectors approach it: `WEAK PASSWORD`, `NO SALT`, `WRONG ALGORITHM`, `BAD IMPLEMENTATION`. Camera circles the intact engine while each external vector lights up.",
+    "16:43",
+    "16:53"
+  ],
+  [
+    "95",
+    "\u201cA cryptographically strong hash does not turn a weak password into a strong password.\u201d",
+    "Show:\n\n```text\npassword123\n```\n\nentering a SHA-256 engine. The attacker guesses it immediately. Then replace the password with a long random passphrase and show the search space expanding.",
+    "16:53",
+    "17:02"
+  ],
+  [
+    "96",
+    "\u201cA plain fast hash also does not provide the work factor required for modern password storage.\u201d",
+    "Thousands of SHA-256 password guesses race through a fast pipeline. Replace the same architecture with memory-hard blocks and show the pipeline slowed dramatically.",
+    "17:02",
+    "17:11"
+  ],
+  [
+    "97",
+    "\u201cAnd collisions do not let an attacker magically recover an original password from SHA-256. Collision resistance, preimage resistance, and password guessing are different problems.\u201d",
+    "Three isolated lanes appear with labels `COLLISION`, `PREIMAGE`, `PASSWORD GUESSING`. Different attacks move through each lane. Camera pans across all three.",
+    "17:11",
+    "17:21"
+  ],
+  [
+    "98",
+    "\u201cSo go back to the real machine.\u201d",
+    "Camera pulls from the tiny `ToyHash8` collision into darkness. One 32-bit register appears. Then all eight registers appear. Then the 64-word schedule. Then the 64 rounds. Finally the full 512-bit block. Each layer is revealed by camera movement rather than a cut.",
+    "17:21",
+    "17:31"
+  ],
+  [
+    "99",
+    "\u201cThe data is padded. The block is expanded into a message schedule. Eight state words enter a sixty-four-round compression loop. The state is accumulated. The process repeats for every block.\u201d",
+    "Perform a full accelerated cinematic run of the SHA-256 pipeline: padding \u2192 sixteen words \u2192 sixty-four words \u2192 round counter 00\u201363 \u2192 accumulated state \u2192 next block. Use a continuous camera fly-through.",
+    "17:31",
+    "17:45"
+  ],
+  [
+    "100",
+    "\u201cThen, after the final block, eight words become the digest you recognize.\u201d",
+    "Eight hexadecimal register streams merge into the 64-character output. Camera travels through the string and emerges from the right side into a black void.",
+    "17:45",
+    "17:55"
+  ],
+  [
+    "101",
+    "\u201cA hash takes arbitrary-length input and produces a fixed-length digest.\u201d",
+    "Wide shot showing data streams of different lengths converging into identical-width digest strips.",
+    "17:55",
+    "18:04"
+  ],
+  [
+    "102",
+    "\u201cSHA-256 does it with 512-bit blocks, 32-bit words, eight working variables, a sixty-four-word message schedule, and sixty-four compression rounds.\u201d",
+    "Five labels appear sequentially while the actual corresponding machinery animates behind each one. Do not show generic static blocks; each label is attached to the actual object it describes.",
+    "18:04",
+    "18:16"
+  ],
+  [
+    "103",
+    "\u201cIts security is about making certain attacks computationally infeasible\u2014not about making the output impossible to compute.\u201d",
+    "Show SHA-256 calculation completing instantly, then show attempted reverse/preimage/collision paths becoming computationally enormous. Camera steadily zooms outward as the attack space expands.",
+    "18:16",
+    "18:28"
+  ],
+  [
+    "104",
+    "\u201cSHA-1 is a useful warning: when practical collision attacks arrive, an old hash can become the wrong primitive even if the basic idea of hashing remains sound.\u201d",
+    "SHA-1 collision demonstration briefly reappears, then fades into SHA-2 and SHA-3. NIST policy panel remains visible at the bottom.",
+    "18:28",
+    "18:38"
+  ],
+  [
+    "105",
+    "\u201cAnd for passwords, remember the distinction: never store plaintext passwords, but also do not replace plaintext with a raw fast SHA-256 hash. Use a dedicated password-hashing scheme such as Argon2id with a unique salt and appropriately tuned cost.\u201d",
+    "Final security checklist assembles:\n\n```text\nPLAINTEXT PASSWORD       \u2717\nFAST RAW SHA-256         \u2717\nUNIQUE SALT              \u2713\nARGON2ID / SCRYPT / ...  \u2713\nTUNED COST               \u2713\n```\n\nEach row enters from a different direction. The camera gently pulls backward as the complete checklist settles into a clean technical frame.",
+    "18:38",
+    "18:52"
+  ],
+  [
+    "106",
+    "\u201cThe final mental model is simple: the input goes in, the state gets mixed over and over, and a fixed-size digest comes out.\u201d",
+    "Return to the original `abc \u2192 digest` visualization, but now the camera flies through the complete SHA-256 machine while the narration describes it. Exit from the machine into the final digest.",
+    "18:52",
+    "19:02"
+  ],
+  [
+    "107",
+    "\u201cThe magic is not that the computer cannot calculate the hash.\u201d",
+    "Show `SHA-256(\"abc\")` being calculated immediately. Camera holds on the completed digest.",
+    "19:02",
+    "19:07"
+  ],
+  [
+    "108",
+    "\u201cThe magic is that, when the construction is sound, calculating the digest is easy\u2014and producing the right kind of input from the digest, or producing a useful collision, is supposed to be hard.\u201d",
+    "Three paths separate from the digest: `CALCULATE`, `PREIMAGE`, `COLLISION`. `CALCULATE` completes instantly in teal. The other two extend into enormous black space and become visually unreachable.",
+    "19:07",
+    "19:19"
+  ],
+  [
+    "109",
+    "\u201cThat is the core idea behind cryptographic hashing.\u201d",
+    "All technical components collapse into one clean centered SHA-256 glyph/wordmark. Camera performs one final slow pull-back until the word becomes small against pure black.",
+    "19:19",
+    "19:25"
+  ],
+  [
+    "110",
+    "\u201cAnd once you understand the bits moving through the machine, SHA-256 stops looking like a magic incantation and starts looking like what it really is: a carefully engineered state machine.\u201d",
+    "Final reveal. Reconstruct the entire path from login password \u2192 bytes \u2192 padded block \u2192 message schedule \u2192 64 rounds \u2192 digest. The entire chain animates backward once, then forward again at high speed, ending on the digest. Hard cut to black.",
+    "19:25",
+    "19:40"
+  ],
+  [
+    "111",
+    "\u201cOne input. One fixed-size digest. A lot of very deliberate mathematics in between.\u201d",
+    "Three words appear one at a time in yellow:\n\n```text\nINPUT.\nSTATE.\nDIGEST.\n```\n\nEach word is accompanied by a tight camera punch-in. Final frame holds for 1 second, then cuts to black.",
+    "19:40",
+    "19:50"
+  ],
+  [
+    "112",
+    "[No narration]",
+    "Black background. Centered teal text:\n\n```text\nSHA-256\n```\n\nUnder it:\n\n```text\n512-bit blocks\n256-bit digest\n64 rounds\n```\n\nBottom-left: `\\uf023 CRYPTOGRAPHIC HASH`\nBottom-right: `\\uf120 MOTION CANVAS`\n\nCamera performs an almost imperceptible slow pull-back. No rounded rectangles, no transparency.",
+    "19:50",
+    "20:00"
+  ]
+]

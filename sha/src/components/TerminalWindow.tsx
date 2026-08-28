@@ -6,6 +6,8 @@ import {NodeProps} from '@motion-canvas/2d';
 export interface TerminalWindowProps extends NodeProps {
   opacity?: number;
   scale?: number;
+  w?: number;
+  h?: number;
   ref?: any;
 }
 
@@ -44,7 +46,7 @@ export class TerminalWindow extends Node {
       <Txt
         ref={t}
         text=""
-        fill="#00ffff"
+        fill="#65daf2"
         fontFamily="monospace"
         fontSize={30}
         y={lineIndex * 40}
@@ -58,7 +60,7 @@ export class TerminalWindow extends Node {
     yield* waitFor(0.2);
   }
 
-  public addStaticLine(text: string, color: string = '#00ffff') {
+  public addStaticLine(text: string, color: string = '#65daf2') {
     const lineIndex = this.textContainer().children().length;
     this.textContainer().add(
       <Txt

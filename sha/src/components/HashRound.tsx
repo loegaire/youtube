@@ -17,9 +17,9 @@ export class HashRound extends Node {
     });
 
     const TEAL = '#6cf265';
-    const YELLOW = '#ffff00';
+    const YELLOW = '#e6f265';
     const BG_COLOR = '#000000';
-    const CYAN = '#00ffff';
+    const CYAN = '#65daf2';
 
     this.add(
       <Node>
@@ -44,6 +44,12 @@ export class HashRound extends Node {
         <Txt ref={this.t2Text} x={400} y={-150} text="T2 = Σ0(a) + Maj(a,b,c)" fill={YELLOW} fontFamily="monospace" fontSize={30} opacity={0} />
       </Node>
     );
+  }
+
+  public *animateRound() {
+    yield* this.animateT1();
+    yield* waitFor(0.2);
+    yield* this.animateT2();
   }
 
   public *animateT1() {

@@ -5,9 +5,9 @@ export const C = {
   bg: '#000000',
   lime: '#6cf265',
   orange: '#ffb86c',
-  yellow: '#ffff00',
-  cyan: '#00ffff',
-  red: '#ff4d4d',
+  yellow: '#e6f265',
+  cyan: '#65daf2',
+  red: '#f26565',
   grid: '#1f4f21',
 };
 
@@ -31,7 +31,7 @@ export class TechPanel extends Node {
     this.add(
       <Rect ref={this.box} width={w} height={h} fill={C.bg} stroke={accent} lineWidth={3} clip>
         <Rect width={w} height={44} y={-h / 2 + 22} fill={C.bg} stroke={accent} lineWidth={2}>
-          <Txt text={`${icon ? `${icon}  ` : ''}${title ?? ''}`} fill={accent} fontFamily={FONT} fontSize={24} x={-w / 2 + 24} textAlign="left" />
+            <Txt text={`${icon ? `${icon}  ` : ''}${title ?? ''}`} fill={accent} fontFamily={FONT} fontSize={24} x={-w / 2 + 24} width={w - 48} offset={[-1, 0]} textAlign="left" />
         </Rect>
         <Layout ref={this.body} layout direction="column" gap={12} x={-w / 2 + 28} y={-h / 2 + 78} alignItems="start" />
       </Rect>,
@@ -76,6 +76,52 @@ export function* reveal(nodes: Node[], duration = 0.7) {
   yield* sequence(0.08, ...nodes.map(node => all(node.opacity(1, duration), node.scale(1, duration, easeInOutCubic))));
 }
 
-export function* exitLeft(nodes: Node[], duration = 0.8) {
-  yield* all(...nodes.map(node => node.position.x(node.position.x() - 2200, duration, easeInOutCubic)));
+export class Caption extends Node {
+  public readonly txt = createRef<Txt>();
+  public readonly box = createRef<Rect>();
+
+  public constructor(props?: NodeProps) {
+    super(props ?? {});
+    this.add(
+      <Rect
+        ref={this.box}
+        width={1700}
+        height={112}
+        fill={C.bg}
+        stroke={C.lime}
+        lineWidth={2}
+        y={405}
+        justifyContent="center"
+        alignItems="center"
+        padding={10}
+      >
+        <Txt
+          ref={this.txt}
+          text=""
+          fill={C.yellow}
+          fontFamily={FONT}
+          fontSize={22}
+          textAlign="center"
+          width={1640}
+        />
+      </Rect>,
+    );
+  }
+
+  public set(speechText: string) {
+    const words = speechText.split(' ');
+    const lines: string[] = [];
+    let line = '';
+    for (const word of words) {
+      if ((line + ' ' + word).trim().length > 92) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = `${line} ${word}`.trim();
+      }
+    }
+    if (line) lines.push(line);
+    this.txt().text(speechText ? `“${lines.join('\n')}”` : '');
+    this.box().opacity(speechText ? 1 : 0);
+  }
 }
