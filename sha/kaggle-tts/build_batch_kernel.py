@@ -26,7 +26,7 @@ def sh(cmd):
     return subprocess.run(cmd, check=True)
 
 
-sh([sys.executable, "-m", "pip", "install", "-q", "-U", "voxcpm", "soundfile"])
+sh([sys.executable, "-m", "pip", "install", "-q", "-U", "voxcpm", "soundfile", "faster-whisper"])
 
 import torch  # noqa: E402
 import soundfile as sf  # noqa: E402
@@ -47,6 +47,18 @@ sh([
     "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
     str(ref_wav),
 ])
+
+# VoxCPM2 voice cloning requires prompt_wav_path AND prompt_text (exact
+# transcript of the prompt wav) together, plus reference_wav_path for max
+# similarity. Transcribe the reference window so conditioning is correct.
+from faster_whisper import WhisperModel  # noqa: E402
+
+wm = WhisperModel("small", device="cuda", compute_type="float16")
+wsegs, _ = wm.transcribe(str(ref_wav), language="en", beam_size=5)
+prompt_text = " ".join(s.text.strip() for s in wsegs).strip()
+print("PROMPT_TEXT:", repr(prompt_text), flush=True)
+if not prompt_text:
+    raise RuntimeError("empty whisper transcript of reference audio")
 
 try:
     model = VoxCPM.from_pretrained(
@@ -75,6 +87,8 @@ for i, seg in enumerate(segments):
         try:
             wav = model.generate(
                 text=text,
+                prompt_wav_path=str(ref_wav),
+                prompt_text=prompt_text,
                 reference_wav_path=str(ref_wav),
                 cfg_value=2.0,
                 inference_timesteps=20,

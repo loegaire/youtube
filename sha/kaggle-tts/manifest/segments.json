@@ -145,7 +145,7 @@
  },
  {
   "id": "37",
-  "text": "For the `e` side of the state, the rotations are different."
+  "text": "For the E side of the state, the rotations are different."
  },
  {
   "id": "38",
@@ -153,11 +153,11 @@
  },
  {
   "id": "39",
-  "text": "First, SHA-256 computes `T1` from `h`, the sigma function of `e`, the Choose function, a round constant, and the current message word."
+  "text": "First, SHA-256 computes T one from H, the sigma function of E, the Choose function, a round constant, and the current message word."
  },
  {
   "id": "40",
-  "text": "Then `T2` is computed from the sigma function of `a` and the Majority function."
+  "text": "Then T two is computed from the sigma function of A and the Majority function."
  },
  {
   "id": "41",
@@ -213,7 +213,7 @@
  },
  {
   "id": "54",
-  "text": "Let's hash the text `abc` and watch every byte move."
+  "text": "Let's hash the text A, B, C and watch every byte move."
  },
  {
   "id": "55",
@@ -357,7 +357,7 @@
  },
  {
   "id": "90",
-  "text": "For this deliberately tiny function, `y` and the string containing a space followed by `@` both produce the same eight-bit result: `0x8a`."
+  "text": "For this deliberately tiny function, the letter Y and the string containing a space followed by the at sign, both produce the same eight-bit result: hex eight A."
  },
  {
   "id": "91",
