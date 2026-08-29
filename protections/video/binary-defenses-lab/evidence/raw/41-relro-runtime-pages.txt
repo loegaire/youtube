@@ -1,0 +1,30 @@
+===== relro-none =====
+$ objdump -R bin/relro-none | grep 'puts@'
+00000000004033a0 R_X86_64_JUMP_SLOT  puts@GLIBC_2.2.5
+$ cat /proc/1546/maps  # row containing 0x4033a0
+00403000-00404000 rw-p 00002000 fe:00 3588947                            /mnt/data/binary-defenses-lab/bin/relro-none
+PROGRAM: entered main
+PROGRAM: before first puts
+PROGRAM: after first puts
+hello from puts
+
+===== relro-partial =====
+$ objdump -R bin/relro-partial | grep 'puts@'
+0000000000404000 R_X86_64_JUMP_SLOT  puts@GLIBC_2.2.5
+$ cat /proc/1548/maps  # row containing 0x404000
+00404000-00405000 rw-p 00003000 fe:00 3588948                            /mnt/data/binary-defenses-lab/bin/relro-partial
+PROGRAM: entered main
+PROGRAM: before first puts
+PROGRAM: after first puts
+hello from puts
+
+===== relro-full =====
+$ objdump -R bin/relro-full | grep 'puts@'
+0000000000403fd8 R_X86_64_JUMP_SLOT  puts@GLIBC_2.2.5
+$ cat /proc/1550/maps  # row containing 0x403fd8
+00403000-00404000 r--p 00002000 fe:00 3588949                            /mnt/data/binary-defenses-lab/bin/relro-full
+PROGRAM: entered main
+PROGRAM: before first puts
+PROGRAM: after first puts
+hello from puts
+

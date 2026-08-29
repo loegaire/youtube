@@ -1,0 +1,24 @@
+{
+  "name": "rsa-motion-canvas",
+  "version": "1.0.0",
+  "description": "RSA algorithm explainer built with Motion Canvas — Thinh YouTube house style",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "render": "mc render --project ./src/project.ts --output ./out/rsa.mp4",
+    "render-frames": "mc render --project ./src/project.ts --output ./out --frames",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@motion-canvas/core": "^3.17.2",
+    "@motion-canvas/2d": "^3.17.2",
+    "@motion-canvas/ui": "^3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/vite-plugin": "^3.17.2",
+    "@motion-canvas/2d": "^3.17.2",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2"
+  }
+}

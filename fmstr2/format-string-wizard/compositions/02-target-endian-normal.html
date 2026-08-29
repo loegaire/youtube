@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <template>
+      <style>
+        #root { position:relative; width:1920px; height:1080px; overflow:hidden; color:#F1F3EE; font-family:Inter,Arial,sans-serif; }
+        .scene { position:absolute; inset:0; overflow:hidden; } .stage { position:absolute; inset:0; background:radial-gradient(circle at 72% 40%,#15345a 0%,#0A0D0B 50%,#0A0D0B 100%); }.grid { position:absolute; inset:0; opacity:.27; background-image:linear-gradient(rgba(74,158,255,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(74,158,255,.10) 1px,transparent 1px); background-size:64px 64px; }
+        .kicker { position:absolute; left:105px; top:70px; color:#B3D8C2; font:600 20px/1 "JetBrains Mono",monospace; letter-spacing:.18em; text-transform:uppercase; }.title { position:absolute; left:105px; top:115px; font:800 70px/1 Inter,Arial,sans-serif; letter-spacing:-.055em; }.orange{color:#D8BE73}.red{color:#F0786E}.cyan{color:#B3D8C2}.purple{color:#B3D8C2}.safe{color:#8CCB9A}.blue{color:#8CCB9A}.dim{color:#758ba2}
+        .code { position:absolute; left:100px; top:230px; width:980px; height:700px; border:2px solid rgba(189,239,255,.38); border-radius:26px; background:#111713; padding:42px 50px; font:600 31px/1.62 "JetBrains Mono",monospace; box-shadow:0 25px 60px rgba(0,0,0,.38); }.line-hot { display:block; margin:8px -18px; padding:6px 18px; border-radius:10px; background:rgba(255,93,108,.12); border-left:6px solid #F0786E; }
+        .susbox { position:absolute; right:120px; top:244px; width:610px; border:2px solid rgba(74,158,255,.8); border-radius:26px; background:rgba(8,28,50,.9); padding:30px; box-shadow:0 0 45px rgba(74,158,255,.18); }.sushead{color:#8CCB9A;font:700 25px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase}.hex{margin-top:22px;color:#F1F3EE;font:700 46px/1 "JetBrains Mono",monospace}.bytes{display:flex;gap:11px;margin-top:25px}.byte{width:75px;height:76px;display:flex;align-items:center;justify-content:center;border:2px solid #8CCB9A;border-radius:12px;background:#17201A;color:#B3D8C2;font:700 28px/1 "JetBrains Mono",monospace}.ascii{display:flex;gap:11px;margin-top:8px}.ascii i{width:75px;text-align:center;color:#B3D8C2;font:600 25px/1 "JetBrains Mono",monospace;font-style:normal}.gate{position:absolute;right:135px;bottom:100px;width:575px;height:215px;border:3px solid #D8BE73;border-radius:28px;background:rgba(39,28,12,.75);padding:28px 34px;color:#F1F3EE;font:700 31px/1.35 "JetBrains Mono",monospace}.gate small{display:block;margin-top:12px;color:#D8BE73;font:600 19px/1 Inter,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase}.gate:after{content:'LOCKED';position:absolute;right:28px;top:27px;color:#F0786E;font:700 18px/1 "JetBrains Mono",monospace;letter-spacing:.12em}.warn{position:absolute;left:955px;top:510px;padding:16px 20px;border:2px solid #F0786E;border-radius:14px;background:rgba(255,93,108,.1);color:#F0786E;font:700 21px/1 "JetBrains Mono",monospace;}
+        .endian-center { position:absolute; left:50%; top:215px; transform:translateX(-50%); width:1400px; text-align:center; }.big-hex { color:#F1F3EE; font:800 78px/1 "JetBrains Mono",monospace; }.row-title{margin-top:25px;color:#8CCB9A;font:600 24px/1 "JetBrains Mono",monospace;letter-spacing:.17em;text-transform:uppercase}.memory{display:flex;justify-content:center;gap:16px;margin-top:18px}.cell{width:145px;height:128px;border:3px solid #8CCB9A;border-radius:18px;background:#17201A;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#B3D8C2;font:700 38px/1 "JetBrains Mono",monospace}.cell small{margin-top:12px;color:#F1F3EE;font:600 25px/1 Inter,Arial,sans-serif}.target { position:absolute; left:50%; bottom:105px; transform:translateX(-50%); width:1120px; padding:28px 44px; border:2px solid rgba(185,135,255,.7); border-radius:24px; background:rgba(31,16,52,.7); text-align:center; color:#B3D8C2; font:700 48px/1.25 "JetBrains Mono",monospace; }.flip-arrow { position:absolute; left:50%; top:470px; transform:translateX(-50%); color:#D8BE73; font:700 48px/1 Inter,Arial,sans-serif; }
+        .terminal { position:absolute; left:195px; top:180px; width:1530px; height:720px; border:2px solid rgba(189,239,255,.46); border-radius:28px; background:#071321; overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.44);}.bar{height:66px;padding:0 25px;border-bottom:2px solid rgba(189,239,255,.2);display:flex;align-items:center;color:#B3D8C2;font:600 19px/1 "JetBrains Mono",monospace}.dots{width:15px;height:15px;border-radius:50%;background:#F0786E;box-shadow:28px 0 #D8BE73,56px 0 #8CCB9A;margin-right:52px}.term-content{padding:48px 55px;color:#F1F3EE;font:500 29px/1.72 "JetBrains Mono",monospace;white-space:pre-line}.checklist{position:absolute;right:130px;bottom:85px;width:480px;border:2px solid rgba(81,229,140,.7);border-radius:22px;background:rgba(7,30,27,.9);padding:25px 30px;color:#F1F3EE;font:600 27px/1.62 "JetBrains Mono",monospace}.checklist strong{display:block;color:#8CCB9A;font:700 19px/1 Inter,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}.unchecked{color:#6d849b}.done{color:#8CCB9A}
+        .stage { background:#0A0D0B !important; background-image:none !important; } .grid { display:none !important; }
+      </style>
+      <div id="root" data-composition-id="02-target-endian-normal" data-width="1920" data-height="1080" data-duration="78" data-fps="30">
+        <div id="s02-target" class="clip" data-start="0" data-duration="28" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div class="kicker">52.00 / enter the target program</div><div class="title">The wizard gate has one <span class="blue">state variable</span>.</div><div id="s02-code" class="code"><span class="orange">#include</span> <span class="safe">&lt;stdio.h&gt;</span>
+
+<span class="blue">int sus</span> = <span class="purple">0x21737573</span>;
+
+<span class="orange">int</span> main() {
+  <span class="orange">char</span> buf[1024];
+  <span class="orange">char</span> flag[64];
+
+  scanf(<span class="safe">"%1024s"</span>, buf);
+  printf(<span class="safe">"Here's your input: "</span>);
+  <span class="line-hot">printf(buf);</span>
+  printf(<span class="safe">"\\n"</span>);
+}</div><div id="s02-sus" class="susbox"><div class="sushead">global variable / .data</div><div class="hex">sus = 0x21737573</div><div class="bytes"><span class="byte">73</span><span class="byte">75</span><span class="byte">73</span><span class="byte">21</span></div><div class="ascii"><i>s</i><i>u</i><i>s</i><i>!</i></div></div><div id="s02-warn" class="warn">USER CONTROLS THE FIRST ARGUMENT</div><div id="s02-gate" class="gate">if (sus == <span class="purple">0x67616c66</span>)<small>open the winning branch</small></div></div></div>
+        <div id="s02-endian" class="clip" data-start="28" data-duration="30" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div class="kicker">80.00 / the hex joke</div><div class="title">Numbers hiding text in <span class="blue">little-endian</span> memory.</div><div class="endian-center"><div class="big-hex">sus = <span class="purple">0x21737573</span></div><div class="row-title">integer bytes / visual order</div><div id="s02-introw" class="memory"><span class="cell">21<small>!</small></span><span class="cell">73<small>s</small></span><span class="cell">75<small>u</small></span><span class="cell">73<small>s</small></span></div><div id="s02-flip" class="flip-arrow">↓ flip into memory order ↓</div><div class="row-title">memory bytes / increasing addresses</div><div id="s02-memrow" class="memory"><span class="cell">73<small>s</small></span><span class="cell">75<small>u</small></span><span class="cell">73<small>s</small></span><span class="cell">21<small>!</small></span></div></div><div id="s02-target-word" class="target">integer wants: 0x67616c66 &nbsp; | &nbsp; memory spells: <span class="safe">f l a g</span></div></div></div>
+        <div id="s02-normal" class="clip" data-start="58" data-duration="20" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div class="kicker">110.00 / first contact</div><div class="title">Observe the normal path first.</div><div id="s02-term" class="terminal"><div class="bar"><span class="dots"></span>./vuln</div><div id="s02-termtext" class="term-content"><span class="cyan">$ ./vuln</span>
+
+You don't have what it takes. Only a true wizard could change my suspicions.
+What do you have to say?
+<span class="safe">hello</span>
+
+Here's your input: <span class="safe">hello</span>
+sus = <span class="purple">0x21737573</span>
+You can do better!</div></div><div id="s02-checklist" class="checklist"><strong>exploit checklist</strong><span class="done">✓ 1. normal input</span>
+<span class="unchecked">○ 2. format probes</span>
+<span class="unchecked">○ 3. find our input</span>
+<span class="unchecked">○ 4. find sus</span>
+<span class="unchecked">○ 5. use %n to change sus</span></div></div></div>
+      </div>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused:true });
+        tl.fromTo('#s02-code',{autoAlpha:0,x:120},{autoAlpha:1,x:0,duration:.55,ease:'power3.out'},.12)
+          .fromTo('#s02-sus',{autoAlpha:0,x:90,scale:.92},{autoAlpha:1,x:0,scale:1,duration:.5,ease:'power3.out'},1.25)
+          .fromTo('#s02-warn',{autoAlpha:0,y:30},{autoAlpha:1,y:0,duration:.35,ease:'back.out(1.2)'},5.2)
+          .fromTo('#s02-gate',{autoAlpha:0,x:125},{autoAlpha:1,x:0,duration:.5,ease:'power3.out'},17.2)
+          .fromTo('#s02-introw',{autoAlpha:0,y:-55},{autoAlpha:1,y:0,duration:.52,ease:'power3.out'},28.45)
+          .fromTo('#s02-flip',{autoAlpha:0,scale:.75},{autoAlpha:1,scale:1,duration:.34,ease:'back.out(1.2)'},31.0)
+          .fromTo('#s02-memrow',{autoAlpha:0,y:55},{autoAlpha:1,y:0,duration:.52,ease:'power3.out'},32.15)
+          .fromTo('#s02-target-word',{autoAlpha:0,y:35,scale:.96},{autoAlpha:1,y:0,scale:1,duration:.48,ease:'power3.out'},40.0)
+          .to('#s02-introw',{x:120,rotation:8,autoAlpha:.12,duration:.6,ease:'power2.in'},49.0)
+          .to('#s02-memrow',{borderColor:'#8CCB9A',duration:.3},50.0)
+          .fromTo('#s02-term',{autoAlpha:0,x:125,scale:.96},{autoAlpha:1,x:0,scale:1,duration:.55,ease:'power3.out'},58.25)
+          .fromTo('#s02-termtext',{autoAlpha:0,y:20},{autoAlpha:1,y:0,duration:.4},59.0)
+          .fromTo('#s02-checklist',{autoAlpha:0,x:100},{autoAlpha:1,x:0,duration:.45,ease:'power3.out'},66.0);
+        window.__timelines['02-target-endian-normal'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

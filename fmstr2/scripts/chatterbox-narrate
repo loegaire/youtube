@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Shared, resource-bounded wrapper. Usage:
+#   scripts/chatterbox-narrate format-string-wizard --start 0 --count 3
+#   scripts/chatterbox-narrate format-string-wizard --all
+#   scripts/chatterbox-narrate format-string-wizard --finalize
+
+workspace_dir="$(cd "$(dirname "$0")/.." && pwd)"
+project_name="${1:?usage: chatterbox-narrate <project-dir> [generator args]}"
+shift
+project_dir="$workspace_dir/$project_name"
+venv_python="$workspace_dir/.chatterbox-venv/bin/python"
+
+test -x "$venv_python" || { echo "Missing shared Chatterbox environment: $venv_python" >&2; exit 1; }
+test -d "$project_dir" || { echo "Missing project directory: $project_dir" >&2; exit 1; }
+
+export CHATTERBOX_HOME="$workspace_dir/.chatterbox-models"
+export HF_HOME="$CHATTERBOX_HOME"
+export HF_HUB_DISABLE_TELEMETRY=1
+export TOKENIZERS_PARALLELISM=false
+export OMP_NUM_THREADS=2
+export MKL_NUM_THREADS=2
+
+if [[ "${1:-}" == "--all" ]]; then
+  shift
+  # Twenty-one sections, three at a time. Existing clips are skipped, so this is resumable.
+  for start in 0 3 6 9 12 15 18; do
+    "$venv_python" "$project_dir/scripts/generate-owner-narration.py" --threads 2 --start "$start" --count 3 "$@"
+  done
+  exec "$venv_python" "$project_dir/scripts/generate-owner-narration.py" --threads 2 --finalize
+fi
+
+exec "$venv_python" "$project_dir/scripts/generate-owner-narration.py" --threads 2 "$@"

@@ -1,0 +1,30 @@
+{
+  "name": "picoctf-buffer-overflow-visualized",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "build:preview": "vite build --config vite.preview.config.ts",
+    "typecheck": "tsc --noEmit",
+    "video:encode": "nice -n 10 ffmpeg -y -hide_banner -loglevel warning -stats -framerate 30 -start_number 0 -i output/project/%06d.png -i audio/narration.wav -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -threads 2 -c:a aac -b:a 192k -shortest -movflags +faststart output/picoctf-buffer-overflow-1-final.mp4",
+    "narration:plan": "node scripts/narration-plan.mjs",
+    "narration:sync": "node scripts/sync-narration-durations.mjs",
+    "narration:pilot": ".chatterbox-venv/bin/python scripts/generate-chatterbox.py --ids 01b,00a,02c --force",
+    "narration:generate": "node scripts/run-chatterbox-batches.mjs",
+    "narration:finalize": "node scripts/finalize-chatterbox.mjs"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "chrome-remote-interface": "^0.34.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

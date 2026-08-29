@@ -1,0 +1,8 @@
+{
+  "duration": 1265,
+  "maxStaticSec": 4.8,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#scene-0 .headline", "bySec": 0.6 },
+    { "kind": "keepsMoving", "withinSelector": "#root", "maxStaticSec": 4.8 }
+  ]
+}

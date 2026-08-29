@@ -1,0 +1,25 @@
+{
+  "name": "uaf-educational-explainer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "captions": "node scripts/make-captions.mjs",
+    "video:encode": "node scripts/encode-video.mjs",
+    "verify": "bash /home/thinh/.codex/skills/thinh-youtube-house-style/scripts/verify_video.sh"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

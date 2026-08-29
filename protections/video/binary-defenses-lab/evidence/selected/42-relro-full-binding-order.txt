@@ -1,0 +1,10 @@
+$ env LD_DEBUG=bindings ./bin/relro-full
+88:      1554:	binding file /mnt/data/binary-defenses-lab/bin/relro-full [0] to /lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `puts' [GLIBC_2.2.5]
+89:      1554:	binding file /mnt/data/binary-defenses-lab/bin/relro-full [0] to /lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `write' [GLIBC_2.2.5]
+90:      1554:	binding file /mnt/data/binary-defenses-lab/bin/relro-full [0] to /lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `sleep' [GLIBC_2.2.5]
+106:      1554:	transferring control: /mnt/data/binary-defenses-lab/bin/relro-full
+108:PROGRAM: entered main
+109:PROGRAM: before first puts
+110:PROGRAM: after first puts
+-- stdout --
+hello from puts

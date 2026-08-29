@@ -1,0 +1,10 @@
+declare module '*?scene' {
+  import {FullSceneDescription} from '@motion-canvas/core';
+  const scene: FullSceneDescription;
+  export default scene;
+}
+
+declare module '*.wav' {
+  const src: string;
+  export default src;
+}

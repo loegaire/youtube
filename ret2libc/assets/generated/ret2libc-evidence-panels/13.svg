@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#040806"/>
+  <rect x="32" y="32" width="1856" height="1016" rx="8" fill="#06100c" stroke="#244636" stroke-width="2"/>
+  <line x1="52" y1="100" x2="1868" y2="100" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="146" x2="1868" y2="146" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="192" x2="1868" y2="192" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="238" x2="1868" y2="238" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="284" x2="1868" y2="284" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="330" x2="1868" y2="330" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="376" x2="1868" y2="376" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="422" x2="1868" y2="422" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="468" x2="1868" y2="468" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="514" x2="1868" y2="514" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="560" x2="1868" y2="560" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="606" x2="1868" y2="606" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="652" x2="1868" y2="652" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="698" x2="1868" y2="698" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="744" x2="1868" y2="744" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="790" x2="1868" y2="790" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="836" x2="1868" y2="836" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="882" x2="1868" y2="882" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="928" x2="1868" y2="928" stroke="#0d1d17" stroke-width="1"/>
+<line x1="52" y1="974" x2="1868" y2="974" stroke="#0d1d17" stroke-width="1"/>
+  <rect x="70" y="66" width="1780" height="78" rx="6" fill="#071b13" stroke="#2d5946" stroke-width="1.5"/>
+  <text x="1510" y="113" fill="#ffd36e" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="25">scene 14 | 08:08</text>
+  <text x="96" y="168" fill="#7d9d8d" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="18">ret2libc: the echo server that leaks its own library</text>
+
+  <rect x="70" y="198" width="650" height="350" rx="6" fill="#07130f" stroke="#224333" stroke-width="1.5"/>
+  <text x="96" y="252" fill="#d8fbe8" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="30">x86-64 passes the first argument</text>
+<text x="96" y="294" fill="#d8fbe8" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="30">in RDI.</text>
+<text x="96" y="336" fill="#d8fbe8" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="30">Starting one byte into 41 5f c3</text>
+<text x="96" y="378" fill="#d8fbe8" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="30">reveals pop rdi; ret.</text>
+
+  <rect x="70" y="578" width="650" height="312" rx="6" fill="#091811" stroke="#224333" stroke-width="1.5"/>
+  <text x="96" y="621" fill="#ffd36e" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="18" font-weight="700">facts</text>
+  <text x="96" y="662" fill="#e5f7ea" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="25">&gt; context bytes: 41 5f c3</text>
+<text x="96" y="698" fill="#e5f7ea" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="25">&gt; shifted decode: 0x400913</text>
+<text x="96" y="734" fill="#e5f7ea" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="25">&gt; POP_RDI = 0x400913</text>
+
+  <rect x="760" y="198" width="1090" height="692" rx="6" fill="#020503" stroke="#2d5946" stroke-width="1.5"/>
+  <rect x="760" y="198" width="1090" height="46" rx="6" fill="#0a2117"/>
+  <circle cx="790" cy="221" r="7" fill="#ff6f5f"/>
+  <circle cx="815" cy="221" r="7" fill="#ffd36e"/>
+  <circle cx="840" cy="221" r="7" fill="#7fffd4"/>
+  <text x="878" y="229" fill="#7fffd4" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="19">raw evidence / provenance breadcrumb</text>
+  <text x="790" y="286" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">evidence/14_csu_gadget_context.txt</text>
+<text x="790" y="313" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">$ objdump -d -M intel --start-address=0x400906</text>
+<text x="790" y="340" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">--stop-address=0x400916 ./vuln</text>
+<text x="790" y="367" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400910:  41 5e                  pop    r14</text>
+<text x="790" y="394" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400912:  41 5f                  pop    r15</text>
+<text x="790" y="421" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400914:  c3                     ret</text>
+<text x="790" y="448" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400915:  90                     nop</text>
+<text x="790" y="475" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">evidence/15_pop_rdi_mid_instruction.txt</text>
+<text x="790" y="502" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">$ objdump -d -M intel --start-address=0x400913</text>
+<text x="790" y="529" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">--stop-address=0x400916 ./vuln</text>
+<text x="790" y="556" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">0000000000400913 &lt;__libc_csu_init+0x63&gt;:</text>
+<text x="790" y="583" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400913:  5f                     pop    rdi</text>
+<text x="790" y="610" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400914:  c3                     ret</text>
+<text x="790" y="637" fill="#cdebd9" font-family="JetBrains Mono, Fira Code, DejaVu Sans Mono, monospace" font-size="22">  400915:  90                     nop</text>
+</svg>

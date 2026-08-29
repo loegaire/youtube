@@ -1,0 +1,6 @@
+$ objdump -s -j .rodata ./vuln
+
+./vuln:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 400930 01000200 255b5e0a 5d002563 00        ....%[^.].%c.   

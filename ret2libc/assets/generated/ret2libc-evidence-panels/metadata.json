@@ -1,0 +1,319 @@
+{
+  "generatedAt": "2026-07-26T12:38:07.177Z",
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 24,
+  "totalDuration": 1160,
+  "style": "near-black terminal UI with mint highlights, orange control flow, pale yellow addresses",
+  "honesty": "Runtime shell transcript is not fabricated; the local loader assertion is shown from evidence/20_runtime_constraint.txt.",
+  "panels": [
+    {
+      "index": 0,
+      "title": "Cold Open: The Echo Server Eats Text",
+      "start": 0,
+      "duration": 14,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/00.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/00.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 1,
+      "title": "Title: Leak, Calculate, Return",
+      "start": 14,
+      "duration": 14,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/01.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/01.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 2,
+      "title": "Challenge Files First",
+      "start": 28,
+      "duration": 27,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/02.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/02.png",
+      "evidence": [
+        "evidence/00_ls.txt",
+        "evidence/02_file.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 3,
+      "title": "Makefile Is Context, Not Source",
+      "start": 55,
+      "duration": 23,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/03.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/03.png",
+      "evidence": [
+        "evidence/01_makefile.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 4,
+      "title": "Protections From Real Metadata",
+      "start": 78,
+      "duration": 37,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/04.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/04.png",
+      "evidence": [
+        "evidence/03_readelf_header.txt",
+        "evidence/04_program_headers.txt",
+        "evidence/05_dynamic.txt",
+        "evidence/19_canary_check.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 5,
+      "title": "NX Changes The Attack Shape",
+      "start": 115,
+      "duration": 27,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/05.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/05.png",
+      "evidence": [
+        "evidence/04_program_headers.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 6,
+      "title": "Symbols Point At do_stuff",
+      "start": 142,
+      "duration": 50,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/06.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/06.png",
+      "evidence": [
+        "evidence/06_symbols.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 7,
+      "title": "do_stuff Before The Bug",
+      "start": 192,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/07.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/07.png",
+      "evidence": [
+        "evidence/10_disasm_do_stuff.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 8,
+      "title": "The Bug Is \"%[^\\n]\"",
+      "start": 245,
+      "duration": 37,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/08.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/08.png",
+      "evidence": [
+        "evidence/08_rodata.txt",
+        "evidence/10_disasm_do_stuff.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 9,
+      "title": "Stack Frame Reconstruction",
+      "start": 282,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/09.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/09.png",
+      "evidence": [
+        "evidence/10_disasm_do_stuff.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 10,
+      "title": "The Echo Mutates The First 100 Bytes",
+      "start": 335,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/10.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/10.png",
+      "evidence": [
+        "evidence/11_disasm_convert_case.txt",
+        "evidence/10_disasm_do_stuff.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 11,
+      "title": "The Trailing d Is Not The Leak",
+      "start": 388,
+      "duration": 42,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/11.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/11.png",
+      "evidence": [
+        "evidence/10_disasm_do_stuff.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 12,
+      "title": "PLT And GOT Give The Leak Target",
+      "start": 430,
+      "duration": 58,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/12.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/12.png",
+      "evidence": [
+        "evidence/07_relocations.txt",
+        "evidence/13_plt.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 13,
+      "title": "Hidden Mid-Instruction pop rdi; ret",
+      "start": 488,
+      "duration": 52,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/13.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/13.png",
+      "evidence": [
+        "evidence/14_csu_gadget_context.txt",
+        "evidence/15_pop_rdi_mid_instruction.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 14,
+      "title": "The Alignment ret Shim",
+      "start": 540,
+      "duration": 42,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/14.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/14.png",
+      "evidence": [
+        "evidence/16_ret_shim.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 15,
+      "title": "Stage One Payload",
+      "start": 582,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/15.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/15.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 16,
+      "title": "The Leak Is Raw Bytes",
+      "start": 635,
+      "duration": 55,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/16.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/16.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 17,
+      "title": "Provided libc Offsets",
+      "start": 690,
+      "duration": 48,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/17.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/17.png",
+      "evidence": [
+        "evidence/17_libc_symbols.txt",
+        "evidence/18_libc_binsh.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 18,
+      "title": "Rebuild libc Runtime Map",
+      "start": 738,
+      "duration": 47,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/18.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/18.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 19,
+      "title": "Stage Two Payload",
+      "start": 785,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/19.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/19.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 20,
+      "title": "Why The ret Is Not Decorative",
+      "start": 838,
+      "duration": 44,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/20.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/20.png",
+      "evidence": [
+        "evidence/16_ret_shim.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 21,
+      "title": "Final Run: Runtime Honesty Gate",
+      "start": 882,
+      "duration": 53,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/21.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/21.png",
+      "evidence": [
+        "evidence/20_runtime_constraint.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 22,
+      "title": "Full Traced Exploit Map",
+      "start": 935,
+      "duration": 70,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/22.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/22.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 23,
+      "title": "Challenge-Specific Pitfalls",
+      "start": 1005,
+      "duration": 75,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/23.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/23.png",
+      "evidence": [
+        "evidence/10_disasm_do_stuff.txt",
+        "evidence/11_disasm_convert_case.txt",
+        "evidence/15_pop_rdi_mid_instruction.txt",
+        "evidence/05_dynamic.txt"
+      ],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 24,
+      "title": "Ret2libc Lesson",
+      "start": 1080,
+      "duration": 45,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/24.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/24.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    },
+    {
+      "index": 25,
+      "title": "Outro: A Path Through Existing Code",
+      "start": 1125,
+      "duration": 35,
+      "svg": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/25.svg",
+      "png": "/home/thinh/proj/youtube/ret2libc/assets/generated/ret2libc-evidence-panels/25.png",
+      "evidence": [],
+      "note": "Symbolic generated panel built from real evidence snippets. Not terminal fabrication."
+    }
+  ]
+}

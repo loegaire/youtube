@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../assets/gsap.min.js"></script>
+    <script src="../assets/scene-data.js"></script>
+    <style>
+      @font-face { font-family:"JetBrainsMono Nerd Font"; src:local("JetBrains Mono"); font-display:swap; }
+      :root { --bg:#050B08; --panel:#0D1510; --raised:#142019; --rule:#2D4437; --ink:#F1F3EE; --muted:#A2ADA5; --mint:#8CCB9A; --yellow:#E4CF82; --orange:#C89563; --red:#CA6763; --purple:#9B87B4; --cyan:#A7DDE0; }
+      * { box-sizing:border-box; } html,body,#root { width:1920px; height:1080px; margin:0; overflow:hidden; background:var(--bg); }
+      body { color:var(--ink); font-family:Inter,"Noto Sans",Arial,sans-serif; } .mono { font-family:"JetBrainsMono Nerd Font","JetBrains Mono",monospace; }
+      #root > .clip, #film > .clip { position:absolute; inset:0; overflow:hidden; }
+      .scene { position:absolute; inset:0; overflow:hidden; background:var(--bg); }
+      .grid { position:absolute; inset:0; opacity:.27; background-image:linear-gradient(#21352a 1px,transparent 1px),linear-gradient(90deg,#21352a 1px,transparent 1px); background-size:64px 64px; mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent); }
+      .top { position:absolute; left:98px; right:98px; top:66px; display:flex; align-items:center; justify-content:space-between; z-index:5; }
+      .section { color:var(--mint); font:700 22px/1.2 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; letter-spacing:.14em; text-transform:uppercase; }
+      .series { color:var(--muted); font:700 19px/1.2 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; letter-spacing:.12em; }
+      .title { position:absolute; left:98px; top:124px; max-width:1120px; font:800 70px/.98 Inter,"Noto Sans",sans-serif; letter-spacing:-.055em; z-index:4; }
+      .title .n { color:var(--yellow); font:700 30px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; letter-spacing:.04em; vertical-align:top; margin-right:18px; }
+      .evidence { position:absolute; left:98px; top:255px; width:800px; height:620px; border:2px solid var(--rule); border-radius:20px; background:var(--panel); overflow:hidden; }
+      .bar { height:54px; display:flex; align-items:center; gap:14px; padding:0 24px; border-bottom:2px solid var(--rule); color:var(--mint); font:700 18px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }
+      .dots { display:flex; gap:8px; margin-right:12px; } .dot { width:10px; height:10px; border-radius:50%; background:var(--red); } .dot:nth-child(2){background:var(--yellow)} .dot:nth-child(3){background:var(--mint)}
+      .evidence-wrap { position:absolute; inset:54px 0 0; overflow:hidden; padding:24px 30px; }
+      .evidence pre { margin:0; color:#D9E5DD; font:500 16px/1.48 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; white-space:pre; transform-origin:top left; }
+      .scan { position:absolute; left:0; right:0; top:116px; height:3px; background:var(--yellow); box-shadow:0 0 0 2px #050B08,0 0 0 4px var(--yellow); z-index:3; }
+      .rail { position:absolute; left:940px; top:274px; width:340px; height:590px; border-left:2px solid var(--rule); padding-left:22px; }
+      .kicker { color:var(--muted); font:700 16px/1.2 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; letter-spacing:.10em; }
+      .hero { margin-top:14px; color:var(--ink); font:800 42px/1.02 Inter,"Noto Sans",sans-serif; letter-spacing:-.05em; }
+      .note { margin-top:16px; max-width:300px; color:var(--muted); font:500 19px/1.34 Inter,"Noto Sans",sans-serif; }
+      .chip { display:inline-flex; margin-top:25px; padding:12px 16px; border:2px solid var(--rule); border-radius:11px; color:var(--cyan); background:#0A1310; font:700 18px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }
+      .crumb { position:absolute; left:98px; bottom:60px; right:440px; padding:17px 20px; border-top:2px solid var(--rule); color:var(--cyan); background:rgba(5,11,8,.94); font:700 18px/1.25 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; z-index:6; }
+      .badge { position:absolute; right:98px; bottom:60px; max-width:360px; padding:13px 16px; border:2px solid var(--mint); color:var(--mint); background:var(--bg); font:700 16px/1.2 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; text-align:center; z-index:6; }
+      .model { position:absolute; inset:0; overflow:hidden; }
+      .question { position:absolute; width:205px; padding:18px; border:2px solid var(--rule); background:var(--raised); color:var(--ink); font:800 17px/1.12 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }
+      .question b { display:block; color:var(--yellow); font-size:34px; margin-bottom:8px; }
+      .stack { position:absolute; right:50px; bottom:200px; width:340px; display:grid; grid-template-columns:1fr; border:2px solid var(--rule); background:#0B1410; }
+      .cell { min-height:58px; padding:17px 20px; border-bottom:2px solid var(--rule); color:var(--ink); font:700 20px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }
+      .cell:last-child { border:0; }.cell.danger { color:var(--red); background:#251412; }.cell.guard { color:var(--yellow); background:#2D2918; }.cell.purple { color:var(--purple); }
+      .ruler { position:absolute; right:430px; bottom:255px; width:55px; height:380px; border-left:3px solid var(--yellow); }
+      .ruler:after { content:"32 bytes"; position:absolute; top:-34px; left:-25px; color:var(--yellow); font:700 17px "JetBrainsMono Nerd Font","JetBrains Mono",monospace; white-space:nowrap; }
+      .page { position:absolute; right:45px; top:306px; width:520px; height:330px; border:3px solid var(--cyan); background:#0A1719; padding:25px; }
+      .perms { display:flex; gap:12px; margin-top:45px; }.perm { width:112px; padding:20px 0; border:2px solid var(--rule); text-align:center; color:var(--mint); font:800 42px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }.perm.off { color:var(--red); border-color:var(--red); }
+      .maps { position:absolute; right:35px; top:340px; width:430px; }.maprow { height:64px; margin-bottom:12px; border:2px solid var(--rule); background:var(--raised); padding:17px 18px; color:var(--cyan); font:700 18px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }.maprow:nth-child(2){ color:var(--purple); }.maprow:nth-child(3){ color:var(--mint); }.maprow:nth-child(4){color:var(--yellow)}
+      .got { position:absolute; right:35px; top:340px; width:440px; }.slot { display:grid; grid-template-columns:1.25fr 1fr .55fr; gap:0; border:2px solid var(--rule); background:var(--raised); color:var(--ink); font:700 16px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }.slot + .slot{margin-top:12px}.slot span{padding:18px 12px;border-right:2px solid var(--rule)}.slot span:last-child{border:0}.rw{color:var(--red)}.ro{color:var(--mint)}
+      .matrix { position:absolute; right:35px; top:290px; width:470px; }.mrow { display:grid; grid-template-columns:72px 1fr; gap:16px; padding:18px 0; border-bottom:2px solid var(--rule); font:700 16px/1.2 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; }.mrow strong{color:var(--mint)}.mrow span{color:var(--ink)}
+      .pointer { position:absolute; width:24px; height:24px; border-radius:50%; background:var(--yellow); box-shadow:0 0 0 8px #050B08,0 0 0 10px var(--yellow); z-index:5; }
+      .carrier { position:absolute; right:100px; bottom:155px; padding:13px 18px; border:2px solid var(--purple); color:var(--purple); font:800 20px/1 "JetBrainsMono Nerd Font","JetBrains Mono",monospace; background:var(--bg); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="binary-defenses-part-06" data-start="0" data-duration="229.266" data-width="1920" data-height="1080" data-fps="24">
+      <div id="film" class="clip" data-start="0" data-duration="229.266" data-track-index="1"></div>
+      <audio id="owner-narration" src="../assets/audio/binary-defenses-narration.wav" data-start="0" data-duration="229.266" data-media-start="1146.329" data-track-index="10" data-volume="1"></audio>
+    </div>
+    <script>window.BINARY_DEFENSES_SEGMENT_START=1146.329;window.BINARY_DEFENSES_SEGMENT_END=1375.595;</script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const root = document.getElementById('root');
+      const segmentStart = window.BINARY_DEFENSES_SEGMENT_START || 0;
+      const segmentEnd = window.BINARY_DEFENSES_SEGMENT_END || Infinity;
+      const scenes = window.BINARY_DEFENSES_SCENES
+        .filter(scene => scene.start >= segmentStart && scene.end <= segmentEnd)
+        .map(scene => ({...scene, start: scene.start - segmentStart, end: scene.end - segmentStart}));
+      const film = document.getElementById('film');
+      const escapeHtml = value => value.replace(/[&<>]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
+      const sectionFor = number => number <= 3 ? '00 · How did we get here?' : number <= 8 ? '01 · The evidence lab' : number <= 10 ? '02 · Baseline' : number <= 16 ? '03 · NX' : number <= 25 ? '04 · Stack canaries' : number <= 33 ? '05 · ASLR' : number <= 38 ? '06 · PIE' : number <= 47 ? '07 · RELRO' : '08 · Defense in depth';
+      const summaryRows = ['NX · no execute page','CANARY · guard checked before ret','ASLR · runtime regions vary','PIE · main gains a randomized base','RELRO · relocation page is r--p'];
+      function model(scene) {
+        if (scene.mode === 'recap') return `<div class="question" style="left:940px;top:470px"><b>?</b>CAN DATA EXECUTE?</div><div class="question" style="left:1185px;top:470px"><b>?</b>DO ADDRESSES STAY FIXED?</div><div class="question" style="left:1430px;top:470px"><b>?</b>CAN LINKER DATA BE WRITTEN?</div><div class="carrier">assumptions → evidence</div>`;
+        if (scene.mode === 'source') return `<div class="stack"><div class="cell">name[32]</div><div class="cell danger">read(..., 128)</div><div class="cell purple">saved return path</div></div><div class="ruler"></div><div class="carrier">source row → machine state</div>`;
+        if (scene.mode === 'stack') return `<div class="stack"><div class="cell purple">RETURN ADDRESS</div><div class="cell">SAVED RBP</div><div class="cell danger">bytes 32..127</div><div class="cell">name[32]</div></div><div class="ruler"></div><div class="carrier">ret → execution path</div>`;
+        if (scene.mode === 'nx') return `<div class="page"><div class="kicker">GNU_STACK / CAPTURED ELF ROW</div><div class="hero">permission is a hardware decision</div><div class="perms"><div class="perm">R</div><div class="perm">W</div><div class="perm off">E</div></div></div><div class="carrier">RWE → RW</div>`;
+        if (scene.mode === 'canary') return `<div class="stack"><div class="cell purple">RETURN ADDRESS</div><div class="cell">SAVED RBP</div><div class="cell guard">TLS GUARD COPY</div><div class="cell danger">input crosses here</div><div class="cell">name[32]</div></div><div class="ruler"></div><div class="carrier">guard compare → fail or ret</div>`;
+        if (scene.mode === 'aslr') return `<div class="maps"><div class="maprow">main binary · 0x401186</div><div class="maprow">libc · 0x7f...a5a0</div><div class="maprow">stack · 0x7ffd...</div><div class="maprow">base + offset</div></div><div class="carrier">region base → next run</div>`;
+        if (scene.mode === 'pie') return `<div class="maps"><div class="maprow">ELF TYPE · DYN</div><div class="maprow">main offset · 0x1189</div><div class="maprow">run base · 0x5594...</div><div class="maprow">base + 0x1189</div></div><div class="carrier">DYN → randomized main</div>`;
+        if (scene.mode === 'relro') return `<div class="got"><div class="slot"><span>puts@GOT</span><span>0x403fd8</span><span class="ro">r--p</span></div><div class="slot"><span>write@GOT</span><span>startup binding</span><span class="ro">NOW</span></div><div class="slot"><span>sleep@GOT</span><span>loader route</span><span class="rw">late?</span></div></div><div class="carrier">relocation slot → lock page</div>`;
+        return `<div class="matrix">${summaryRows.map((row, index) => `<div class="mrow"><strong>0${index+1}</strong><span>${row}</span></div>`).join('')}</div><div class="carrier">evidence graph → next episode</div>`;
+      }
+      function createScene(scene) {
+        const el = document.createElement('article');
+        el.id = `scene-${String(scene.number).padStart(2,'0')}`;
+        el.className = 'clip';
+        el.dataset.start = scene.start;
+        el.dataset.duration = scene.duration;
+        el.dataset.trackIndex = '1';
+        const badge = scene.number <= 3 ? 'RECONSTRUCTION — SERIES RECAP' : scene.number === 51 ? 'REAL WARNING + LABELED CORRECTED EXAMPLE' : scene.number >= 48 ? 'DERIVED SUMMARY — EVERY CELL TRACEABLE' : scene.number === 14 || scene.number === 20 || scene.number === 29 || scene.number === 45 ? 'PRIMARY SOURCE — PAPER ASSET PENDING' : 'REAL OUTPUT / EVIDENCE-DERIVED RECONSTRUCTION';
+        el.innerHTML = `<section class="scene"><div class="grid"></div><div class="top"><div class="section">${sectionFor(scene.number)}</div><div class="series">BINARY DEFENSES / LINUX x86-64</div></div><div class="title"><span class="n">${String(scene.number).padStart(2,'0')}</span>${escapeHtml(scene.title)}</div><div class="evidence"><div class="bar"><div class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>${escapeHtml(scene.evidenceFile)}</div><div class="evidence-wrap"><pre data-layout-allow-overflow data-layout-allow-overlap>${escapeHtml(scene.evidence)}</pre></div><div class="scan"></div></div><aside class="rail"><div class="kicker">ESTABLISH → OPERATE → CONSEQUENCE</div><div class="hero">${escapeHtml(scene.mode.toUpperCase())}</div><div class="note">${escapeHtml(scene.dialogue)}</div><div class="chip">${escapeHtml(scene.evidenceFile)}</div></aside><div class="model">${model(scene)}</div><div class="pointer"></div><div class="crumb">LAB &gt; binary-defenses-lab &gt; ${escapeHtml(scene.evidenceFile)} &gt; scene ${scene.number}</div><div class="badge">${badge}</div></section>`;
+        film.appendChild(el);
+        return el;
+      }
+      const timeline = gsap.timeline({paused:true});
+      const stageEls = scenes.map(createScene);
+      gsap.set(stageEls, {autoAlpha:0, xPercent:0});
+      scenes.forEach((scene, index) => {
+        const el = stageEls[index]; const pre = el.querySelector('pre'); const scan = el.querySelector('.scan'); const carrier = el.querySelector('.carrier'); const pointer = el.querySelector('.pointer');
+        const start = scene.start; const end = scene.end;
+        timeline.set(el,{autoAlpha:1,xPercent:12},start)
+          .to(el,{xPercent:0,duration:.42,ease:'power3.out'},start)
+          .fromTo(scan,{y:0,autoAlpha:.2},{y:430,autoAlpha:1,duration:Math.min(4.2,scene.duration*.22),ease:'none'},start+.55)
+          .fromTo(pre,{y:0},{y:-Math.min(420, Math.max(0,pre.textContent.split('\n').length*18-300)),duration:Math.min(5.5,scene.duration*.32),ease:'power1.inOut'},start+Math.min(4,scene.duration*.28))
+          .fromTo(pointer,{x:1120,y:315,autoAlpha:0},{x:1620,y:595,autoAlpha:1,duration:Math.min(3.5,scene.duration*.2),ease:'power2.inOut'},start+Math.min(8,scene.duration*.45))
+          .fromTo(carrier,{x:0,autoAlpha:0},{x:-55,autoAlpha:1,duration:.45,ease:'power3.out'},start+Math.max(1,scene.duration*.65))
+          .to(el,{xPercent:-12,autoAlpha:0,duration:.42,ease:'power3.in'},end-.42);
+      });
+      window.__timelines[root.dataset.compositionId] = timeline;
+    </script>
+  </body>
+</html>

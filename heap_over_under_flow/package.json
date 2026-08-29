@@ -1,0 +1,33 @@
+{
+  "name": "picoctf-heap-over-under-flow",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host 0.0.0.0",
+    "build:static": "vite build --config vite.static.config.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "build:preview": "vite build --config vite.preview.config.ts",
+    "serve:preview": "vite preview --host 0.0.0.0 --port 9001",
+    "render:preview": "motion-canvas render --project src/project.ts --quality 80",
+    "render:static": "node scripts/render-static-frames.mjs",
+    "video:encode": "nice -n 10 ffmpeg -y -hide_banner -loglevel warning -stats -framerate 24 -start_number 0 -i output/project/%06d.png -i audio/narration.wav -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -threads 2 -c:a aac -b:a 192k -shortest -movflags +faststart output/heap-over-underflow-picoctf.mp4",
+    "audit:frames": "node scripts/capture-audit.mjs",
+    "narration:plan": "node scripts/narration-plan.mjs",
+    "narration:generate": "node scripts/run-owner-batches.mjs",
+    "narration:finalize": "node scripts/finalize-owner-narration.mjs"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "chrome-remote-interface": "^0.34.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+import {existsSync, mkdirSync, statSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+
+const root = new URL('..', import.meta.url).pathname;
+const fps = 12;
+const frames = 16510;
+const chunk = 720;
+const dir = `${root}output/segments`;
+mkdirSync(dir, {recursive: true});
+
+for (let start = 0; start < frames; start += chunk) {
+  const out = `${dir}/${String(start / chunk).padStart(3, '0')}.mp4`;
+  if (existsSync(out) && statSync(out).size > 1024) continue;
+  const result = spawnSync('node', [
+    'scripts/render_motion_canvas_pipe.mjs',
+    '--fps', String(fps),
+    '--start', String(start),
+    '--limit', String(Math.min(chunk, frames - start)),
+    '--output', out,
+  ], {cwd: root, stdio: 'inherit'});
+  process.exit(result.status ?? 1);
+}
+console.log('complete');

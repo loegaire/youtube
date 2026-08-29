@@ -1,0 +1,3 @@
+$ readelf -sW ./libc.so.6 | egrep " (puts|system)@@"
+   422: 0000000000080a30   512 FUNC    WEAK   DEFAULT   13 puts@@GLIBC_2.2.5
+  1403: 000000000004f4e0    45 FUNC    WEAK   DEFAULT   13 system@@GLIBC_2.2.5

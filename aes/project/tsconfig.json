@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "@motion-canvas/2d/lib",
+    "lib": ["ES2021", "DOM"],
+    "types": ["@motion-canvas/core"]
+  },
+  "include": ["src/**/*", "project.ts"]
+}

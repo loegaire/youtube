@@ -1,0 +1,18 @@
+import {defineConfig} from 'vite';
+
+export default defineConfig({
+  root: 'preview',
+  base: './',
+  build: {
+    target: 'es2022',
+    outDir: '../dist-preview',
+    emptyOutDir: true,
+  },
+  server: {
+    fs: {
+      allow: [
+        '/home/thinh/proj/youtube/ret2libc',
+      ],
+    },
+  },
+});

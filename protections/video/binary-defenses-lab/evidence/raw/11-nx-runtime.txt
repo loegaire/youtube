@@ -1,0 +1,10 @@
+$ ./bin/exec-probe-rwx
+code buffer: 0x7fffa4950f36
+calling bytes stored on the stack...
+returned: 42
+shell_status=0
+
+$ ./bin/exec-probe-nx
+terminated_by_signal=11
+shell_status=139
+

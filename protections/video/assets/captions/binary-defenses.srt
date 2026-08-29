@@ -1,0 +1,1999 @@
+1
+00:00:00,000 --> 00:00:02,972
+Hello again, hackers. In the last few lessons,
+
+2
+00:00:02,972 --> 00:00:06,522
+we turned an innocent-looking input into control of
+
+3
+00:00:06,522 --> 00:00:09,411
+a program. First the bytes escaped a buffer.
+
+4
+00:00:09,411 --> 00:00:11,310
+Then they crossed the stack,
+
+5
+00:00:11,310 --> 00:00:13,539
+replaced a saved return address,
+
+6
+00:00:13,539 --> 00:00:17,584
+and sent the processor somewhere the original programmer
+
+7
+00:00:17,584 --> 00:00:19,730
+never selected. With shellcode,
+
+8
+00:00:19,730 --> 00:00:22,042
+that destination was our own data.
+
+9
+00:00:22,042 --> 00:00:24,684
+With ROP, it was a chain of instructions
+
+10
+00:00:24,684 --> 00:00:26,830
+already inside the executable.
+
+11
+00:00:26,830 --> 00:00:30,209
+Our earlier targets were intentionally generous.
+
+12
+00:00:30,209 --> 00:00:31,818
+The stack could execute.
+
+13
+00:00:31,818 --> 00:00:35,037
+The executable lived at predictable addresses.
+
+14
+00:00:35,037 --> 00:00:37,933
+No secret value guarded the return address.
+
+15
+00:00:37,933 --> 00:00:40,025
+Linker data remained writable.
+
+16
+00:00:40,025 --> 00:00:42,438
+That was not a mistake in the lessons;
+
+17
+00:00:42,438 --> 00:00:45,898
+stripping away defenses let us isolate one exploit
+
+18
+00:00:45,898 --> 00:00:47,185
+primitive at a time.
+
+19
+00:00:47,185 --> 00:00:49,519
+But it also gave us a distorted idea
+
+20
+00:00:49,519 --> 00:00:52,978
+of what a contemporary Linux binary normally looks
+
+21
+00:00:52,978 --> 00:00:53,300
+like.
+
+22
+00:00:53,300 --> 00:00:55,675
+So today, we reverse perspectives.
+
+23
+00:00:55,675 --> 00:00:57,201
+We keep the memory bug,
+
+24
+00:00:57,201 --> 00:00:59,576
+then add the defenses one at a time
+
+25
+00:00:59,576 --> 00:01:03,137
+and observe exactly what changes—from source code,
+
+26
+00:01:03,137 --> 00:01:05,342
+to ELF metadata, to disassembly,
+
+27
+00:01:05,342 --> 00:01:06,954
+to the live process map.
+
+28
+00:01:06,954 --> 00:01:08,904
+And one historical warning:
+
+29
+00:01:08,904 --> 00:01:11,872
+these defenses did not all emerge from one
+
+30
+00:01:11,872 --> 00:01:14,077
+neat sequence of famous papers.
+
+31
+00:01:14,077 --> 00:01:17,130
+StackGuard has a canonical research paper.
+
+32
+00:01:17,130 --> 00:01:22,643
+PaX developed executable-space protection and ASLR through implementation
+
+33
+00:01:22,643 --> 00:01:25,950
+documents. PIE and RELRO grew through compiler,
+
+34
+00:01:25,950 --> 00:01:29,173
+linker, loader, and distribution engineering.
+
+35
+00:01:29,173 --> 00:01:32,480
+We will show those primary artifacts honestly.
+
+36
+00:01:32,480 --> 00:01:35,005
+Before discussing a single instruction,
+
+37
+00:01:35,005 --> 00:01:37,011
+here is the complete laboratory.
+
+38
+00:01:37,011 --> 00:01:39,239
+It contains five small source files,
+
+39
+00:01:39,239 --> 00:01:41,170
+one reproducible build script,
+
+40
+00:01:41,170 --> 00:01:43,546
+one capture script, thirteen binaries,
+
+41
+00:01:43,546 --> 00:01:46,443
+and the raw outputs used throughout this video.
+
+42
+00:01:46,443 --> 00:01:49,414
+We are not beginning from a cropped instruction
+
+43
+00:01:49,414 --> 00:01:50,454
+or a tidy diagram.
+
+44
+00:01:50,454 --> 00:01:53,276
+We are beginning from the files that produced
+
+45
+00:01:53,276 --> 00:01:54,390
+every later claim.
+
+46
+00:01:54,390 --> 00:01:57,733
+This capture was made on sixty-four-bit Linux with
+
+47
+00:01:57,733 --> 00:02:00,669
+GCC fourteen point two and GNU binutils two
+
+48
+00:02:00,669 --> 00:02:04,502
+point forty-four. Kernel address randomization is set to
+
+49
+00:02:04,502 --> 00:02:06,785
+mode two. We do not disable ASLR for
+
+50
+00:02:06,785 --> 00:02:10,536
+convenient screenshots, and we do not invent addresses
+
+51
+00:02:10,536 --> 00:02:12,819
+that remain stable across reruns.
+
+52
+00:02:12,819 --> 00:02:14,939
+When this lab is captured again,
+
+53
+00:02:14,939 --> 00:02:18,201
+several pointers and process IDs should change.
+
+54
+00:02:18,201 --> 00:02:19,832
+That change is evidence,
+
+55
+00:02:19,832 --> 00:02:21,300
+not an inconvenience.
+
+56
+00:02:21,300 --> 00:02:23,723
+This is the complete vulnerable program.
+
+57
+00:02:23,723 --> 00:02:26,076
+There is no hidden helper and no omitted
+
+58
+00:02:26,076 --> 00:02:29,283
+cleanup path. `greet` reserves thirty-two bytes for `name`,
+
+59
+00:02:29,283 --> 00:02:32,277
+then passes that address to `read` while requesting
+
+60
+00:02:32,277 --> 00:02:34,914
+as many as one hundred and twenty-eight bytes.
+
+61
+00:02:34,914 --> 00:02:37,979
+`main` disables output buffering only so the runtime
+
+62
+00:02:37,979 --> 00:02:40,402
+evidence appears in a predictable order.
+
+63
+00:02:40,402 --> 00:02:43,610
+Every protected variant begins with this same source.
+
+64
+00:02:43,610 --> 00:02:45,688
+When we build the variants,
+
+65
+00:02:45,688 --> 00:02:48,899
+GCC warns us before the program ever runs.
+
+66
+00:02:48,899 --> 00:02:51,450
+The warning is unusually direct:
+
+67
+00:02:51,450 --> 00:02:55,322
+`read` may write one hundred and twenty-eight bytes
+
+68
+00:02:55,322 --> 00:02:57,872
+into an object of size thirty-two.
+
+69
+00:02:57,872 --> 00:02:59,572
+That warning is not NX,
+
+70
+00:02:59,572 --> 00:03:00,895
+a canary, ASLR, PIE,
+
+71
+00:03:00,895 --> 00:03:03,539
+or RELRO. It identifies the defect.
+
+72
+00:03:03,539 --> 00:03:07,601
+The mitigations we study later only constrain what
+
+73
+00:03:07,601 --> 00:03:11,379
+can happen after the defective write is allowed
+
+74
+00:03:11,379 --> 00:03:12,040
+to exist.
+
+75
+00:03:12,040 --> 00:03:14,174
+The build produces real ELF files,
+
+76
+00:03:14,174 --> 00:03:16,385
+with distinct build IDs and hashes.
+
+77
+00:03:16,385 --> 00:03:20,119
+`file` identifies which are ordinary executables and which
+
+78
+00:03:20,119 --> 00:03:24,921
+are position-independent executables. We record those identities because
+
+79
+00:03:24,921 --> 00:03:27,894
+later screenshots must point back to the exact
+
+80
+00:03:27,894 --> 00:03:29,799
+artifact that generated them.
+
+81
+00:03:29,799 --> 00:03:32,314
+A clean diagram is useful only after the
+
+82
+00:03:32,314 --> 00:03:33,915
+evidence chain is intact.
+
+83
+00:03:33,915 --> 00:03:35,899
+Before drawing a stack frame,
+
+84
+00:03:35,899 --> 00:03:38,876
+we ask the binary what GCC actually emitted.
+
+85
+00:03:38,876 --> 00:03:42,597
+`objdump` interleaves the full source with the machine
+
+86
+00:03:42,597 --> 00:03:46,400
+instructions for `greet`. The function starts at address
+
+87
+00:03:46,400 --> 00:03:48,468
+`0x401156`, reserves `0x30` bytes,
+
+88
+00:03:48,468 --> 00:03:51,196
+calculates the buffer as `rbp minus 0x30`,
+
+89
+00:03:51,196 --> 00:03:55,579
+loads `0x80`—one hundred and twenty-eight—into the third argument
+
+90
+00:03:55,579 --> 00:03:58,803
+register, calls `read`, then reaches `leave` and `ret`
+
+91
+00:03:58,803 --> 00:04:00,705
+without an integrity check.
+
+92
+00:04:00,705 --> 00:04:02,849
+Now the diagram has a provenance.
+
+93
+00:04:02,849 --> 00:04:05,391
+`sub rsp,0x30` gives the local frame area.
+
+94
+00:04:05,391 --> 00:04:08,012
+`rbp minus 0x30` locates the first byte of
+
+95
+00:04:08,012 --> 00:04:11,189
+`name`. The saved frame pointer and return address
+
+96
+00:04:11,189 --> 00:04:13,016
+sit above the current frame.
+
+97
+00:04:13,016 --> 00:04:16,034
+This is still a reconstruction—we did not dump
+
+98
+00:04:16,034 --> 00:04:19,449
+every stack byte—but its distances are derived from
+
+99
+00:04:19,449 --> 00:04:21,832
+the instructions we just inspected,
+
+100
+00:04:21,832 --> 00:04:24,135
+not from a generic textbook layout.
+
+101
+00:04:24,135 --> 00:04:26,244
+To isolate execute permission,
+
+102
+00:04:26,244 --> 00:04:28,434
+we use a second complete program.
+
+103
+00:04:28,434 --> 00:04:31,192
+Its local array contains six x86-64 bytes:
+
+104
+00:04:31,192 --> 00:04:32,084
+`mov eax, 42; ret`.
+
+105
+00:04:32,084 --> 00:04:34,680
+The program prints the array’s address,
+
+106
+00:04:34,680 --> 00:04:37,438
+casts that address to a function pointer,
+
+107
+00:04:37,438 --> 00:04:40,358
+and calls it. The two binaries are identical
+
+108
+00:04:40,358 --> 00:04:43,603
+except for the linker’s stack-execution request.
+
+109
+00:04:43,603 --> 00:04:46,198
+This is safer and clearer than asking a
+
+110
+00:04:46,198 --> 00:04:49,281
+full shell payload to prove several things at
+
+111
+00:04:49,281 --> 00:04:49,605
+once.
+
+112
+00:04:49,605 --> 00:04:52,575
+First we inspect the ELF program headers,
+
+113
+00:04:52,575 --> 00:04:55,108
+not a hand-written permission card.
+
+114
+00:04:55,108 --> 00:04:57,292
+In the executable-stack build,
+
+115
+00:04:57,292 --> 00:04:59,389
+the `GNU_STACK` row ends in `RWE`:
+
+116
+00:04:59,389 --> 00:05:02,446
+read, write, execute. In the protected build,
+
+117
+00:05:02,446 --> 00:05:04,019
+the same row ends in `RW`:
+
+118
+00:05:04,019 --> 00:05:06,552
+read and write, with execute absent.
+
+119
+00:05:06,552 --> 00:05:10,308
+The close-up only appears after the complete header
+
+120
+00:05:10,308 --> 00:05:13,715
+table has established where that row came from.
+
+121
+00:05:13,715 --> 00:05:15,336
+Now we run both artifacts.
+
+122
+00:05:15,336 --> 00:05:17,034
+With the executable stack,
+
+123
+00:05:17,034 --> 00:05:19,350
+the program prints its stack buffer,
+
+124
+00:05:19,350 --> 00:05:22,669
+calls those bytes, and returns forty-two with status
+
+125
+00:05:22,669 --> 00:05:25,217
+zero. With NX, the same call is terminated
+
+126
+00:05:25,217 --> 00:05:28,150
+by signal eleven and the shell reports status
+
+127
+00:05:28,150 --> 00:05:29,925
+one hundred and thirty-nine.
+
+128
+00:05:29,925 --> 00:05:32,396
+The bytes were accepted as data in both
+
+129
+00:05:32,396 --> 00:05:35,406
+cases. The difference appears only when the CPU
+
+130
+00:05:35,406 --> 00:05:38,185
+tries to fetch instructions from that page.
+
+131
+00:05:38,185 --> 00:05:41,085
+The wider idea is executable-space protection.
+
+132
+00:05:41,085 --> 00:05:44,803
+PaX developed PAGEEXEC and related mechanisms for systems
+
+133
+00:05:44,803 --> 00:05:48,595
+where convenient hardware support was not always available,
+
+134
+00:05:48,595 --> 00:05:51,198
+and its documents describe making stacks,
+
+135
+00:05:51,198 --> 00:05:55,734
+heaps, and anonymous mappings non-executable while reserving execution
+
+136
+00:05:55,734 --> 00:05:57,667
+for mappings that contain code.
+
+137
+00:05:57,667 --> 00:06:00,344
+NX is not a detector looking for suspicious
+
+138
+00:06:00,344 --> 00:06:03,095
+byte patterns. It is permission enforcement.
+
+139
+00:06:03,095 --> 00:06:06,404
+The write into the array succeeds because the
+
+140
+00:06:06,404 --> 00:06:10,062
+stack is writable. The indirect call also succeeds
+
+141
+00:06:10,062 --> 00:06:13,371
+in changing RIP because NX is not control-flow
+
+142
+00:06:13,371 --> 00:06:16,506
+integrity. Failure occurs at the next stage:
+
+143
+00:06:16,506 --> 00:06:21,383
+instruction fetch. The translation and permission machinery sees
+
+144
+00:06:21,383 --> 00:06:24,866
+an address in a page without execute permission,
+
+145
+00:06:24,866 --> 00:06:27,740
+so no instruction from `b8 2a...` reaches the
+
+146
+00:06:27,740 --> 00:06:29,656
+decoder. The data survives;
+
+147
+00:06:29,656 --> 00:06:31,485
+execution does not begin.
+
+148
+00:06:31,485 --> 00:06:33,808
+This is why ROP was the next logical
+
+149
+00:06:33,808 --> 00:06:38,694
+technique. The corrupted stack supplies data—addresses and values—while
+
+150
+00:06:38,694 --> 00:06:42,459
+instruction fetches stay inside executable code pages.
+
+151
+00:06:42,459 --> 00:06:45,983
+NX removed the assumption that writable bytes could
+
+152
+00:06:45,983 --> 00:06:48,787
+also be instructions. It did not remove the
+
+153
+00:06:48,787 --> 00:06:51,670
+overflow, stop `ret`, or erase the program’s own
+
+154
+00:06:51,670 --> 00:06:54,394
+executable code. One attack route closed;
+
+155
+00:06:54,394 --> 00:06:55,595
+another remained.
+
+156
+00:06:55,595 --> 00:06:58,386
+To see what stack protection changes,
+
+157
+00:06:58,386 --> 00:07:01,447
+we compare the complete `greet` functions.
+
+158
+00:07:01,447 --> 00:07:05,769
+The unprotected version reserves `0x30` bytes and returns
+
+159
+00:07:05,769 --> 00:07:09,280
+directly. The protected version reserves `0x40`,
+
+160
+00:07:09,280 --> 00:07:11,171
+loads a value from `fs:0x28`,
+
+161
+00:07:11,171 --> 00:07:13,242
+stores it at `rbp minus eight`,
+
+162
+00:07:13,242 --> 00:07:15,853
+performs the same vulnerable `read`,
+
+163
+00:07:15,853 --> 00:07:19,635
+then reloads and compares that saved value before
+
+164
+00:07:19,635 --> 00:07:20,625
+`leave` and `ret`.
+
+165
+00:07:20,625 --> 00:07:24,402
+The disassembly tells us where the compiler reads
+
+166
+00:07:24,402 --> 00:07:25,931
+and stores the guard,
+
+167
+00:07:25,931 --> 00:07:28,450
+but we can also measure the values.
+
+168
+00:07:28,450 --> 00:07:33,666
+This architecture-specific probe reads the x86-64 thread-local guard
+
+169
+00:07:33,666 --> 00:07:37,084
+from `fs:0x28` and the compiler’s frame copy from
+
+170
+00:07:37,084 --> 00:07:39,512
+`rbp minus eight`, then prints both.
+
+171
+00:07:39,512 --> 00:07:42,120
+It is instrumentation for this lab,
+
+172
+00:07:42,120 --> 00:07:44,459
+not portable application code,
+
+173
+00:07:44,459 --> 00:07:48,146
+and its complete source remains on screen before
+
+174
+00:07:48,146 --> 00:07:49,855
+we inspect the numbers.
+
+175
+00:07:49,855 --> 00:07:52,707
+Across three executions, the guard changes.
+
+176
+00:07:52,707 --> 00:07:54,450
+In each execution, however,
+
+177
+00:07:54,450 --> 00:07:57,382
+the thread-local guard and the frame copy are
+
+178
+00:07:57,382 --> 00:08:00,076
+identical. The first run prints `cc6f...2200`;
+
+179
+00:08:00,076 --> 00:08:01,898
+the second prints `8f19...7a00`;
+
+180
+00:08:01,898 --> 00:08:03,641
+the third prints `5b33...3800`.
+
+181
+00:08:03,641 --> 00:08:07,207
+We are not choosing aesthetically convenient values.
+
+182
+00:08:07,207 --> 00:08:09,980
+These are the values recorded by the probe
+
+183
+00:08:09,980 --> 00:08:11,010
+on this capture.
+
+184
+00:08:11,010 --> 00:08:14,344
+In 1998, Crispin Cowan and his coauthors presented
+
+185
+00:08:14,344 --> 00:08:17,837
+StackGuard. Their paper places a canary word between
+
+186
+00:08:17,837 --> 00:08:20,060
+local data and the return address,
+
+187
+00:08:20,060 --> 00:08:23,076
+then verifies it before the function returns.
+
+188
+00:08:23,076 --> 00:08:26,252
+Its Figure Two is not merely decorative history;
+
+189
+00:08:26,252 --> 00:08:29,586
+it gives us a primary-source stack relationship to
+
+190
+00:08:29,586 --> 00:08:32,920
+compare with the compiler output we just measured.
+
+191
+00:08:32,920 --> 00:08:36,899
+At function entry, the protected binary reserves sixty-four
+
+192
+00:08:36,899 --> 00:08:41,118
+bytes. Instruction `0x40116e` copies the thread-local guard into
+
+193
+00:08:41,118 --> 00:08:44,301
+`rax`. Instruction `0x401177` stores it at `rbp minus
+
+194
+00:08:44,301 --> 00:08:47,007
+eight`. The buffer begins at `rbp minus 0x30`.
+
+195
+00:08:47,007 --> 00:08:49,634
+That puts the canary above the buffer in
+
+196
+00:08:49,634 --> 00:08:51,783
+the path toward saved frame data.
+
+197
+00:08:51,783 --> 00:08:53,932
+The diagram is a reconstruction,
+
+198
+00:08:53,932 --> 00:08:57,195
+but every distance shown comes from the selected
+
+199
+00:08:57,195 --> 00:08:58,150
+instructions.
+
+200
+00:08:58,150 --> 00:09:00,407
+The canary does not stop the write.
+
+201
+00:09:00,407 --> 00:09:03,954
+The first thirty-two bytes occupy the declared array.
+
+202
+00:09:03,954 --> 00:09:07,501
+More bytes continue through adjacent frame storage.
+
+203
+00:09:07,501 --> 00:09:10,886
+Eventually the stream overwrites the saved guard,
+
+204
+00:09:10,886 --> 00:09:13,708
+then can continue toward saved `rbp` and the
+
+205
+00:09:13,708 --> 00:09:16,932
+return address. The defensive action is delayed.
+
+206
+00:09:16,932 --> 00:09:20,398
+Stack protection records that corruption now so it
+
+207
+00:09:20,398 --> 00:09:23,300
+can react before control is returned later.
+
+208
+00:09:23,300 --> 00:09:26,081
+The epilogue reloads the frame copy at `0x4011b8`,
+
+209
+00:09:26,081 --> 00:09:29,210
+subtracts the current thread-local guard at `0x4011bc`,
+
+210
+00:09:29,210 --> 00:09:31,435
+and jumps over the failure call only if
+
+211
+00:09:31,435 --> 00:09:32,478
+the result is zero.
+
+212
+00:09:32,478 --> 00:09:33,660
+If the values differ,
+
+213
+00:09:33,660 --> 00:09:37,345
+`0x4011c7` calls `__stack_chk_fail`. Only after the equality path
+
+214
+00:09:37,345 --> 00:09:39,779
+reaches `0x4011cc` do `leave` and `ret` execute.
+
+215
+00:09:39,779 --> 00:09:42,630
+The corrupted return address can exist in memory
+
+216
+00:09:42,630 --> 00:09:44,090
+and still never reach RIP.
+
+217
+00:09:44,090 --> 00:09:45,556
+With ninety-six `A` bytes,
+
+218
+00:09:45,556 --> 00:09:48,488
+the plain build prints that it read ninety-six
+
+219
+00:09:48,488 --> 00:09:51,343
+bytes, then dies by signal eleven with status
+
+220
+00:09:51,343 --> 00:09:53,118
+one hundred and thirty-nine.
+
+221
+00:09:53,118 --> 00:09:56,205
+The canary build reads the same ninety-six bytes,
+
+222
+00:09:56,205 --> 00:09:58,288
+prints `stack smashing detected`,
+
+223
+00:09:58,288 --> 00:10:01,221
+then terminates by signal six with status one
+
+224
+00:10:01,221 --> 00:10:05,156
+hundred and thirty-four. One crashes after corrupted control
+
+225
+00:10:05,156 --> 00:10:08,706
+state is consumed. The other detects corruption before
+
+226
+00:10:08,706 --> 00:10:09,400
+returning.
+
+227
+00:10:09,400 --> 00:10:12,154
+A stack canary is therefore a tamper check
+
+228
+00:10:12,154 --> 00:10:14,356
+for particular protected frames,
+
+229
+00:10:14,356 --> 00:10:16,795
+not a universal memory-safety system.
+
+230
+00:10:16,795 --> 00:10:18,290
+It does not repair `read`,
+
+231
+00:10:18,290 --> 00:10:20,021
+protect every heap object,
+
+232
+00:10:20,021 --> 00:10:22,853
+or make all pointer corruption impossible.
+
+233
+00:10:22,853 --> 00:10:25,764
+And if another bug reveals the current guard,
+
+234
+00:10:25,764 --> 00:10:29,462
+an attacker may reproduce that value while overwriting
+
+235
+00:10:29,462 --> 00:10:32,215
+data around it. The next defenses also rely
+
+236
+00:10:32,215 --> 00:10:35,992
+on hidden values—and that makes disclosure our recurring
+
+237
+00:10:35,992 --> 00:10:36,385
+enemy.
+
+238
+00:10:36,385 --> 00:10:38,891
+To observe address randomization,
+
+239
+00:10:38,891 --> 00:10:41,225
+we use another complete program.
+
+240
+00:10:41,225 --> 00:10:42,953
+It prints its process ID,
+
+241
+00:10:42,953 --> 00:10:44,336
+the address of `main`,
+
+242
+00:10:44,336 --> 00:10:46,151
+one local stack variable,
+
+243
+00:10:46,151 --> 00:10:47,533
+a reference to `puts`,
+
+244
+00:10:47,533 --> 00:10:51,336
+and the actual libc implementation found with `dlsym`.
+
+245
+00:10:51,336 --> 00:10:52,891
+If launched with `--hold`,
+
+246
+00:10:52,891 --> 00:10:55,484
+it waits so we can inspect `/proc` while
+
+247
+00:10:55,484 --> 00:10:57,904
+that exact process is still alive.
+
+248
+00:10:57,904 --> 00:11:01,015
+The kernel reports randomization mode two.
+
+249
+00:11:01,015 --> 00:11:03,948
+Across four runs of the non-PIE binary,
+
+250
+00:11:03,948 --> 00:11:07,733
+`main` remains `0x401186`, and its PLT reference for
+
+251
+00:11:07,733 --> 00:11:12,085
+`puts` remains `0x401030`. The local stack pointer changes
+
+252
+00:11:12,085 --> 00:11:15,870
+every time. The actual libc `puts` address changes
+
+253
+00:11:15,870 --> 00:11:19,843
+every time. This is the first important separation:
+
+254
+00:11:19,843 --> 00:11:23,155
+ASLR is active, but an ordinary non-PIE main
+
+255
+00:11:23,155 --> 00:11:26,845
+executable can still provide fixed addresses.
+
+256
+00:11:26,845 --> 00:11:29,104
+This is the actual map for that held
+
+257
+00:11:29,104 --> 00:11:32,065
+process. The executable begins at `0x00400000`.
+
+258
+00:11:32,065 --> 00:11:34,636
+Its executable page is the next mapping.
+
+259
+00:11:34,636 --> 00:11:37,597
+Libc’s file mapping begins at `0x7f704aa1e000`,
+
+260
+00:11:37,597 --> 00:11:40,869
+and the user stack occupies the high-address range
+
+261
+00:11:40,869 --> 00:11:44,141
+beginning at `0x7ffe4a34d000`. We show the whole map
+
+262
+00:11:44,141 --> 00:11:47,336
+first because a selected row without its process
+
+263
+00:11:47,336 --> 00:11:49,595
+and file context is easy to misread.
+
+264
+00:11:49,595 --> 00:11:52,823
+The PaX ASLR design states the central objective
+
+265
+00:11:52,823 --> 00:11:57,311
+plainly: introduce randomness into addresses so attacks requiring
+
+266
+00:11:57,311 --> 00:11:59,831
+advance knowledge become unreliable.
+
+267
+00:11:59,831 --> 00:12:02,193
+It also states the central weakness:
+
+268
+00:12:02,193 --> 00:12:05,500
+if the process can disclose its randomized layout,
+
+269
+00:12:05,500 --> 00:12:07,626
+guessing is no longer necessary.
+
+270
+00:12:07,626 --> 00:12:10,697
+The protection is not that the addresses cease
+
+271
+00:12:10,697 --> 00:12:13,295
+to exist. It is that their current values
+
+272
+00:12:13,295 --> 00:12:15,185
+become secret process state.
+
+273
+00:12:15,185 --> 00:12:18,517
+ASLR does not normally throw every function into
+
+274
+00:12:18,517 --> 00:12:20,386
+an independent random slot.
+
+275
+00:12:20,386 --> 00:12:23,474
+It randomizes the base of mappings or regions.
+
+276
+00:12:23,474 --> 00:12:25,425
+In one particular libc build,
+
+277
+00:12:25,425 --> 00:12:28,025
+`puts` remains at a fixed offset from the
+
+278
+00:12:28,025 --> 00:12:30,544
+library’s base. When the library moves,
+
+279
+00:12:30,544 --> 00:12:32,657
+the base and `puts` move together.
+
+280
+00:12:32,657 --> 00:12:36,639
+That preserved internal distance is precisely what later
+
+281
+00:12:36,639 --> 00:12:39,727
+allows one leaked pointer to reveal the whole
+
+282
+00:12:39,727 --> 00:12:40,215
+region.
+
+283
+00:12:40,215 --> 00:12:41,815
+For PID fifteen twenty-one,
+
+284
+00:12:41,815 --> 00:12:45,014
+the captured libc mapping begins at `0x7f704aa1e000`,
+
+285
+00:12:45,014 --> 00:12:47,705
+while `dlsym` reports `puts` at `0x7f704aa9e5a0`.
+
+286
+00:12:47,705 --> 00:12:50,831
+`nm` independently reports the `puts` symbol offset as
+
+287
+00:12:50,831 --> 00:12:52,722
+`0x805a0` in this exact libc file.
+
+288
+00:12:52,722 --> 00:12:55,485
+Adding the captured base and that file offset
+
+289
+00:12:55,485 --> 00:12:57,957
+reproduces the runtime address exactly.
+
+290
+00:12:57,957 --> 00:13:00,575
+These numbers belong to this build and this
+
+291
+00:13:00,575 --> 00:13:03,120
+run; the relationship is the reusable part.
+
+292
+00:13:03,120 --> 00:13:06,655
+Address randomization was also studied as a broader
+
+293
+00:13:06,655 --> 00:13:08,664
+compiler and loader strategy.
+
+294
+00:13:08,664 --> 00:13:13,163
+Bhatkar, DuVarney, and Sekar described address obfuscation across
+
+295
+00:13:13,163 --> 00:13:16,778
+code and data. Shacham and colleagues later evaluated
+
+296
+00:13:16,778 --> 00:13:19,912
+the practical limits of ASLR in a thirty-two-bit
+
+297
+00:13:19,912 --> 00:13:24,411
+setting, where restricted entropy and repeated attempts mattered
+
+298
+00:13:24,411 --> 00:13:27,785
+greatly. The correct lesson is neither ‘ASLR solves
+
+299
+00:13:27,785 --> 00:13:31,481
+exploitation’ nor ‘ASLR is useless.’ Its strength depends
+
+300
+00:13:31,481 --> 00:13:33,409
+on entropy, restart behavior,
+
+301
+00:13:33,409 --> 00:13:37,105
+architecture, and especially information disclosure.
+
+302
+00:13:37,105 --> 00:13:40,187
+When a program reveals a pointer into libc,
+
+303
+00:13:40,187 --> 00:13:43,270
+the attacker no longer needs to guess that
+
+304
+00:13:43,270 --> 00:13:46,352
+run’s base. Subtract the known offset of the
+
+305
+00:13:46,352 --> 00:13:50,843
+revealed object, and the randomized base becomes measurable.
+
+306
+00:13:50,843 --> 00:13:53,045
+ASLR has not been switched off.
+
+307
+00:13:53,045 --> 00:13:55,599
+Its hidden state has been observed.
+
+308
+00:13:55,599 --> 00:13:58,769
+That is the ASLR part of ret2libc—but before
+
+309
+00:13:58,769 --> 00:14:01,764
+we can use the main executable to perform
+
+310
+00:14:01,764 --> 00:14:04,229
+such a leak, we must ask whether the
+
+311
+00:14:04,229 --> 00:14:06,255
+executable itself is fixed.
+
+312
+00:14:06,255 --> 00:14:08,117
+PIE is visible before runtime.
+
+313
+00:14:08,117 --> 00:14:11,693
+`readelf` identifies `address-nopie` as type `EXEC` with entry
+
+314
+00:14:11,693 --> 00:14:14,300
+point `0x4010a0`; `nm` places `main` at `0x401186`.
+
+315
+00:14:14,300 --> 00:14:15,790
+The PIE build is type `DYN`,
+
+316
+00:14:15,790 --> 00:14:18,918
+specifically a position-independent executable,
+
+317
+00:14:18,918 --> 00:14:20,408
+with entry point `0x10a0`;
+
+318
+00:14:20,408 --> 00:14:22,419
+`nm` records `main` as offset `0x1189`.
+
+319
+00:14:22,419 --> 00:14:25,473
+We first inspect the complete headers and symbol
+
+320
+00:14:25,473 --> 00:14:27,410
+tables, then extract those rows.
+
+321
+00:14:27,410 --> 00:14:30,897
+PIE and ASLR are related but not synonymous.
+
+322
+00:14:30,897 --> 00:14:34,481
+PIE is the property that lets the executable
+
+323
+00:14:34,481 --> 00:14:36,708
+operate at different bases.
+
+324
+00:14:36,708 --> 00:14:40,002
+ASLR is the runtime policy that selects a
+
+325
+00:14:40,002 --> 00:14:42,617
+base for a particular execution.
+
+326
+00:14:42,617 --> 00:14:46,975
+A relocatable executable can be placed somewhere new.
+
+327
+00:14:46,975 --> 00:14:51,625
+A fixed-address executable still expects its linked home.
+
+328
+00:14:51,625 --> 00:14:55,499
+Only the combination gives us a randomized main
+
+329
+00:14:55,499 --> 00:14:56,080
+binary.
+
+330
+00:14:56,080 --> 00:14:57,470
+In the four PIE executions,
+
+331
+00:14:57,470 --> 00:15:00,377
+`main` changes from `0x55949c2c2189` to three other bases.
+
+332
+00:15:00,377 --> 00:15:02,715
+The stack changes, and libc changes as before.
+
+333
+00:15:02,715 --> 00:15:05,305
+Here the printed `puts` reference also resolves to
+
+334
+00:15:05,305 --> 00:15:07,264
+the randomized libc implementation.
+
+335
+00:15:07,264 --> 00:15:09,855
+The important result is that the executable’s own
+
+336
+00:15:09,855 --> 00:15:12,003
+code address is no longer a stable island
+
+337
+00:15:12,003 --> 00:15:12,635
+across runs.
+
+338
+00:15:12,635 --> 00:15:14,244
+For PID fifteen twenty-two,
+
+339
+00:15:14,244 --> 00:15:16,949
+`/proc` shows the PIE file mapping beginning at
+
+340
+00:15:16,949 --> 00:15:20,313
+`0x55bce0674000`. The binary’s symbol table gives `main` an
+
+341
+00:15:20,313 --> 00:15:21,848
+offset of `0x1189`. Add them,
+
+342
+00:15:21,848 --> 00:15:24,919
+and we obtain the printed runtime address exactly:
+
+343
+00:15:24,919 --> 00:15:29,672
+`0x55bce0675189`. PIE therefore changes absolute addresses while preserving
+
+344
+00:15:29,672 --> 00:15:31,281
+offsets within that build,
+
+345
+00:15:31,281 --> 00:15:34,425
+just as ASLR-preserved offsets existed inside libc.
+
+346
+00:15:34,425 --> 00:15:37,966
+Without PIE, fixed addresses in the main binary
+
+347
+00:15:37,966 --> 00:15:39,600
+can provide a PLT call,
+
+348
+00:15:39,600 --> 00:15:41,869
+a GOT location, a re-entry point,
+
+349
+00:15:41,869 --> 00:15:44,593
+or a ROP gadget even while libc moves.
+
+350
+00:15:44,593 --> 00:15:48,043
+With PIE, those objects move together with the
+
+351
+00:15:48,043 --> 00:15:51,946
+executable. An exploit often needs a binary pointer
+
+352
+00:15:51,946 --> 00:15:54,398
+leak before using them reliably.
+
+353
+00:15:54,398 --> 00:15:56,940
+But PIE does not erase the objects,
+
+354
+00:15:56,940 --> 00:16:00,480
+change their internal offsets on every launch,
+
+355
+00:16:00,480 --> 00:16:03,658
+fix the overflow, or conceal a pointer that
+
+356
+00:16:03,658 --> 00:16:05,655
+the program itself prints.
+
+357
+00:16:05,655 --> 00:16:08,146
+To observe dynamic binding order,
+
+358
+00:16:08,146 --> 00:16:10,549
+we use a fourth complete program.
+
+359
+00:16:10,549 --> 00:16:14,464
+It writes explicit markers to standard error before
+
+360
+00:16:14,464 --> 00:16:16,777
+and after the first call to `puts`,
+
+361
+00:16:16,777 --> 00:16:20,070
+then sleeps so its mappings can be inspected.
+
+362
+00:16:20,070 --> 00:16:23,718
+Three non-PIE binaries are built from this source:
+
+363
+00:16:23,718 --> 00:16:25,675
+no RELRO with lazy binding,
+
+364
+00:16:25,675 --> 00:16:28,078
+partial RELRO with lazy binding,
+
+365
+00:16:28,078 --> 00:16:30,925
+and full RELRO with immediate binding.
+
+366
+00:16:30,925 --> 00:16:34,015
+RELRO cannot be understood from one green label.
+
+367
+00:16:34,015 --> 00:16:36,719
+For each binary, we record program headers,
+
+368
+00:16:36,719 --> 00:16:39,345
+the dynamic section, relocation records,
+
+369
+00:16:39,345 --> 00:16:42,281
+and section headers. No RELRO has no `GNU_RELRO`
+
+370
+00:16:42,281 --> 00:16:45,680
+segment. Partial RELRO has one beginning at `0x403df8`,
+
+371
+00:16:45,680 --> 00:16:48,152
+but no `BIND_NOW`. Full RELRO has a larger
+
+372
+00:16:48,152 --> 00:16:50,701
+protected range beginning at `0x403dc0`,
+
+373
+00:16:50,701 --> 00:16:54,023
+and its dynamic section contains both `BIND_NOW` and
+
+374
+00:16:54,023 --> 00:16:54,795
+the `NOW` flag.
+
+375
+00:16:54,795 --> 00:16:57,666
+Next we connect the file’s relocation address to
+
+376
+00:16:57,666 --> 00:16:59,963
+the live process page that contains it.
+
+377
+00:16:59,963 --> 00:17:01,255
+In the no-RELRO binary,
+
+378
+00:17:01,255 --> 00:17:03,551
+`puts` has relocation address `0x4033a0`,
+
+379
+00:17:03,551 --> 00:17:05,130
+inside a writable mapping.
+
+380
+00:17:05,130 --> 00:17:07,427
+With partial RELRO, `puts` is at `0x404000`,
+
+381
+00:17:07,427 --> 00:17:09,365
+again inside a writable mapping.
+
+382
+00:17:09,365 --> 00:17:11,446
+With full RELRO, `puts` is at `0x403fd8`,
+
+383
+00:17:11,446 --> 00:17:14,030
+and the containing page is mapped read-only.
+
+384
+00:17:14,030 --> 00:17:16,242
+To see *when* symbols are resolved,
+
+385
+00:17:16,242 --> 00:17:19,682
+we ask the dynamic loader for binding diagnostics.
+
+386
+00:17:19,682 --> 00:17:22,549
+The raw output is dense—more than a hundred
+
+387
+00:17:22,549 --> 00:17:26,808
+lines—because the loader reports bindings for the executable,
+
+388
+00:17:26,808 --> 00:17:28,610
+libc, and the loader itself.
+
+389
+00:17:28,610 --> 00:17:30,985
+We show that complete stream first.
+
+390
+00:17:30,985 --> 00:17:33,606
+Only then do we select the lines around
+
+391
+00:17:33,606 --> 00:17:36,555
+`transferring control`, our program markers,
+
+392
+00:17:36,555 --> 00:17:38,357
+and the bindings for `write`,
+
+393
+00:17:38,357 --> 00:17:39,340
+`puts`, and `sleep`.
+
+394
+00:17:39,340 --> 00:17:40,743
+In the partial build,
+
+395
+00:17:40,743 --> 00:17:44,210
+the loader transfers control to the program first.
+
+396
+00:17:44,210 --> 00:17:46,852
+`write` is bound as the first marker runs.
+
+397
+00:17:46,852 --> 00:17:49,823
+The program announces that it is before its
+
+398
+00:17:49,823 --> 00:17:52,630
+first `puts`. Only then does the loader bind
+
+399
+00:17:52,630 --> 00:17:54,859
+`puts`. `sleep` is bound later as well.
+
+400
+00:17:54,859 --> 00:17:59,151
+Lazy binding postpones these writes until the corresponding
+
+401
+00:17:59,151 --> 00:18:00,307
+call path is used,
+
+402
+00:18:00,307 --> 00:18:03,856
+which is why the procedure-linkage slot must remain
+
+403
+00:18:03,856 --> 00:18:06,250
+writable during normal execution.
+
+404
+00:18:06,250 --> 00:18:07,325
+In the full build,
+
+405
+00:18:07,325 --> 00:18:09,935
+the order reverses. The loader binds `puts`,
+
+406
+00:18:09,935 --> 00:18:12,929
+`write`, and `sleep` before the line that transfers
+
+407
+00:18:12,929 --> 00:18:14,618
+control to the executable.
+
+408
+00:18:14,618 --> 00:18:17,535
+Only afterward do our `entered main` and `before
+
+409
+00:18:17,535 --> 00:18:19,224
+first puts` markers appear.
+
+410
+00:18:19,224 --> 00:18:23,676
+Because the required procedure-linkage writes are completed during
+
+411
+00:18:23,676 --> 00:18:26,823
+startup, the page containing `puts` can be read-only
+
+412
+00:18:26,823 --> 00:18:29,280
+by the time ordinary program code runs.
+
+413
+00:18:29,280 --> 00:18:33,415
+Drepper’s engineering report explains the layout problem behind
+
+414
+00:18:33,415 --> 00:18:36,498
+RELRO. Some ELF structures must be writable while
+
+415
+00:18:36,498 --> 00:18:40,182
+relocations are performed, but should not remain writable
+
+416
+00:18:40,182 --> 00:18:43,640
+afterward. The report’s own diagrams show protected ELF
+
+417
+00:18:43,640 --> 00:18:46,347
+data reordered next to read-only data so the
+
+418
+00:18:46,347 --> 00:18:48,828
+loader can cover it with a read-only page
+
+419
+00:18:48,828 --> 00:18:52,361
+range after relocation. Full RELRO combines that layout
+
+420
+00:18:52,361 --> 00:18:53,865
+with immediate binding.
+
+421
+00:18:53,865 --> 00:18:56,887
+The conceptual calling path is now safe to
+
+422
+00:18:56,887 --> 00:19:00,427
+animate because we have already located its real
+
+423
+00:19:00,427 --> 00:19:03,276
+relocation entries and binding events.
+
+424
+00:19:03,276 --> 00:19:05,261
+A call reaches the PLT route.
+
+425
+00:19:05,261 --> 00:19:08,197
+The route consults the relevant GOT slot.
+
+426
+00:19:08,197 --> 00:19:11,909
+Before resolution, that route can enter the dynamic
+
+427
+00:19:11,909 --> 00:19:15,794
+resolver. After resolution, the slot contains the libc
+
+428
+00:19:15,794 --> 00:19:20,111
+destination. Partial RELRO permits later loader writes for
+
+429
+00:19:20,111 --> 00:19:22,960
+lazy binding. Full RELRO resolves first,
+
+430
+00:19:22,960 --> 00:19:25,205
+then removes write permission.
+
+431
+00:19:25,205 --> 00:19:29,006
+Full RELRO blocks writes to the protected relocation
+
+432
+00:19:29,006 --> 00:19:31,878
+page. It does not make the page unreadable.
+
+433
+00:19:31,878 --> 00:19:33,905
+The mapping we measured is `r--p`,
+
+434
+00:19:33,905 --> 00:19:37,875
+not inaccessible. A disclosure primitive may still read
+
+435
+00:19:37,875 --> 00:19:39,734
+the resolved `puts` pointer,
+
+436
+00:19:39,734 --> 00:19:43,366
+and that pointer can still reveal libc’s randomized
+
+437
+00:19:43,366 --> 00:19:46,322
+base. RELRO closes the GOT-overwrite route.
+
+438
+00:19:46,322 --> 00:19:48,265
+It does not close code reuse,
+
+439
+00:19:48,265 --> 00:19:52,995
+information leakage, or corruption of unrelated writable objects.
+
+440
+00:19:52,995 --> 00:19:56,107
+Only now do we compress the evidence into
+
+441
+00:19:56,107 --> 00:19:59,859
+a summary. NX comes from stack execution metadata
+
+442
+00:19:59,859 --> 00:20:04,710
+and page enforcement. The canary appears as compiler-generated
+
+443
+00:20:04,710 --> 00:20:07,547
+prologue and epilogue instructions.
+
+444
+00:20:07,547 --> 00:20:10,842
+ASLR appears in changing runtime mappings.
+
+445
+00:20:10,842 --> 00:20:13,587
+PIE changes the ELF type and lets the
+
+446
+00:20:13,587 --> 00:20:16,516
+main binary receive a randomized base.
+
+447
+00:20:16,516 --> 00:20:18,530
+RELRO combines ELF layout,
+
+448
+00:20:18,530 --> 00:20:22,465
+binding policy, and loader-enforced read-only pages.
+
+449
+00:20:22,465 --> 00:20:25,292
+The source-level defect never changed:
+
+450
+00:20:25,292 --> 00:20:27,324
+thirty-two bytes of storage,
+
+451
+00:20:27,324 --> 00:20:30,681
+one hundred and twenty-eight bytes requested.
+
+452
+00:20:30,681 --> 00:20:33,420
+What changed was the point at which an
+
+453
+00:20:33,420 --> 00:20:38,103
+exploit’s assumptions failed. NX waits until instruction fetch.
+
+454
+00:20:38,103 --> 00:20:40,223
+The canary reacts before `ret`.
+
+455
+00:20:40,223 --> 00:20:43,669
+ASLR invalidates yesterday’s runtime pointer.
+
+456
+00:20:43,669 --> 00:20:46,673
+PIE removes fixed main-binary addresses.
+
+457
+00:20:46,673 --> 00:20:49,942
+Full RELRO rejects a write to the relocation
+
+458
+00:20:49,942 --> 00:20:50,295
+page.
+
+459
+00:20:50,295 --> 00:20:52,750
+No single layer is the final answer.
+
+460
+00:20:52,750 --> 00:20:54,359
+ROP can route around NX.
+
+461
+00:20:54,359 --> 00:20:57,492
+A pointer disclosure can reveal an ASLR base.
+
+462
+00:20:57,492 --> 00:21:00,624
+A leaked canary can preserve the stack check.
+
+463
+00:21:00,624 --> 00:21:03,249
+A leaked code pointer can reveal a PIE
+
+464
+00:21:03,249 --> 00:21:06,213
+base. Full RELRO can force an attacker away
+
+465
+00:21:06,213 --> 00:21:10,615
+from GOT overwrites without preventing every code-reuse path.
+
+466
+00:21:10,615 --> 00:21:13,833
+Defense in depth works by making a successful
+
+467
+00:21:13,833 --> 00:21:18,151
+chain require several independent capabilities in the same
+
+468
+00:21:18,151 --> 00:21:19,590
+vulnerable process.
+
+469
+00:21:19,590 --> 00:21:22,527
+Return once more to the compiler warning.
+
+470
+00:21:22,527 --> 00:21:26,674
+It identified the actual engineering failure before any
+
+471
+00:21:26,674 --> 00:21:30,562
+mitigation activated. NX did not reduce the requested
+
+472
+00:21:30,562 --> 00:21:33,931
+length. The canary did not make the destination
+
+473
+00:21:33,931 --> 00:21:36,782
+larger. ASLR and PIE did not validate the
+
+474
+00:21:36,782 --> 00:21:39,460
+pointer. RELRO did not constrain `read`.
+
+475
+00:21:39,460 --> 00:21:42,656
+A corrected bound, a memory-safe abstraction,
+
+476
+00:21:42,656 --> 00:21:45,939
+or a design that cannot express this mismatch
+
+477
+00:21:45,939 --> 00:21:47,753
+addresses the bug itself.
+
+478
+00:21:47,753 --> 00:21:51,900
+The protections reduce exploitability when bugs remain.
+
+479
+00:21:51,900 --> 00:21:55,134
+And now ret2libc stops looking like a bag
+
+480
+00:21:55,134 --> 00:21:58,654
+of arbitrary tricks. NX explains why we reuse
+
+481
+00:21:58,654 --> 00:22:02,649
+executable code instead of running bytes from the
+
+482
+00:22:02,649 --> 00:22:05,979
+stack. ASLR explains why libc’s base must be
+
+483
+00:22:05,979 --> 00:22:09,593
+learned. PIE explains why even our PLT entries,
+
+484
+00:22:09,593 --> 00:22:13,684
+GOT locations, and gadgets may require a binary-base
+
+485
+00:22:13,684 --> 00:22:17,298
+leak. The canary explains why a blind overflow
+
+486
+00:22:17,298 --> 00:22:18,725
+can die before `ret`.
+
+487
+00:22:18,725 --> 00:22:22,055
+RELRO explains why reading a GOT entry may
+
+488
+00:22:22,055 --> 00:22:26,050
+remain useful even when overwriting it is blocked.
+
+489
+00:22:26,050 --> 00:22:28,652
+Today we did not begin with five floating
+
+490
+00:22:28,652 --> 00:22:31,178
+shields and assign them magical powers.
+
+491
+00:22:31,178 --> 00:22:33,934
+We followed real source into real binaries,
+
+492
+00:22:33,934 --> 00:22:36,689
+inspected their headers and instructions,
+
+493
+00:22:36,689 --> 00:22:38,832
+ran them, read their live mappings,
+
+494
+00:22:38,832 --> 00:22:41,818
+and then built the diagrams from that evidence.
+
+495
+00:22:41,818 --> 00:22:44,726
+The result is a defender’s map of exploitation:
+
+496
+00:22:44,726 --> 00:22:47,329
+executable permission, stack integrity,
+
+497
+00:22:47,329 --> 00:22:49,931
+randomized placement, relocatable code,
+
+498
+00:22:49,931 --> 00:22:51,844
+and hardened relocation data.
+
+499
+00:22:51,844 --> 00:22:54,217
+Next time, we ask what happens when the
+
+500
+00:22:54,217 --> 00:22:55,595
+program leaks the map.

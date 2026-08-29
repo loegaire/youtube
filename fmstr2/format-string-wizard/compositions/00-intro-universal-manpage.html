@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <template>
+      <style>
+        #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #F1F3EE; font-family: Inter, Arial, sans-serif; }
+        .scene { position: absolute; inset: 0; overflow: hidden; }
+        .stage { position: absolute; inset: 0; background: radial-gradient(circle at 70% 35%, #102a4d 0%, #0A0D0B 48%, #0A0D0B 100%); }
+        .grid { position: absolute; inset: 0; opacity: .32; background-image: linear-gradient(rgba(74,158,255,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(74,158,255,.10) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, transparent, black 16%, black 84%, transparent); }
+        .eyebrow { position:absolute; top:76px; left:110px; color:#B3D8C2; font:600 22px/1.2 "JetBrains Mono", monospace; letter-spacing:.18em; text-transform:uppercase; }
+        .terminal { position:absolute; left:225px; top:190px; width:1470px; height:690px; border:2px solid rgba(189,239,255,.45); border-radius:28px; background:rgba(5,14,27,.88); box-shadow: 0 30px 80px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.08); overflow:hidden; }
+        .bar { height:68px; border-bottom:2px solid rgba(189,239,255,.22); display:flex; align-items:center; gap:14px; padding:0 28px; color:#B3D8C2; font:500 18px/1 "JetBrains Mono", monospace; }
+        .dot { width:14px; height:14px; border-radius:50%; background:#F0786E; box-shadow:28px 0 #D8BE73, 56px 0 #8CCB9A; margin-right:52px; }
+        .code { padding:50px 62px; font:500 31px/1.72 "JetBrains Mono", monospace; color:#F1F3EE; white-space:pre; }
+        .dim { color:#7794b6; } .green { color:#8CCB9A; } .cyan { color:#B3D8C2; } .orange { color:#D8BE73; } .purple { color:#B3D8C2; } .red { color:#F0786E; }
+        .cursor { display:inline-block; width:16px; height:36px; background:#8CCB9A; vertical-align:-5px; box-shadow:0 0 18px #8CCB9A; }
+        .hero-word { position:absolute; left:50%; top:52%; transform:translate(-50%,-50%); font:800 248px/.85 Inter, Arial, sans-serif; letter-spacing:-.09em; color:rgba(248,244,232,.13); text-shadow:0 0 80px rgba(255,174,66,.25); }
+        .output-orb { position:absolute; right:138px; bottom:145px; padding:20px 34px; border:2px solid rgba(189,239,255,.65); border-radius:20px; background:rgba(9,31,49,.92); color:#B3D8C2; font:700 38px/1 "JetBrains Mono", monospace; box-shadow:0 0 40px rgba(189,239,255,.18); }
+        .language-shell { position:absolute; inset:145px 130px 115px; border:2px solid rgba(189,239,255,.25); border-radius:36px; background:rgba(5,14,27,.72); }
+        .lang-label { position:absolute; top:94px; width:100%; text-align:center; color:#B3D8C2; font:600 24px/1 "JetBrains Mono", monospace; letter-spacing:.22em; text-transform:uppercase; }
+        .lang-core { position:absolute; top:245px; width:100%; text-align:center; color:#F1F3EE; font:800 142px/1 Inter, Arial, sans-serif; letter-spacing:-.065em; }
+        .tile { position:absolute; padding:18px 26px; border:2px solid rgba(255,174,66,.62); border-radius:16px; background:#101d30; color:#D8BE73; font:600 29px/1 "JetBrains Mono", monospace; box-shadow:0 12px 30px rgba(0,0,0,.25); }
+        .note { position:absolute; left:50%; bottom:126px; transform:translateX(-50%); color:#B3D8C2; font:500 28px/1.25 Inter, Arial, sans-serif; }
+        .underline { position:absolute; height:8px; border-radius:4px; background:#D8BE73; box-shadow:0 0 20px rgba(255,174,66,.8); }
+        #s00-under { width:150px !important; }
+        .manual { position:absolute; left:165px; top:105px; width:1590px; height:860px; padding:72px 88px; border:2px solid rgba(189,239,255,.36); background:#0b1727; box-shadow:0 30px 70px rgba(0,0,0,.45); font:500 31px/1.6 "JetBrains Mono", monospace; color:#B3D8C2; overflow:hidden; }
+        .manual-title { color:#F1F3EE; font-size:58px; letter-spacing:.05em; margin-bottom:52px; } .manual strong { color:#F1F3EE; } .sig { display:inline-block; margin-top:20px; padding:16px 22px; border:2px solid #D8BE73; border-radius:14px; color:#F1F3EE; background:rgba(255,174,66,.09); }
+        .focus { color:#D8BE73; text-shadow:0 0 22px rgba(255,174,66,.48); } .ellipsis { color:#B3D8C2; text-shadow:0 0 22px rgba(185,135,255,.48); }
+        /* Sibling-video palette: flat charcoal canvas, never a gradient wash. */
+        .stage { background:#0A0D0B !important; background-image:none !important; }
+      </style>
+      <div id="root" data-composition-id="00-intro-universal-manpage" data-width="1920" data-height="1080" data-duration="17" data-fps="30">
+        <div id="s00-intro" class="clip" data-start="0" data-duration="5" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div id="s00-hero" class="hero-word">printf</div><div id="s00-terminal" class="terminal"><div class="bar"><span class="dot"></span>lesson_01 / hello.c</div><div class="code"><span class="cyan">$</span> cat hello.c
+
+<span class="orange">#include</span> <span class="green">&lt;stdio.h&gt;</span>
+
+<span class="orange">int</span> main() {
+    <span class="orange">printf</span>(<span class="green">"hello world\\n"</span>);
+    <span class="orange">return</span> 0;
+}
+
+<span class="cyan">$</span> gcc hello.c -o hello
+<span class="cyan">$</span> ./hello
+<span id="s00-output-line" class="cyan">hello world</span> <span id="s00-cursor" class="cursor"></span></div></div><div id="s00-orb" class="output-orb">hello world</div></div></div>
+        <div id="s00-universal" class="clip" data-start="5" data-duration="10" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div class="language-shell"></div><div class="eyebrow">output is a human bridge</div><div id="s00-lang-label" class="lang-label">C</div><div id="s00-lang-core" class="lang-core">printf</div><div id="s00-tile-py" class="tile" style="left:145px;top:310px">print()</div><div id="s00-tile-js" class="tile" style="right:145px;top:310px">console.log()</div><div id="s00-tile-java" class="tile" style="left:205px;bottom:175px">System.out.println()</div><div id="s00-tile-go" class="tile" style="right:245px;bottom:175px">fmt.Println()</div><div id="s00-tile-rust" class="tile" style="left:49%;bottom:95px">println!()</div><div id="s00-number-joke" class="note"><span class="purple">1337</span> <span class="dim">→</span> <span class="orange">leet</span> <span class="dim">→</span> <span class="cyan">hello</span></div><div id="s00-subtitle" class="note" style="bottom:160px;opacity:0">C's <span class="orange">formatted</span> <span class="cyan">output</span> function</div><div id="s00-under" class="underline" style="left:757px;bottom:147px;width:0"></div></div></div>
+        <div id="s00-manpage" class="clip" data-start="15" data-duration="2" data-track-index="1"><div class="scene"><div class="stage"></div><div class="grid"></div><div id="s00-manual" class="manual"><div class="manual-title">PRINTF(3) <span class="dim">Linux Programmer's Manual</span></div><strong>NAME</strong>
+    printf - formatted output conversion
+
+<strong>SYNOPSIS</strong>
+    <span class="sig">int printf(const char *<span class="focus">format</span>, <span class="ellipsis">...</span>);</span>
+
+<strong>DESCRIPTION</strong>
+    The printf() family of functions produces output according to a format...
+    Conversion specifications are introduced by the percent character...
+    <span class="dim">scrolling through the details...</span></div></div></div>
+      </div>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo('#s00-terminal', { autoAlpha: 0, scale: .92, y: 55 }, { autoAlpha: 1, scale: 1, y: 0, duration: .52, ease: 'power3.out' }, .2)
+          .fromTo('#s00-hero', { autoAlpha: 0, scale: .86 }, { autoAlpha: 1, scale: 1, duration: .7, ease: 'power3.out' }, .05)
+          .fromTo('#s00-output-line', { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: .28, ease: 'power2.out' }, 2.95)
+          .fromTo('#s00-orb', { autoAlpha: 0, x: -80, scale: .7 }, { autoAlpha: 1, x: 0, scale: 1, duration: .55, ease: 'back.out(1.4)' }, 3.15)
+          .to('#s00-hero', { color: 'rgba(248,244,232,.32)', duration: .36 }, 3.15)
+          .fromTo('#s00-lang-core', { autoAlpha: 0, x: 110 }, { autoAlpha: 1, x: 0, duration: .48, ease: 'power3.out' }, 5.12)
+          .fromTo('#s00-lang-label', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: .32 }, 5.2)
+          .to('#s00-lang-core', { innerText: 'print()', duration: .01 }, 5.8)
+          .to('#s00-lang-label', { innerText: 'Python', duration: .01 }, 5.8)
+          .to('#s00-lang-core', { innerText: 'console.log()', duration: .01 }, 6.5)
+          .to('#s00-lang-label', { innerText: 'JavaScript', duration: .01 }, 6.5)
+          .to('#s00-lang-core', { innerText: 'System.out.println()', duration: .01 }, 7.2)
+          .to('#s00-lang-label', { innerText: 'Java', duration: .01 }, 7.2)
+          .to('#s00-lang-core', { innerText: 'fmt.Println()', duration: .01 }, 8.0)
+          .to('#s00-lang-label', { innerText: 'Go', duration: .01 }, 8.0)
+          .to('#s00-lang-core', { innerText: 'println!()', duration: .01 }, 8.7)
+          .to('#s00-lang-label', { innerText: 'Rust', duration: .01 }, 8.7)
+          .fromTo('#s00-tile-py,#s00-tile-js,#s00-tile-java,#s00-tile-go,#s00-tile-rust', { autoAlpha: 0, scale: .65 }, { autoAlpha: 1, scale: 1, duration: .35, stagger: .08, ease: 'back.out(1.4)' }, 9.35)
+          .to('#s00-tile-py,#s00-tile-js,#s00-tile-java,#s00-tile-go,#s00-tile-rust', { x: -95, autoAlpha: .18, duration: .7, stagger: .05, ease: 'power3.in' }, 10.8)
+          .to('#s00-lang-core', { innerText: 'printf', duration: .01 }, 11.2)
+          .to('#s00-lang-label', { innerText: 'C', duration: .01 }, 11.2)
+          .fromTo('#s00-subtitle', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .38 }, 12.0)
+          .fromTo('#s00-under', { scaleX: 0, transformOrigin: 'left' }, { scaleX: 1, duration: .42, ease: 'power3.out' }, 13.0)
+          .fromTo('#s00-manual', { autoAlpha: 0, x: 145, rotation: 2 }, { autoAlpha: 1, x: 0, rotation: 0, duration: .45, ease: 'power3.out' }, 15.02)
+          .to('#s00-manual', { y: -150, duration: .7, ease: 'power2.inOut' }, 15.45);
+        window.__timelines['00-intro-universal-manpage'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+﻿1
+00:00:04,104 --> 00:00:04,838
+Today.
+
+2
+00:00:04,838 --> 00:00:07,640
+NASA's James Webb Space Telescope amazes
+
+3
+00:00:07,640 --> 00:00:10,643
+us with its new views of the universe,
+
+4
+00:00:12,078 --> 00:00:15,415
+but its images
+build upon 40 years of innovation
+
+5
+00:00:15,415 --> 00:00:18,418
+in infrared space telescopes.
+
+6
+00:00:22,622 --> 00:00:25,392
+The universe is full of infrared light
+
+7
+00:00:25,392 --> 00:00:28,695
+at wavelengths much longer
+than what human eyes can see.
+
+8
+00:00:30,764 --> 00:00:34,300
+We need space
+telescopes equipped with special detectors
+
+9
+00:00:34,300 --> 00:00:37,303
+to reveal these hidden wonders.
+
+10
+00:00:38,338 --> 00:00:39,205
+The first
+
+11
+00:00:39,205 --> 00:00:42,609
+was the Infrared Astronomical Satellite,
+or IRAS,
+
+12
+00:00:42,675 --> 00:00:44,744
+launched in 1983.
+
+13
+00:00:44,744 --> 00:00:48,581
+IRAS measured
+the infrared glow of hundreds
+
+14
+00:00:48,581 --> 00:00:51,584
+of thousands of stars and galaxies.
+
+15
+00:00:53,820 --> 00:00:55,522
+In 2003,
+
+16
+00:00:55,522 --> 00:00:59,526
+the Spitzer Space Telescope began
+a new era of infrared astronomy.
+
+17
+00:01:01,227 --> 00:01:04,431
+Spitzer revealed details of galaxies
+and nebulas
+
+18
+00:01:04,631 --> 00:01:07,634
+never seen before.
+
+19
+00:01:08,701 --> 00:01:10,970
+Now Webb takes us even deeper
+
+20
+00:01:10,970 --> 00:01:13,973
+into the infrared universe.
+
+21
+00:01:20,313 --> 00:01:22,082
+We look forward to the wonders yet
+
+22
+00:01:22,082 --> 00:01:25,752
+to be revealed by Webb
+and future infrared telescopes.

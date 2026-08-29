@@ -1,0 +1,29 @@
+$ file bin/*
+/mnt/data/binary-defenses-lab/bin/address-nopie:  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e4dfcb501a0375def445e167bea910e4a1d31517, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/address-pie:    ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=04913f9c8a4ce028c3bf1c79ce868bb49c14e857, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/canary-probe:   ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2bad4e1f7c84c81a0d562ee00b98621c816b99c2, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/exec-probe-nx:  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=854c144d960a7def030348fda9e4b0360eef6545, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/exec-probe-rwx: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e9fa70256af6b2a92e93d096698f2eb7e5b71503, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/relro-full:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2b786e3ecebb8c48e489d9d6b537f1975d5ee1c4, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/relro-none:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=369614b399543733dba7915b99fb267b2113b860, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/relro-partial:  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a09aa604d8dab7007234cf82ffcc519b19a3dda5, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/vuln-canary:    ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=cf30be2a32d9e2a9564f511d9d7fa723cae28e42, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/vuln-full:      ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=687c697bdb29393a759678d401640ee7cead484e, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/vuln-nx:        ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=eecfce8e158b27e2091ab14a2582dbd2fc0ada6d, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/vuln-pie:       ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7b617a5d7cbec1eff22e4da4b27714da54ac0515, for GNU/Linux 3.2.0, with debug_info, not stripped
+/mnt/data/binary-defenses-lab/bin/vuln-plain:     ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=dd82135f8ef43876a65f0763daddc554ce6f8610, for GNU/Linux 3.2.0, with debug_info, not stripped
+
+$ sha256sum bin/*
+515b87a4f86007b35aa11bbfb542f63c1f1391fac2682c9596349b798640cf9a  /mnt/data/binary-defenses-lab/bin/address-nopie
+4b19e5199544d612255281aea8bd1f7125f6b463109189b5fa7f08efcee02d85  /mnt/data/binary-defenses-lab/bin/address-pie
+1849ef65ca22229506a28bc53e9ed7ea8b6dd97e48e7e2139b26ddfd9f394ff0  /mnt/data/binary-defenses-lab/bin/canary-probe
+90dfcbf502614c611628ae9491b43b1a405846d5ea7bafd784d7b5121ffdd02c  /mnt/data/binary-defenses-lab/bin/exec-probe-nx
+31cd5b94b2896e5ffea886c665110f5cfe83cd57051f4412b5d66a651c4be3e5  /mnt/data/binary-defenses-lab/bin/exec-probe-rwx
+4623da037cbdd6f87d8df8ff95ef75ae38fb54eeee9c0c8fdf337038a2c0772c  /mnt/data/binary-defenses-lab/bin/relro-full
+136926c802647fb71df191f7c4ddd60f837dc69550ca271b70866daed50dad87  /mnt/data/binary-defenses-lab/bin/relro-none
+0df7518c03d055056f23c92f4ffdcb5f7e164b0beabf788b94017c27b4aa62f6  /mnt/data/binary-defenses-lab/bin/relro-partial
+0e66f002c1476a126dc840d405219e831f498a89c3533ebb29d73ee8fbcf878c  /mnt/data/binary-defenses-lab/bin/vuln-canary
+9f080085f3d58f776d8cd13711f922a7abfb2137b5aef78741253d70d09793a8  /mnt/data/binary-defenses-lab/bin/vuln-full
+c4e8316a12d4780a86b38f0b042e4e91273bea4ed89240c9abfd44322c414428  /mnt/data/binary-defenses-lab/bin/vuln-nx
+482534ce207c8be5aa740171e5d301ccea252320f85cc36eb64e6ff17ade2ad8  /mnt/data/binary-defenses-lab/bin/vuln-pie
+077d2fc89fdfc612595247871ce9da604e547a74da64b66032998c3328d3c1bc  /mnt/data/binary-defenses-lab/bin/vuln-plain

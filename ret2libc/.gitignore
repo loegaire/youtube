@@ -1,0 +1,9 @@
+node_modules/
+output/
+renders/
+review/*.png
+audio/chatterbox-clips/
+audio/chatterbox-full/
+audio/narration.wav
+audio/reference/voice-reference.wav
+

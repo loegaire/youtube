@@ -1,0 +1,267 @@
+[
+  {
+    "id": "scene-01",
+    "duration": 24,
+    "text": "Hello again, hackers. In the last few lessons, we turned an innocent-looking input into control of a program. First the bytes escaped a buffer. Then they crossed the stack, replaced a saved return address, and sent the processor somewhere the original programmer never selected. With shellcode, that destination was our own data. With ROP, it was a chain of instructions already inside the executable."
+  },
+  {
+    "id": "scene-02",
+    "duration": 27,
+    "text": "Our earlier targets were intentionally generous. The stack could execute. The executable lived at predictable addresses. No secret value guarded the return address. Linker data remained writable. That was not a mistake in the lessons; stripping away defenses let us isolate one exploit primitive at a time. But it also gave us a distorted idea of what a contemporary Linux binary normally looks like."
+  },
+  {
+    "id": "scene-03",
+    "duration": 37,
+    "text": "So today, we reverse perspectives. We keep the memory bug, then add the defenses one at a time and observe exactly what changes—from source code, to ELF metadata, to disassembly, to the live process map. And one historical warning: these defenses did not all emerge from one neat sequence of famous papers. StackGuard has a canonical research paper. PaX developed executable-space protection and ASLR through implementation documents. PIE and RELRO grew through compiler, linker, loader, and distribution engineering. We will show those primary artifacts honestly."
+  },
+  {
+    "id": "scene-04",
+    "duration": 32,
+    "text": "Before discussing a single instruction, here is the complete laboratory. It contains five small source files, one reproducible build script, one capture script, thirteen binaries, and the raw outputs used throughout this video. We are not beginning from a cropped instruction or a tidy diagram. We are beginning from the files that produced every later claim."
+  },
+  {
+    "id": "scene-05",
+    "duration": 32,
+    "text": "This capture was made on sixty-four-bit Linux with GCC fourteen point two and GNU binutils two point forty-four. Kernel address randomization is set to mode two. We do not disable ASLR for convenient screenshots, and we do not invent addresses that remain stable across reruns. When this lab is captured again, several pointers and process IDs should change. That change is evidence, not an inconvenience."
+  },
+  {
+    "id": "scene-06",
+    "duration": 36,
+    "text": "This is the complete vulnerable program. There is no hidden helper and no omitted cleanup path. `greet` reserves thirty-two bytes for `name`, then passes that address to `read` while requesting as many as one hundred and twenty-eight bytes. `main` disables output buffering only so the runtime evidence appears in a predictable order. Every protected variant begins with this same source."
+  },
+  {
+    "id": "scene-07",
+    "duration": 34,
+    "text": "When we build the variants, GCC warns us before the program ever runs. The warning is unusually direct: `read` may write one hundred and twenty-eight bytes into an object of size thirty-two. That warning is not NX, a canary, ASLR, PIE, or RELRO. It identifies the defect. The mitigations we study later only constrain what can happen after the defective write is allowed to exist."
+  },
+  {
+    "id": "scene-08",
+    "duration": 32,
+    "text": "The build produces real ELF files, with distinct build IDs and hashes. `file` identifies which are ordinary executables and which are position-independent executables. We record those identities because later screenshots must point back to the exact artifact that generated them. A clean diagram is useful only after the evidence chain is intact."
+  },
+  {
+    "id": "scene-09",
+    "duration": 36,
+    "text": "Before drawing a stack frame, we ask the binary what GCC actually emitted. `objdump` interleaves the full source with the machine instructions for `greet`. The function starts at address `0x401156`, reserves `0x30` bytes, calculates the buffer as `rbp minus 0x30`, loads `0x80`—one hundred and twenty-eight—into the third argument register, calls `read`, then reaches `leave` and `ret` without an integrity check."
+  },
+  {
+    "id": "scene-10",
+    "duration": 32,
+    "text": "Now the diagram has a provenance. `sub rsp,0x30` gives the local frame area. `rbp minus 0x30` locates the first byte of `name`. The saved frame pointer and return address sit above the current frame. This is still a reconstruction—we did not dump every stack byte—but its distances are derived from the instructions we just inspected, not from a generic textbook layout."
+  },
+  {
+    "id": "scene-11",
+    "duration": 33,
+    "text": "To isolate execute permission, we use a second complete program. Its local array contains six x86-64 bytes: `mov eax, 42; ret`. The program prints the array’s address, casts that address to a function pointer, and calls it. The two binaries are identical except for the linker’s stack-execution request. This is safer and clearer than asking a full shell payload to prove several things at once."
+  },
+  {
+    "id": "scene-12",
+    "duration": 33,
+    "text": "First we inspect the ELF program headers, not a hand-written permission card. In the executable-stack build, the `GNU_STACK` row ends in `RWE`: read, write, execute. In the protected build, the same row ends in `RW`: read and write, with execute absent. The close-up only appears after the complete header table has established where that row came from."
+  },
+  {
+    "id": "scene-13",
+    "duration": 32,
+    "text": "Now we run both artifacts. With the executable stack, the program prints its stack buffer, calls those bytes, and returns forty-two with status zero. With NX, the same call is terminated by signal eleven and the shell reports status one hundred and thirty-nine. The bytes were accepted as data in both cases. The difference appears only when the CPU tries to fetch instructions from that page."
+  },
+  {
+    "id": "scene-14",
+    "duration": 34,
+    "text": "The wider idea is executable-space protection. PaX developed PAGEEXEC and related mechanisms for systems where convenient hardware support was not always available, and its documents describe making stacks, heaps, and anonymous mappings non-executable while reserving execution for mappings that contain code. NX is not a detector looking for suspicious byte patterns. It is permission enforcement."
+  },
+  {
+    "id": "scene-15",
+    "duration": 36,
+    "text": "The write into the array succeeds because the stack is writable. The indirect call also succeeds in changing RIP because NX is not control-flow integrity. Failure occurs at the next stage: instruction fetch. The translation and permission machinery sees an address in a page without execute permission, so no instruction from `b8 2a...` reaches the decoder. The data survives; execution does not begin."
+  },
+  {
+    "id": "scene-16",
+    "duration": 32,
+    "text": "This is why ROP was the next logical technique. The corrupted stack supplies data—addresses and values—while instruction fetches stay inside executable code pages. NX removed the assumption that writable bytes could also be instructions. It did not remove the overflow, stop `ret`, or erase the program’s own executable code. One attack route closed; another remained."
+  },
+  {
+    "id": "scene-17",
+    "duration": 36,
+    "text": "To see what stack protection changes, we compare the complete `greet` functions. The unprotected version reserves `0x30` bytes and returns directly. The protected version reserves `0x40`, loads a value from `fs:0x28`, stores it at `rbp minus eight`, performs the same vulnerable `read`, then reloads and compares that saved value before `leave` and `ret`."
+  },
+  {
+    "id": "scene-18",
+    "duration": 35,
+    "text": "The disassembly tells us where the compiler reads and stores the guard, but we can also measure the values. This architecture-specific probe reads the x86-64 thread-local guard from `fs:0x28` and the compiler’s frame copy from `rbp minus eight`, then prints both. It is instrumentation for this lab, not portable application code, and its complete source remains on screen before we inspect the numbers."
+  },
+  {
+    "id": "scene-19",
+    "duration": 32,
+    "text": "Across three executions, the guard changes. In each execution, however, the thread-local guard and the frame copy are identical. The first run prints `cc6f...2200`; the second prints `8f19...7a00`; the third prints `5b33...3800`. We are not choosing aesthetically convenient values. These are the values recorded by the probe on this capture."
+  },
+  {
+    "id": "scene-20",
+    "duration": 33,
+    "text": "In 1998, Crispin Cowan and his coauthors presented StackGuard. Their paper places a canary word between local data and the return address, then verifies it before the function returns. Its Figure Two is not merely decorative history; it gives us a primary-source stack relationship to compare with the compiler output we just measured."
+  },
+  {
+    "id": "scene-21",
+    "duration": 36,
+    "text": "At function entry, the protected binary reserves sixty-four bytes. Instruction `0x40116e` copies the thread-local guard into `rax`. Instruction `0x401177` stores it at `rbp minus eight`. The buffer begins at `rbp minus 0x30`. That puts the canary above the buffer in the path toward saved frame data. The diagram is a reconstruction, but every distance shown comes from the selected instructions."
+  },
+  {
+    "id": "scene-22",
+    "duration": 31,
+    "text": "The canary does not stop the write. The first thirty-two bytes occupy the declared array. More bytes continue through adjacent frame storage. Eventually the stream overwrites the saved guard, then can continue toward saved `rbp` and the return address. The defensive action is delayed. Stack protection records that corruption now so it can react before control is returned later."
+  },
+  {
+    "id": "scene-23",
+    "duration": 35,
+    "text": "The epilogue reloads the frame copy at `0x4011b8`, subtracts the current thread-local guard at `0x4011bc`, and jumps over the failure call only if the result is zero. If the values differ, `0x4011c7` calls `__stack_chk_fail`. Only after the equality path reaches `0x4011cc` do `leave` and `ret` execute. The corrupted return address can exist in memory and still never reach RIP."
+  },
+  {
+    "id": "scene-24",
+    "duration": 32,
+    "text": "With ninety-six `A` bytes, the plain build prints that it read ninety-six bytes, then dies by signal eleven with status one hundred and thirty-nine. The canary build reads the same ninety-six bytes, prints `stack smashing detected`, then terminates by signal six with status one hundred and thirty-four. One crashes after corrupted control state is consumed. The other detects corruption before returning."
+  },
+  {
+    "id": "scene-25",
+    "duration": 30,
+    "text": "A stack canary is therefore a tamper check for particular protected frames, not a universal memory-safety system. It does not repair `read`, protect every heap object, or make all pointer corruption impossible. And if another bug reveals the current guard, an attacker may reproduce that value while overwriting data around it. The next defenses also rely on hidden values—and that makes disclosure our recurring enemy."
+  },
+  {
+    "id": "scene-26",
+    "duration": 36,
+    "text": "To observe address randomization, we use another complete program. It prints its process ID, the address of `main`, one local stack variable, a reference to `puts`, and the actual libc implementation found with `dlsym`. If launched with `--hold`, it waits so we can inspect `/proc` while that exact process is still alive. The kernel reports randomization mode two."
+  },
+  {
+    "id": "scene-27",
+    "duration": 32,
+    "text": "Across four runs of the non-PIE binary, `main` remains `0x401186`, and its PLT reference for `puts` remains `0x401030`. The local stack pointer changes every time. The actual libc `puts` address changes every time. This is the first important separation: ASLR is active, but an ordinary non-PIE main executable can still provide fixed addresses."
+  },
+  {
+    "id": "scene-28",
+    "duration": 35,
+    "text": "This is the actual map for that held process. The executable begins at `0x00400000`. Its executable page is the next mapping. Libc’s file mapping begins at `0x7f704aa1e000`, and the user stack occupies the high-address range beginning at `0x7ffe4a34d000`. We show the whole map first because a selected row without its process and file context is easy to misread."
+  },
+  {
+    "id": "scene-29",
+    "duration": 32,
+    "text": "The PaX ASLR design states the central objective plainly: introduce randomness into addresses so attacks requiring advance knowledge become unreliable. It also states the central weakness: if the process can disclose its randomized layout, guessing is no longer necessary. The protection is not that the addresses cease to exist. It is that their current values become secret process state."
+  },
+  {
+    "id": "scene-30",
+    "duration": 33,
+    "text": "ASLR does not normally throw every function into an independent random slot. It randomizes the base of mappings or regions. In one particular libc build, `puts` remains at a fixed offset from the library’s base. When the library moves, the base and `puts` move together. That preserved internal distance is precisely what later allows one leaked pointer to reveal the whole region."
+  },
+  {
+    "id": "scene-31",
+    "duration": 32,
+    "text": "For PID fifteen twenty-one, the captured libc mapping begins at `0x7f704aa1e000`, while `dlsym` reports `puts` at `0x7f704aa9e5a0`. `nm` independently reports the `puts` symbol offset as `0x805a0` in this exact libc file. Adding the captured base and that file offset reproduces the runtime address exactly. These numbers belong to this build and this run; the relationship is the reusable part."
+  },
+  {
+    "id": "scene-32",
+    "duration": 32,
+    "text": "Address randomization was also studied as a broader compiler and loader strategy. Bhatkar, DuVarney, and Sekar described address obfuscation across code and data. Shacham and colleagues later evaluated the practical limits of ASLR in a thirty-two-bit setting, where restricted entropy and repeated attempts mattered greatly. The correct lesson is neither ‘ASLR solves exploitation’ nor ‘ASLR is useless.’ Its strength depends on entropy, restart behavior, architecture, and especially information disclosure."
+  },
+  {
+    "id": "scene-33",
+    "duration": 28,
+    "text": "When a program reveals a pointer into libc, the attacker no longer needs to guess that run’s base. Subtract the known offset of the revealed object, and the randomized base becomes measurable. ASLR has not been switched off. Its hidden state has been observed. That is the ASLR part of ret2libc—but before we can use the main executable to perform such a leak, we must ask whether the executable itself is fixed."
+  },
+  {
+    "id": "scene-34",
+    "duration": 36,
+    "text": "PIE is visible before runtime. `readelf` identifies `address-nopie` as type `EXEC` with entry point `0x4010a0`; `nm` places `main` at `0x401186`. The PIE build is type `DYN`, specifically a position-independent executable, with entry point `0x10a0`; `nm` records `main` as offset `0x1189`. We first inspect the complete headers and symbol tables, then extract those rows."
+  },
+  {
+    "id": "scene-35",
+    "duration": 32,
+    "text": "PIE and ASLR are related but not synonymous. PIE is the property that lets the executable operate at different bases. ASLR is the runtime policy that selects a base for a particular execution. A relocatable executable can be placed somewhere new. A fixed-address executable still expects its linked home. Only the combination gives us a randomized main binary."
+  },
+  {
+    "id": "scene-36",
+    "duration": 32,
+    "text": "In the four PIE executions, `main` changes from `0x55949c2c2189` to three other bases. The stack changes, and libc changes as before. Here the printed `puts` reference also resolves to the randomized libc implementation. The important result is that the executable’s own code address is no longer a stable island across runs."
+  },
+  {
+    "id": "scene-37",
+    "duration": 34,
+    "text": "For PID fifteen twenty-two, `/proc` shows the PIE file mapping beginning at `0x55bce0674000`. The binary’s symbol table gives `main` an offset of `0x1189`. Add them, and we obtain the printed runtime address exactly: `0x55bce0675189`. PIE therefore changes absolute addresses while preserving offsets within that build, just as ASLR-preserved offsets existed inside libc."
+  },
+  {
+    "id": "scene-38",
+    "duration": 32,
+    "text": "Without PIE, fixed addresses in the main binary can provide a PLT call, a GOT location, a re-entry point, or a ROP gadget even while libc moves. With PIE, those objects move together with the executable. An exploit often needs a binary pointer leak before using them reliably. But PIE does not erase the objects, change their internal offsets on every launch, fix the overflow, or conceal a pointer that the program itself prints."
+  },
+  {
+    "id": "scene-39",
+    "duration": 34,
+    "text": "To observe dynamic binding order, we use a fourth complete program. It writes explicit markers to standard error before and after the first call to `puts`, then sleeps so its mappings can be inspected. Three non-PIE binaries are built from this source: no RELRO with lazy binding, partial RELRO with lazy binding, and full RELRO with immediate binding."
+  },
+  {
+    "id": "scene-40",
+    "duration": 38,
+    "text": "RELRO cannot be understood from one green label. For each binary, we record program headers, the dynamic section, relocation records, and section headers. No RELRO has no `GNU_RELRO` segment. Partial RELRO has one beginning at `0x403df8`, but no `BIND_NOW`. Full RELRO has a larger protected range beginning at `0x403dc0`, and its dynamic section contains both `BIND_NOW` and the `NOW` flag."
+  },
+  {
+    "id": "scene-41",
+    "duration": 34,
+    "text": "Next we connect the file’s relocation address to the live process page that contains it. In the no-RELRO binary, `puts` has relocation address `0x4033a0`, inside a writable mapping. With partial RELRO, `puts` is at `0x404000`, again inside a writable mapping. With full RELRO, `puts` is at `0x403fd8`, and the containing page is mapped read-only."
+  },
+  {
+    "id": "scene-42",
+    "duration": 36,
+    "text": "To see *when* symbols are resolved, we ask the dynamic loader for binding diagnostics. The raw output is dense—more than a hundred lines—because the loader reports bindings for the executable, libc, and the loader itself. We show that complete stream first. Only then do we select the lines around `transferring control`, our program markers, and the bindings for `write`, `puts`, and `sleep`."
+  },
+  {
+    "id": "scene-43",
+    "duration": 32,
+    "text": "In the partial build, the loader transfers control to the program first. `write` is bound as the first marker runs. The program announces that it is before its first `puts`. Only then does the loader bind `puts`. `sleep` is bound later as well. Lazy binding postpones these writes until the corresponding call path is used, which is why the procedure-linkage slot must remain writable during normal execution."
+  },
+  {
+    "id": "scene-44",
+    "duration": 34,
+    "text": "In the full build, the order reverses. The loader binds `puts`, `write`, and `sleep` before the line that transfers control to the executable. Only afterward do our `entered main` and `before first puts` markers appear. Because the required procedure-linkage writes are completed during startup, the page containing `puts` can be read-only by the time ordinary program code runs."
+  },
+  {
+    "id": "scene-45",
+    "duration": 34,
+    "text": "Drepper’s engineering report explains the layout problem behind RELRO. Some ELF structures must be writable while relocations are performed, but should not remain writable afterward. The report’s own diagrams show protected ELF data reordered next to read-only data so the loader can cover it with a read-only page range after relocation. Full RELRO combines that layout with immediate binding."
+  },
+  {
+    "id": "scene-46",
+    "duration": 34,
+    "text": "The conceptual calling path is now safe to animate because we have already located its real relocation entries and binding events. A call reaches the PLT route. The route consults the relevant GOT slot. Before resolution, that route can enter the dynamic resolver. After resolution, the slot contains the libc destination. Partial RELRO permits later loader writes for lazy binding. Full RELRO resolves first, then removes write permission."
+  },
+  {
+    "id": "scene-47",
+    "duration": 31,
+    "text": "Full RELRO blocks writes to the protected relocation page. It does not make the page unreadable. The mapping we measured is `r--p`, not inaccessible. A disclosure primitive may still read the resolved `puts` pointer, and that pointer can still reveal libc’s randomized base. RELRO closes the GOT-overwrite route. It does not close code reuse, information leakage, or corruption of unrelated writable objects."
+  },
+  {
+    "id": "scene-48",
+    "duration": 35,
+    "text": "Only now do we compress the evidence into a summary. NX comes from stack execution metadata and page enforcement. The canary appears as compiler-generated prologue and epilogue instructions. ASLR appears in changing runtime mappings. PIE changes the ELF type and lets the main binary receive a randomized base. RELRO combines ELF layout, binding policy, and loader-enforced read-only pages."
+  },
+  {
+    "id": "scene-49",
+    "duration": 36,
+    "text": "The source-level defect never changed: thirty-two bytes of storage, one hundred and twenty-eight bytes requested. What changed was the point at which an exploit’s assumptions failed. NX waits until instruction fetch. The canary reacts before `ret`. ASLR invalidates yesterday’s runtime pointer. PIE removes fixed main-binary addresses. Full RELRO rejects a write to the relocation page."
+  },
+  {
+    "id": "scene-50",
+    "duration": 36,
+    "text": "No single layer is the final answer. ROP can route around NX. A pointer disclosure can reveal an ASLR base. A leaked canary can preserve the stack check. A leaked code pointer can reveal a PIE base. Full RELRO can force an attacker away from GOT overwrites without preventing every code-reuse path. Defense in depth works by making a successful chain require several independent capabilities in the same vulnerable process."
+  },
+  {
+    "id": "scene-51",
+    "duration": 34,
+    "text": "Return once more to the compiler warning. It identified the actual engineering failure before any mitigation activated. NX did not reduce the requested length. The canary did not make the destination larger. ASLR and PIE did not validate the pointer. RELRO did not constrain `read`. A corrected bound, a memory-safe abstraction, or a design that cannot express this mismatch addresses the bug itself. The protections reduce exploitability when bugs remain."
+  },
+  {
+    "id": "scene-52",
+    "duration": 36,
+    "text": "And now ret2libc stops looking like a bag of arbitrary tricks. NX explains why we reuse executable code instead of running bytes from the stack. ASLR explains why libc’s base must be learned. PIE explains why even our PLT entries, GOT locations, and gadgets may require a binary-base leak. The canary explains why a blind overflow can die before `ret`. RELRO explains why reading a GOT entry may remain useful even when overwriting it is blocked."
+  },
+  {
+    "id": "scene-53",
+    "duration": 36,
+    "text": "Today we did not begin with five floating shields and assign them magical powers. We followed real source into real binaries, inspected their headers and instructions, ran them, read their live mappings, and then built the diagrams from that evidence. The result is a defender’s map of exploitation: executable permission, stack integrity, randomized placement, relocatable code, and hardened relocation data. Next time, we ask what happens when the program leaks the map."
+  }
+]

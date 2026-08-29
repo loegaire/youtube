@@ -1,0 +1,10 @@
+$ readelf -hW bin/address-nopie | grep -E 'Type:|Entry point'
+  Type:                              EXEC (Executable file)
+  Entry point address:               0x4010a0
+$ nm -n bin/address-nopie | grep ' main$'
+0000000000401186 T main
+$ readelf -hW bin/address-pie | grep -E 'Type:|Entry point'
+  Type:                              DYN (Position-Independent Executable file)
+  Entry point address:               0x10a0
+$ nm -n bin/address-pie | grep ' main$'
+0000000000001189 T main

@@ -1,0 +1,1355 @@
+{
+  "fps": 24,
+  "seams": [
+    {
+      "id": "scene-0->scene-1",
+      "cut": 27.259090909090904,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-0 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-1 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-1->scene-2",
+      "cut": 42.51818181818181,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-1 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-2 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-2->scene-3",
+      "cut": 57.77727272727272,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-2 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-3 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-3->scene-4",
+      "cut": 70.12727272727271,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-3 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-4 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-4->scene-5",
+      "cut": 79.20454545454544,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-4 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-5 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-5->scene-6",
+      "cut": 89.37272727272726,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-5 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-6 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-6->scene-7",
+      "cut": 100.63181818181818,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-6 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-7 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-7->scene-8",
+      "cut": 113.7090909090909,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-7 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-8 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-8->scene-9",
+      "cut": 125.7090909090909,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-8 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-9 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-9->scene-10",
+      "cut": 137.41794142393525,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-9 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-10 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-10->scene-11",
+      "cut": 150.35499018390158,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-10 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-11 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-11->scene-12",
+      "cut": 163.2526944188469,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-11 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-12 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-12->scene-13",
+      "cut": 176.2526944188469,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-12 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-13 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-13->scene-14",
+      "cut": 187.96154493369124,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-13 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-14 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-14->scene-15",
+      "cut": 200.96154493369124,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-14 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-15 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-15->scene-16",
+      "cut": 213.96154493369124,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-15 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-16 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-16->scene-17",
+      "cut": 227.41859048840095,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-16 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-17 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-17->scene-18",
+      "cut": 241.22973676829997,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-17 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-18 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-18->scene-19",
+      "cut": 255.22973676829997,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-18 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-19 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-19->scene-20",
+      "cut": 269.040883048199,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-19 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-20 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-20->scene-21",
+      "cut": 282.97006290316114,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-20 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-21 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-21->scene-22",
+      "cut": 296.97006290316114,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-21 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-22 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-22->scene-23",
+      "cut": 311.73399575303495,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-22 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-23 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-23->scene-24",
+      "cut": 326.73399575303495,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-23 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-24 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-24->scene-25",
+      "cut": 342.3326815978204,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-24 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-25 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-25->scene-26",
+      "cut": 357.4198886173324,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-25 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-26 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-26->scene-27",
+      "cut": 373.13660803718096,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-26 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-27 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-27->scene-28",
+      "cut": 388.77463840698744,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-27 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-28 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-28->scene-29",
+      "cut": 405.01135462157936,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-28 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-29 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-29->scene-30",
+      "cut": 421.2874153611923,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-29 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-30 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-30->scene-31",
+      "cut": 437.7995432509315,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-30 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-31 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-31->scene-32",
+      "cut": 454.19363756560756,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-31 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-32 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-32->scene-33",
+      "cut": 471.69789655034253,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-32 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-33 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-33->scene-34",
+      "cut": 488.92674385993024,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-33 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-34 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-34->scene-35",
+      "cut": 505.5962498497536,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-34 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-35 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-35->scene-36",
+      "cut": 522.5411675147241,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-35 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-36 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-36->scene-37",
+      "cut": 539.0532954044633,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-36 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-37 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-37->scene-38",
+      "cut": 555.4867342441604,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-37 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-38 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-38->scene-39",
+      "cut": 572.0775511839416,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-38 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-39 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-39->scene-40",
+      "cut": 588.707712648744,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-39 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-40 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-40->scene-41",
+      "cut": 605.023117913378,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-40 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-41 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-41->scene-42",
+      "cut": 622.8814776233022,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-41 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-42 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-42->scene-43",
+      "cut": 640.267703032974,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-42 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-43 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-43->scene-44",
+      "cut": 657.6539284426459,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-43 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-44 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-44->scene-45",
+      "cut": 675.0401538523178,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-44 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-45 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-45->scene-46",
+      "cut": 692.4263792619896,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-45 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-46 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-46->scene-47",
+      "cut": 709.9306382467246,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-46 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-47 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-47->scene-48",
+      "cut": 727.1988300813333,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-47 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-48 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-48->scene-49",
+      "cut": 744.2309547658159,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-48 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-49 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-49->scene-50",
+      "cut": 761.6958692255298,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-49 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-50 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-50->scene-51",
+      "cut": 779.554228935454,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-50 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-51 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-51->scene-52",
+      "cut": 798.0899635402059,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-51 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-52 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-52->scene-53",
+      "cut": 816.4683200448735,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-52 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-53 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-53->scene-54",
+      "cut": 835.0040546496253,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-53 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-54 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-54->scene-55",
+      "cut": 853.382411154293,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-54 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-55 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-55->scene-56",
+      "cut": 871.6033895588765,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-55 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-56 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-56->scene-57",
+      "cut": 889.706334388397,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-56 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-57 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-57->scene-58",
+      "cut": 907.7699346928963,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-57 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-58 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-58->scene-59",
+      "cut": 926.8256660923914,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-58 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-59 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-59->scene-60",
+      "cut": 945.6761568973114,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-59 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-60 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-60->scene-61",
+      "cut": 964.9679554469328,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-60 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-61 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-61->scene-62",
+      "cut": 984.1417204214911,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-61 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-62 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-62->scene-63",
+      "cut": 1003.4335189711124,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-62 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-63 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-63->scene-64",
+      "cut": 1022.1351496454183,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-63 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-64 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-64->scene-65",
+      "cut": 1041.0335029448293,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-64 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-65 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-65->scene-66",
+      "cut": 1060.0892343443245,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-65 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-66 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-66->scene-67",
+      "cut": 1079.8616851636682,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-66 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-67 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-67->scene-68",
+      "cut": 1100.2636483833485,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-67 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-68 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-68->scene-69",
+      "cut": 1120.3508554028606,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-68 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-69 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-69->scene-70",
+      "cut": 1141.9416723426418,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-69 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-70 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-70->scene-71",
+      "cut": 1163.1783885572338,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-70 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-71 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-71->scene-72",
+      "cut": 1184.5331383468888,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-71 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-72 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-72->scene-73",
+      "cut": 1205.4157538362915,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-72 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-73 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-73->scene-74",
+      "cut": 1226.3770583757362,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-73 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-74 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    },
+    {
+      "id": "scene-74->scene-75",
+      "cut": 1247.7711526904122,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#scene-74 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.48
+      },
+      "entry": {
+        "selector": "#scene-75 .stage",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.52,
+        "travel": 11.5
+      }
+    }
+  ]
+}

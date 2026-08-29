@@ -1,0 +1,2 @@
+$ readelf -sW ./vuln | grep __stack_chk_fail || echo "no __stack_chk_fail symbol"
+no __stack_chk_fail symbol

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heap Overflow / Underflow — Visual Audit</title>
+    <style>
+      html, body { margin: 0; width: 100%; min-height: 100%; background: #0A0D0B; }
+      motion-canvas-player { width: 1920px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <!-- Width, height, and quality are intentionally omitted here. The player
+         reads the project defaults after its Blob source is attached; setting
+         those attributes during custom-element construction triggers a known
+         null-player configure race in Motion Canvas 3.17.2. -->
+    <motion-canvas-player id="player"></motion-canvas-player>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

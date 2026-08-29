@@ -1,0 +1,219 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Caption,JetBrainsMono Nerd Font,48,&H00EEF3F1,&H00000000,&H5C0B0D0A,&H5C0B0D0A,-1,0,0,0,100,100,-1,0,3,10,0,2,140,140,56,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:03.84,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hHello again,\Nhackers.\NToday our target looks
+Dialogue: 0,0:00:03.84,0:00:07.03,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hharmless:\Nan echo server.\NWe type text,
+Dialogue: 0,0:00:07.03,0:00:10.12,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hit gives text back.\NBut beneath that
+Dialogue: 0,0:00:10.12,0:00:12.78,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hecho is a stack frame,\Na missing
+Dialogue: 0,0:00:12.78,0:00:16.62,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hsize limit,\Nand one tiny return instruction
+Dialogue: 0,0:00:16.62,0:00:19.60,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthat lets us borrow code from libc.
+Dialogue: 0,0:00:19.60,0:00:22.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThis is ret2libc:\Nnot shellcode,\Nnot guessed
+Dialogue: 0,0:00:22.82,0:00:25.94,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\haddresses,\Nbut a traced route through code
+Dialogue: 0,0:00:25.94,0:00:28.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe process already loaded.
+Dialogue: 0,0:00:28.00,0:00:33.03,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hWe start with exactly what the challenge
+Dialogue: 0,0:00:33.03,0:00:36.73,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hgave us.\NNo friendly C source.\NNo
+Dialogue: 0,0:00:36.73,0:00:41.17,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcomment that explains the bug.\NJust a
+Dialogue: 0,0:00:41.17,0:00:45.76,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbinary,\Na libc,\Nand a Makefile fragment.
+Dialogue: 0,0:00:45.76,0:00:49.76,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe raw ls output stays on screen
+Dialogue: 0,0:00:49.76,0:00:50.50,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfirst.
+Dialogue: 0,0:00:50.50,0:00:53.84,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThen file tells us that vuln is
+Dialogue: 0,0:00:53.84,0:00:58.92,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\ha 64-bit dynamically linked executable and it
+Dialogue: 0,0:00:58.92,0:01:02.93,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\his not stripped.\NThe supplied libc is
+Dialogue: 0,0:01:02.93,0:01:07.20,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\ha stripped 64-bit shared object.\NThat is
+Dialogue: 0,0:01:07.20,0:01:09.88,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hour evidence workspace,
+Dialogue: 0,0:01:09.88,0:01:14.18,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hand every clean teaching fragment in this
+Dialogue: 0,0:01:14.18,0:01:18.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hepisode will visibly descend from it.
+Dialogue: 0,0:01:18.00,0:01:23.14,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe Makefile is build context,\Nnot source.
+Dialogue: 0,0:01:23.14,0:01:26.16,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hIt says 64-bit,\Nno PIE,\Nand a
+Dialogue: 0,0:01:26.16,0:01:31.14,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hlocal runpath.\NThe binary still gets the
+Dialogue: 0,0:01:31.14,0:01:35.52,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfinal word.\Nreadelf says its type is
+Dialogue: 0,0:01:35.52,0:01:40.96,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hEXEC.\NGNU_STACK is readable and writable,\Nbut
+Dialogue: 0,0:01:40.96,0:01:42.93,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnot executable.
+Dialogue: 0,0:01:42.93,0:01:47.80,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe dynamic section gives us RUNPATH dot
+Dialogue: 0,0:01:47.80,0:01:52.81,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hslash and GNU_RELRO,\Nwhile the symbol check
+Dialogue: 0,0:01:52.81,0:01:58.11,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfinds no stack canary symbol.\NTogether those
+Dialogue: 0,0:01:58.11,0:02:01.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hrows mean:\Nno PIE,\NNX enabled,\Nno
+Dialogue: 0,0:02:01.55,0:02:06.28,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcanary,\Nand partial RELRO.\NNX changes the
+Dialogue: 0,0:02:06.28,0:02:07.85,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hattack shape.
+Dialogue: 0,0:02:07.85,0:02:11.43,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hBytes can sit on the stack,\Nbut
+Dialogue: 0,0:02:11.43,0:02:17.08,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthey cannot become instructions.\NSo our stack
+Dialogue: 0,0:02:17.08,0:02:22.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hmust become a route made from addresses.
+Dialogue: 0,0:02:22.00,0:02:26.28,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe symbol table is our map because
+Dialogue: 0,0:02:26.28,0:02:30.72,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthis binary is not stripped.\NIt names
+Dialogue: 0,0:02:30.72,0:02:36.78,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hconvert_case at 0x400677,\Ndo_stuff at 0x4006d8,\Nand
+Dialogue: 0,0:02:36.78,0:02:41.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hmain at 0x400771.\NThat suggests a flow
+Dialogue: 0,0:02:41.36,0:02:46.53,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfrom main into do_stuff,\Nthen through scanf,
+Dialogue: 0,0:02:46.53,0:02:49.78,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\ha conversion loop,\Nand puts.
+Dialogue: 0,0:02:49.78,0:02:53.87,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hIt is only a provisional map until
+Dialogue: 0,0:02:53.87,0:02:59.86,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe disassembly proves it.\NNotice the discipline
+Dialogue: 0,0:02:59.86,0:03:04.69,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hhere:\Nthe friendly diagram is pulled out
+Dialogue: 0,0:03:04.69,0:03:09.81,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hof the complete symbol table,\Nnot invented
+Dialogue: 0,0:03:09.81,0:03:12.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hon an empty canvas.
+Dialogue: 0,0:03:12.00,0:03:16.48,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hNow we open all of do_stuff before
+Dialogue: 0,0:03:16.48,0:03:22.11,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hisolating the bug.\NThe function creates a
+Dialogue: 0,0:03:22.11,0:03:26.42,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hstack frame with sub rsp,\N0x90.\NIt
+Dialogue: 0,0:03:26.42,0:03:32.39,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcalculates rbp minus 0x80,\Nthen passes that
+Dialogue: 0,0:03:32.39,0:03:37.54,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\haddress to scanf.\NA second scanf lands
+Dialogue: 0,0:03:37.54,0:03:39.86,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hat rbp minus 0x81.
+Dialogue: 0,0:03:39.86,0:03:46.08,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe loop begins at 0x400728,\Ncalls convert_case,
+Dialogue: 0,0:03:46.08,0:03:51.34,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthen the function calls puts,\Nleaves,\Nand
+Dialogue: 0,0:03:51.34,0:03:57.25,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hreturns.\NThe format strings are not friendly
+Dialogue: 0,0:03:57.25,0:04:01.56,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hsource text;\Nthey are raw bytes in
+Dialogue: 0,0:04:01.56,0:04:05.23,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hrodata.\NThe dump says 25 5b 5e
+Dialogue: 0,0:04:05.23,0:04:09.86,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0a 5d 00:\Npercent,\Nopen bracket,\Ncaret,
+Dialogue: 0,0:04:09.86,0:04:15.23,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnewline,\Nclose bracket,\Nzero.\NThat decodes to
+Dialogue: 0,0:04:15.23,0:04:21.51,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hpercent bracket caret newline bracket:\Nscan until
+Dialogue: 0,0:04:21.51,0:04:25.99,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnewline,\Nwith no width limit.\NThe next
+Dialogue: 0,0:04:25.99,0:04:30.32,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbytes decode to percent c.\NThe first
+Dialogue: 0,0:04:30.32,0:04:32.71,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hscanf is the hazard,
+Dialogue: 0,0:04:32.71,0:04:37.64,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hand its proof is the rodata dump
+Dialogue: 0,0:04:37.64,0:04:42.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hjoined back to the call site.
+Dialogue: 0,0:04:42.00,0:04:48.01,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe input begins at rbp minus 0x80.
+Dialogue: 0,0:04:48.01,0:04:54.87,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThat places the saved base pointer 128
+Dialogue: 0,0:04:54.87,0:05:01.31,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbytes above the buffer,\Nand the saved
+Dialogue: 0,0:05:01.31,0:05:08.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hreturn address eight bytes after that.\NOne
+Dialogue: 0,0:05:08.82,0:05:16.76,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hhundred twenty-eight plus eight gives us the
+Dialogue: 0,0:05:16.76,0:05:21.26,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcontrol offset:\N136 bytes.
+Dialogue: 0,0:05:21.26,0:05:27.63,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hBut this challenge has a strange visible
+Dialogue: 0,0:05:27.63,0:05:33.80,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hside effect.\Ndo_stuff sends the first one
+Dialogue: 0,0:05:33.80,0:05:43.16,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hhundred bytes through convert_case.\NThe disassembly checks
+Dialogue: 0,0:05:43.16,0:05:49.70,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hletter ranges,\Nthen adds or subtracts 0x20.
+Dialogue: 0,0:05:49.70,0:05:56.07,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe loop bound compares the counter with
+Dialogue: 0,0:05:56.07,0:06:03.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0x63,\Nso indices zero through ninety-nine mutate.
+Dialogue: 0,0:06:03.55,0:06:07.64,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hA wall of As can echo as
+Dialogue: 0,0:06:07.64,0:06:15.38,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hAaAaAa.\NOur return address begins at byte
+Dialogue: 0,0:06:15.38,0:06:22.89,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h136,\Nsafely after that mutation zone.\NThe
+Dialogue: 0,0:06:22.89,0:06:29.72,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcounter itself sits at rbp minus 0x8,
+Dialogue: 0,0:06:29.72,0:06:38.13,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hinside the overwritten region.\NWhen the loop
+Dialogue: 0,0:06:38.13,0:06:43.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfinishes,\Nit leaves 0x64 there:
+Dialogue: 0,0:06:43.82,0:06:50.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hASCII lowercase d.\NSo a trailing d
+Dialogue: 0,0:06:50.55,0:06:57.04,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\his an echo artifact,\Nnot the leak.
+Dialogue: 0,0:06:57.04,0:07:02.77,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe leak is the next thing we
+Dialogue: 0,0:07:02.77,0:07:10.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hwill deliberately route to stdout.
+Dialogue: 0,0:07:10.00,0:07:16.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hTo defeat ASLR,\Nwe need one real
+Dialogue: 0,0:07:16.36,0:07:25.25,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hlibc address from this run.\NThe relocation
+Dialogue: 0,0:07:25.25,0:07:32.37,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\htable says puts uses a JUMP_SLOT at
+Dialogue: 0,0:07:32.37,0:07:40.51,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0x601018.\NThe PLT says puts at 0x400540
+Dialogue: 0,0:07:40.51,0:07:46.61,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hjumps through that GOT entry.
+Dialogue: 0,0:07:46.61,0:07:53.04,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hSo puts at PLT can print the
+Dialogue: 0,0:07:53.04,0:08:00.63,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hpointer stored in puts at GOT.\NOn
+Dialogue: 0,0:08:00.63,0:08:09.09,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hx86-64,\Nthe first argument is RDI.\NThe
+Dialogue: 0,0:08:09.09,0:08:17.56,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hclean symbol table does not give us
+Dialogue: 0,0:08:17.56,0:08:24.86,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hpop rdi ret,\Nbut the byte stream
+Dialogue: 0,0:08:24.86,0:08:30.99,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hinside libc csu init does.
+Dialogue: 0,0:08:30.99,0:08:38.11,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hIn normal decoding we see 41 5f
+Dialogue: 0,0:08:38.11,0:08:44.67,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hc3:\Npop r15,\Nret.\NStart one byte
+Dialogue: 0,0:08:44.67,0:08:52.93,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hlater at 0x400913,\Nand 5f c3 becomes
+Dialogue: 0,0:08:52.93,0:09:00.90,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hpop rdi,\Nret.\NThat shifted decode is
+Dialogue: 0,0:09:00.90,0:09:06.03,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnot a guess;\Nit is a real
+Dialogue: 0,0:09:06.03,0:09:13.15,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hdisassembly command.\NFinally,
+Dialogue: 0,0:09:13.15,0:09:19.03,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hinit gives us a plain ret at
+Dialogue: 0,0:09:19.03,0:09:27.31,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0x40052e.\NIt looks boring now.\NLater it
+Dialogue: 0,0:09:27.31,0:09:35.32,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hwill be the alignment shim that lets
+Dialogue: 0,0:09:35.32,0:09:42.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe second chain survive libc.
+Dialogue: 0,0:09:42.00,0:09:47.89,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hStage one now has a provenance trail
+Dialogue: 0,0:09:47.89,0:09:55.15,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hfor every block.\NOne hundred thirty-six bytes
+Dialogue: 0,0:09:55.15,0:10:01.04,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hof padding come from the stack frame.
+Dialogue: 0,0:10:01.04,0:10:06.93,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe shifted decode gives pop rdi ret.
+Dialogue: 0,0:10:06.93,0:10:13.22,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe relocation table gives puts at GOT.
+Dialogue: 0,0:10:13.22,0:10:17.14,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe PLT gives puts at PLT.
+Dialogue: 0,0:10:17.14,0:10:24.01,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hAnd the symbol table gives do_stuff again.
+Dialogue: 0,0:10:24.01,0:10:28.66,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe chain sets RDI to puts at
+Dialogue: 0,0:10:28.66,0:10:33.91,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hGOT,\Nreturns into puts at PLT,\Nand
+Dialogue: 0,0:10:33.91,0:10:41.38,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hre-enters do_stuff.\NOn a matching runtime,\Nputs
+Dialogue: 0,0:10:41.38,0:10:47.44,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hwould emit ugly raw pointer bytes.\NWe
+Dialogue: 0,0:10:47.44,0:10:52.29,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hdo not have that runtime here.
+Dialogue: 0,0:10:52.29,0:10:58.85,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe actual local launch fails before the
+Dialogue: 0,0:10:58.85,0:11:05.42,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hprogram begins:\Nthe supplied libc and the
+Dialogue: 0,0:11:05.42,0:11:13.72,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hhost loader disagree at early initialization.\NThat
+Dialogue: 0,0:11:13.72,0:11:17.39,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\his not a shell,\Nnot a leak,
+Dialogue: 0,0:11:17.39,0:11:21.64,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hand not a reason to fake one.
+Dialogue: 0,0:11:21.64,0:11:27.43,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hIt is a concrete runtime constraint,
+Dialogue: 0,0:11:27.43,0:11:30.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hsaved as evidence.
+Dialogue: 0,0:11:30.00,0:11:36.49,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe supplied libc still gives us its
+Dialogue: 0,0:11:36.49,0:11:45.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hinternal distances.\Nreadelf finds puts at offset
+Dialogue: 0,0:11:45.36,0:11:53.37,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0x80a30 and system at 0x4f4e0.\Nstrings finds
+Dialogue: 0,0:11:53.37,0:11:59.64,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hslash bin slash sh at 0x1b40fa.\NASLR
+Dialogue: 0,0:11:59.64,0:12:05.92,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcan slide the entire library,\Nbut it
+Dialogue: 0,0:12:05.92,0:12:11.76,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hdoes not change those distances.
+Dialogue: 0,0:12:11.76,0:12:18.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hWith a real stage-one leak,\Nlibc base
+Dialogue: 0,0:12:18.36,0:12:27.02,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hequals leaked puts minus 0x80a30.\NThen system
+Dialogue: 0,0:12:27.02,0:12:33.40,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\his base plus 0x4f4e0,\Nand slash bin
+Dialogue: 0,0:12:33.40,0:12:39.77,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hslash sh is base plus 0x1b40fa.\NOne
+Dialogue: 0,0:12:39.77,0:12:48.20,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hknown address would align the whole library
+Dialogue: 0,0:12:48.20,0:12:49.34,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hruler.
+Dialogue: 0,0:12:49.34,0:12:55.90,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hIn this render those runtime values remain
+Dialogue: 0,0:12:55.90,0:13:03.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hsymbolic because the required matching run is
+Dialogue: 0,0:13:03.00,0:13:05.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hunavailable.
+Dialogue: 0,0:13:05.00,0:13:11.04,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hStage two is the borrowed function call.
+Dialogue: 0,0:13:11.04,0:13:18.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hOverflow again with one hundred thirty-six bytes.
+Dialogue: 0,0:13:18.55,0:13:23.12,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hUse the ret shim at 0x40052e to
+Dialogue: 0,0:13:23.12,0:13:28.62,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hshift the stack by one address width.
+Dialogue: 0,0:13:28.62,0:13:34.08,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThen pop rdi ret loads the runtime
+Dialogue: 0,0:13:34.08,0:13:39.54,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\haddress of slash bin slash sh into
+Dialogue: 0,0:13:39.54,0:13:45.59,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hRDI.\NThe final saved return address is
+Dialogue: 0,0:13:45.59,0:13:52.22,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hruntime system.\NIn compact form,\Nthe stack
+Dialogue: 0,0:13:52.22,0:13:57.68,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hroute becomes ret shim,\Npop rdi ret,
+Dialogue: 0,0:13:57.68,0:13:59.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbinsh,\Nsystem.
+Dialogue: 0,0:13:59.82,0:14:05.14,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe added ret is not decorative.\NSome
+Dialogue: 0,0:14:05.14,0:14:11.51,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hlibc paths expect stack alignment.\NThe shim
+Dialogue: 0,0:14:11.51,0:14:18.60,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hconsumes eight bytes and changes the alignment
+Dialogue: 0,0:14:18.60,0:14:23.73,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbefore the route enters libc.\NWe can
+Dialogue: 0,0:14:23.73,0:14:29.93,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hteach that mechanism from the real gadget
+Dialogue: 0,0:14:29.93,0:14:31.88,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hand ABI model,
+Dialogue: 0,0:14:31.88,0:14:36.13,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbut we do not claim a local
+Dialogue: 0,0:14:36.13,0:14:42.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hshell without the matching loader.
+Dialogue: 0,0:14:42.00,0:14:47.20,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hHere is the honesty gate.\NA final
+Dialogue: 0,0:14:47.20,0:14:54.41,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hexploit transcript must come from the real
+Dialogue: 0,0:14:54.41,0:15:00.81,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hremote service or a local runtime with
+Dialogue: 0,0:15:00.81,0:15:09.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe matching ld-linux loader.\NThis workspace contains
+Dialogue: 0,0:15:09.82,0:15:16.42,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hneither.\NThe captured local result is an
+Dialogue: 0,0:15:16.42,0:15:26.63,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hld.so inconsistency assertion during early initialization.
+Dialogue: 0,0:15:26.63,0:15:32.24,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThat is where this proof stops.\NThe
+Dialogue: 0,0:15:32.24,0:15:40.47,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hanalysis does not disappear:\Nchallenge files led
+Dialogue: 0,0:15:40.47,0:15:49.50,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hto build context;\Nreadelf proved protections;\Nsymbols
+Dialogue: 0,0:15:49.50,0:15:57.73,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnamed do_stuff;\Ndisassembly found the stack frame;
+Dialogue: 0,0:15:57.73,0:16:06.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hrodata exposed the unbounded scanf;\Nthe relocation
+Dialogue: 0,0:16:06.36,0:16:10.17,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\htable named puts at GOT;
+Dialogue: 0,0:16:10.17,0:16:16.40,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe PLT named puts at PLT;\Nshifted
+Dialogue: 0,0:16:16.40,0:16:22.85,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hbytes revealed pop rdi ret;\Nand the
+Dialogue: 0,0:16:22.85,0:16:32.08,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hprovided libc supplied the offsets.\NThe missing
+Dialogue: 0,0:16:32.08,0:16:39.69,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hitem is only the runtime transcript,\Nand
+Dialogue: 0,0:16:39.69,0:16:45.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hit remains visibly pending.
+Dialogue: 0,0:16:45.00,0:16:53.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe challenge-specific pitfalls are worth keeping.\NFirst,
+Dialogue: 0,0:16:53.36,0:16:59.63,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hAaAaAa output comes from convert_case and a
+Dialogue: 0,0:16:59.63,0:17:04.33,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hloop bound of 0x63:\Nonly the first
+Dialogue: 0,0:17:04.33,0:17:09.56,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hone hundred bytes mutate,\Nwhile a ROP
+Dialogue: 0,0:17:09.56,0:17:13.74,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hchain at 136 survives.\NSecond,
+Dialogue: 0,0:17:13.74,0:17:20.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe trailing d comes from the loop
+Dialogue: 0,0:17:20.55,0:17:27.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hcounter at rbp minus 0x8 ending at
+Dialogue: 0,0:17:27.36,0:17:32.71,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h0x64.\NIt is visible,\Nbut it is
+Dialogue: 0,0:17:32.71,0:17:38.55,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnot the leak.\NThird,\Nthe pop rdi
+Dialogue: 0,0:17:38.55,0:17:45.36,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hret gadget begins in the middle of
+Dialogue: 0,0:17:45.36,0:17:46.82,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\h41 5f c3,
+Dialogue: 0,0:17:46.82,0:17:51.88,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hso the address is 0x400913,\Nnot the
+Dialogue: 0,0:17:51.88,0:17:57.83,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\haddress of the full pop r15 instruction.
+Dialogue: 0,0:17:57.83,0:18:02.35,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hFourth,\Na provided libc is not a
+Dialogue: 0,0:18:02.35,0:18:09.56,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\husable local runtime unless its loader matches.
+Dialogue: 0,0:18:09.56,0:18:16.42,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hThe broader ret2libc lesson is evidence flow.
+Dialogue: 0,0:18:16.42,0:18:21.66,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hFind the overflow.\NMeasure control.
+Dialogue: 0,0:18:21.66,0:18:25.58,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hFind a way to set the first
+Dialogue: 0,0:18:25.58,0:18:33.04,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hargument.\NLeak one known libc function.\NSubtract
+Dialogue: 0,0:18:33.04,0:18:39.01,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hits offset.\NAdd the targets.\NThen return
+Dialogue: 0,0:18:39.01,0:18:45.73,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hinto code the process already trusts.\NToday,
+Dialogue: 0,0:18:45.73,0:18:53.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe stack never became executable.\NThe payload
+Dialogue: 0,0:18:53.00,0:18:58.23,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hnever became code.\NIt became a path:
+Dialogue: 0,0:18:58.23,0:19:03.20,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hone route to leak libc,\Nand one
+Dialogue: 0,0:19:03.20,0:19:09.63,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hroute to call system.\NThat is ret2libc.
+Dialogue: 0,0:19:09.63,0:19:15.44,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hNot a spell.\NA traced route through
+Dialogue: 0,0:19:15.44,0:19:20.00,Caption,,0,0,0,,{\c&H9ACB8C&}›{\c&HEEF3F1&}\hthe binary's own machinery.

@@ -1,0 +1,1395 @@
+1
+00:00:00,050 --> 00:00:01,850
+Hello once again, hackers.
+
+2
+00:00:01,910 --> 00:00:02,920
+Today we are pwning a
+
+3
+00:00:02,980 --> 00:00:05,830
+program with the humble print function.
+
+4
+00:00:05,890 --> 00:00:07,750
+print f looks innocent:
+
+5
+00:00:07,810 --> 00:00:09,160
+compile a tiny C file,
+
+6
+00:00:09,220 --> 00:00:10,670
+run it, and hello world
+
+7
+00:00:10,730 --> 00:00:12,780
+comes out. But that output
+
+8
+00:00:12,840 --> 00:00:14,710
+did not happen by magic.
+
+9
+00:00:14,770 --> 00:00:16,467
+Something interpreted a recipe.
+
+10
+00:00:16,890 --> 00:00:18,140
+Every language has a way
+
+11
+00:00:18,200 --> 00:00:19,910
+to make numbers human:
+
+12
+00:00:19,970 --> 00:00:25,270
+print, console.log, System.out.println, fmt.Println, println!, puts.
+
+13
+00:00:25,330 --> 00:00:27,130
+Our target is C's print
+
+14
+00:00:27,190 --> 00:00:30,270
+f, the formatted output function.
+
+15
+00:00:30,330 --> 00:00:32,160
+The word formatted is doing
+
+16
+00:00:32,220 --> 00:00:33,585
+almost all the work here.
+
+17
+00:00:33,770 --> 00:00:34,900
+The man page gives us
+
+18
+00:00:34,960 --> 00:00:36,370
+the whole crime scene in
+
+19
+00:00:36,430 --> 00:00:39,950
+one line: printf(const char *format, ...).
+
+20
+00:00:40,010 --> 00:00:42,150
+One argument is the recipe.
+
+21
+00:00:42,210 --> 00:00:44,090
+The dots are however many
+
+22
+00:00:44,150 --> 00:00:47,150
+extra values that recipe asks for.
+
+23
+00:00:47,210 --> 00:00:49,550
+Normal letters simply pass through.
+
+24
+00:00:49,610 --> 00:00:51,176
+A percent sign makes print
+
+25
+00:00:51,236 --> 00:00:53,220
+f stop being a typewriter
+
+26
+00:00:53,280 --> 00:00:55,046
+and become an interpreter.
+
+27
+00:00:55,210 --> 00:00:57,590
+Percent d prints a decimal.
+
+28
+00:00:57,650 --> 00:00:59,870
+Percent x prints hexadecimal.
+
+29
+00:00:59,930 --> 00:01:02,510
+Percent p prints an address-shaped value.
+
+30
+00:01:02,570 --> 00:01:04,370
+Percent s follows a pointer
+
+31
+00:01:04,430 --> 00:01:05,560
+and reads bytes until a
+
+32
+00:01:05,620 --> 00:01:09,450
+null byte. Percent c prints
+
+33
+00:01:09,510 --> 00:01:11,470
+one character, double percent prints
+
+34
+00:01:11,530 --> 00:01:12,940
+a literal percent, and widths
+
+35
+00:01:13,000 --> 00:01:14,831
+such as percent zero eight
+
+36
+00:01:14,891 --> 00:01:16,510
+x change padding.
+
+37
+00:01:16,570 --> 00:01:18,106
+Percent twenty c can add
+
+38
+00:01:18,166 --> 00:01:20,330
+twenty printed characters while showing
+
+39
+00:01:20,390 --> 00:01:21,799
+only one visible letter.
+
+40
+00:01:21,859 --> 00:01:23,700
+Then percent n does something different:
+
+41
+00:01:23,760 --> 00:01:25,370
+it writes the printed-character count
+
+42
+00:01:25,430 --> 00:01:26,667
+through a pointer.
+
+43
+00:01:26,750 --> 00:01:29,686
+That first argument is special.
+
+44
+00:01:29,746 --> 00:01:33,020
+printf("percent s", input) keeps input
+
+45
+00:01:33,080 --> 00:01:36,080
+as data; even the string
+
+46
+00:01:36,140 --> 00:01:38,128
+percent x percent x percent
+
+47
+00:01:38,188 --> 00:01:41,110
+x is printed literally.
+
+48
+00:01:41,170 --> 00:01:43,730
+But printf(input) promotes the same
+
+49
+00:01:43,790 --> 00:01:45,910
+user bytes into the recipe.
+
+50
+00:01:45,970 --> 00:01:47,240
+The wrong person is now
+
+51
+00:01:47,300 --> 00:01:49,072
+writing the recipe, so the
+
+52
+00:01:49,132 --> 00:01:50,990
+interpreter starts asking for arguments
+
+53
+00:01:51,050 --> 00:01:52,976
+the programmer never supplied.
+
+54
+00:01:53,250 --> 00:01:55,530
+Our challenge starts with a
+
+55
+00:01:55,590 --> 00:01:58,320
+global variable named suss, equal
+
+56
+00:01:58,380 --> 00:01:59,887
+to zero x two one
+
+57
+00:01:59,947 --> 00:02:01,910
+seven three seven five seven three.
+
+58
+00:02:01,970 --> 00:02:03,800
+It reads a word into
+
+59
+00:02:03,860 --> 00:02:05,960
+buff, prints a fixed label
+
+60
+00:02:06,020 --> 00:02:08,768
+safely, and then calls print
+
+61
+00:02:08,828 --> 00:02:11,310
+f, buff. Finally it opens
+
+62
+00:02:11,370 --> 00:02:13,764
+the wizard gate only if
+
+63
+00:02:13,824 --> 00:02:15,935
+suss equals zero x six
+
+64
+00:02:15,995 --> 00:02:17,822
+seven six one six c
+
+65
+00:02:17,882 --> 00:02:19,530
+six six. We do not
+
+66
+00:02:19,590 --> 00:02:21,830
+need to smash the whole program.
+
+67
+00:02:21,890 --> 00:02:23,690
+We only need to change
+
+68
+00:02:23,750 --> 00:02:25,340
+exactly this variable into exactly
+
+69
+00:02:25,400 --> 00:02:26,242
+that value.
+
+70
+00:02:26,450 --> 00:02:28,590
+The first number is not random.
+
+71
+00:02:28,650 --> 00:02:31,341
+In memory its bytes are
+
+72
+00:02:31,401 --> 00:02:33,230
+seventy-three, seventy-five, seventy-three, twenty-one:
+
+73
+00:02:33,290 --> 00:02:35,190
+s u s !.
+
+74
+00:02:35,250 --> 00:02:37,420
+The target integer looks like
+
+75
+00:02:37,480 --> 00:02:38,180
+g a l f when
+
+76
+00:02:38,230 --> 00:02:39,680
+read left to right, but
+
+77
+00:02:39,740 --> 00:02:41,750
+this is little endian.
+
+78
+00:02:41,810 --> 00:02:45,040
+In memory it becomes sixty-six,
+
+79
+00:02:45,100 --> 00:02:46,640
+six-c, sixty-one, sixty-seven:
+
+80
+00:02:46,700 --> 00:02:47,750
+f l a g.
+
+81
+00:02:47,810 --> 00:02:49,880
+Our question is now mechanical:
+
+82
+00:02:49,940 --> 00:02:51,570
+how can typed text write
+
+83
+00:02:51,630 --> 00:02:53,057
+these bytes into suss?
+
+84
+00:02:53,410 --> 00:02:55,300
+First we run normal input.
+
+85
+00:02:55,360 --> 00:02:57,300
+hello prints as hello, and
+
+86
+00:02:57,360 --> 00:02:59,429
+sus stays unchanged.
+
+87
+00:02:59,489 --> 00:03:01,804
+Then we probe with percent
+
+88
+00:03:01,864 --> 00:03:04,120
+p.percent p.percent p.percent p.
+
+89
+00:03:04,180 --> 00:03:05,900
+A safe program would print
+
+90
+00:03:05,960 --> 00:03:08,510
+those percent signs literally.
+
+91
+00:03:08,570 --> 00:03:11,870
+This target prints pointer-looking values instead.
+
+92
+00:03:11,930 --> 00:03:14,710
+That confirms a format string vulnerability:
+
+93
+00:03:14,770 --> 00:03:16,356
+the format recipe is walking
+
+94
+00:03:16,416 --> 00:03:18,010
+an argument shelf that was
+
+95
+00:03:18,070 --> 00:03:19,999
+never intended to be exposed.
+
+96
+00:03:20,170 --> 00:03:22,040
+The actual call is just
+
+97
+00:03:22,100 --> 00:03:23,090
+print f, buff.
+
+98
+00:03:23,150 --> 00:03:25,250
+But after reading our percent
+
+99
+00:03:25,310 --> 00:03:27,630
+p tokens, print f behaves
+
+100
+00:03:27,690 --> 00:03:30,207
+as if it saw printf("percent
+
+101
+00:03:30,267 --> 00:03:35,710
+p.percent p.percent p", arg1, arg2, arg3).
+
+102
+00:03:35,770 --> 00:03:37,380
+It is not evil and
+
+103
+00:03:37,440 --> 00:03:39,350
+it is not random.
+
+104
+00:03:39,410 --> 00:03:41,590
+The recipe requests ingredients;
+
+105
+00:03:41,650 --> 00:03:42,840
+the chef was never given
+
+106
+00:03:42,900 --> 00:03:44,740
+them, so the machine reads
+
+107
+00:03:44,800 --> 00:03:46,780
+from the places where arguments
+
+108
+00:03:46,840 --> 00:03:48,267
+normally live. Percent p prints
+
+109
+00:03:48,327 --> 00:03:49,978
+the value. Percent s follows it.
+
+110
+00:03:50,038 --> 00:03:53,138
+Percent n writes through it.
+
+111
+00:03:53,490 --> 00:03:54,760
+For control, we find where
+
+112
+00:03:54,820 --> 00:03:57,070
+our input lands in that shelf.
+
+113
+00:03:57,130 --> 00:03:58,990
+We place A B C
+
+114
+00:03:59,050 --> 00:04:00,090
+D E F G H
+
+115
+00:04:00,150 --> 00:04:02,790
+and try slots.
+
+116
+00:04:02,850 --> 00:04:04,900
+At slot fourteen, the target
+
+117
+00:04:04,960 --> 00:04:06,896
+returns zero x four eight
+
+118
+00:04:06,956 --> 00:04:08,485
+four seven four six four
+
+119
+00:04:08,545 --> 00:04:10,073
+five four four four three
+
+120
+00:04:10,133 --> 00:04:11,345
+four two four one.
+
+121
+00:04:11,405 --> 00:04:13,920
+Flip that little-endian number into
+
+122
+00:04:13,980 --> 00:04:15,620
+memory order and it spells
+
+123
+00:04:15,680 --> 00:04:16,750
+A through H.
+
+124
+00:04:16,810 --> 00:04:17,920
+So, in this local run,
+
+125
+00:04:17,980 --> 00:04:19,770
+argument fourteen is the first
+
+126
+00:04:19,830 --> 00:04:21,790
+controlled eight-byte block.
+
+127
+00:04:21,850 --> 00:04:24,190
+Alignment padding is not the exploit;
+
+128
+00:04:24,250 --> 00:04:26,110
+it makes the recipe read
+
+129
+00:04:26,170 --> 00:04:27,837
+exactly one clean eight-byte address.
+
+130
+00:04:28,510 --> 00:04:30,270
+suss is global, so this
+
+131
+00:04:30,330 --> 00:04:33,340
+local non-PIE target exposes it
+
+132
+00:04:33,400 --> 00:04:35,290
+in .data at zero x
+
+133
+00:04:35,350 --> 00:04:37,390
+four zero four zero six zero.
+
+134
+00:04:37,450 --> 00:04:39,500
+Two bytes higher is zero
+
+135
+00:04:39,560 --> 00:04:41,342
+x four zero four zero
+
+136
+00:04:41,402 --> 00:04:43,240
+six two. We will write
+
+137
+00:04:43,300 --> 00:04:45,061
+the high half, zero x
+
+138
+00:04:45,121 --> 00:04:46,420
+six seven six one, to
+
+139
+00:04:46,480 --> 00:04:48,270
+sus + 2, then the
+
+140
+00:04:48,330 --> 00:04:49,819
+low half, zero x six
+
+141
+00:04:49,879 --> 00:04:57,190
+c six six, to suss.
+
+142
+00:04:57,250 --> 00:04:58,440
+After the first write the
+
+143
+00:04:58,500 --> 00:05:00,510
+bytes begin to look like flag;
+
+144
+00:05:00,570 --> 00:05:02,430
+after the second, they are
+
+145
+00:05:02,490 --> 00:05:02,829
+exactly flag.
+
+146
+00:05:03,530 --> 00:05:04,800
+Percent n does not print
+
+147
+00:05:04,860 --> 00:05:06,030
+the letter n.
+
+148
+00:05:06,090 --> 00:05:07,280
+It takes a pointer and
+
+149
+00:05:07,340 --> 00:05:09,280
+writes the number of characters
+
+150
+00:05:09,340 --> 00:05:11,161
+printed so far.
+
+151
+00:05:11,221 --> 00:05:14,180
+printf("hellopercent n", &count) leaves count
+
+152
+00:05:14,240 --> 00:05:15,630
+equal to five.
+
+153
+00:05:15,690 --> 00:05:18,220
+The h modifier makes percent
+
+154
+00:05:18,280 --> 00:05:19,660
+h n copy only the
+
+155
+00:05:19,720 --> 00:05:21,250
+low two bytes.
+
+156
+00:05:21,310 --> 00:05:23,140
+If our fake argument shelf
+
+157
+00:05:23,200 --> 00:05:24,500
+contains the address of sus,
+
+158
+00:05:24,560 --> 00:05:26,220
+the same feature becomes our
+
+159
+00:05:26,280 --> 00:05:28,466
+controlled two-byte write.
+
+160
+00:05:28,810 --> 00:05:30,610
+One giant write would require
+
+161
+00:05:30,670 --> 00:05:31,530
+more than one point seven
+
+162
+00:05:31,590 --> 00:05:33,470
+billion printed characters.
+
+163
+00:05:33,530 --> 00:05:34,990
+That is ridiculous.
+
+164
+00:05:35,050 --> 00:05:37,723
+Instead, split the target:
+
+165
+00:05:37,783 --> 00:05:39,170
+zero x six seven six
+
+166
+00:05:39,230 --> 00:05:41,091
+one is twenty-six thousand four
+
+167
+00:05:41,151 --> 00:05:43,030
+hundred sixty-five, and zero x
+
+168
+00:05:43,090 --> 00:05:45,113
+six c six six is
+
+169
+00:05:45,173 --> 00:05:47,070
+twenty-seven thousand seven hundred fifty.
+
+170
+00:05:47,130 --> 00:05:48,990
+The first count is smaller,
+
+171
+00:05:49,050 --> 00:05:50,524
+and the second is only
+
+172
+00:05:50,584 --> 00:05:51,460
+one thousand two hundred eighty-five
+
+173
+00:05:51,520 --> 00:05:53,350
+more, so the counter moves
+
+174
+00:05:53,410 --> 00:05:54,733
+naturally upward.
+
+175
+00:05:54,910 --> 00:06:01,610
+The recipe is percent 14$26465cpercent
+
+176
+00:06:01,670 --> 00:06:05,890
+19$hnpercent 14$1285cpercent 20$hn.
+
+177
+00:06:05,950 --> 00:06:08,060
+First, a width field pumps
+
+178
+00:06:08,120 --> 00:06:09,889
+the count to zero x
+
+179
+00:06:09,949 --> 00:06:11,717
+six seven six one.
+
+180
+00:06:11,777 --> 00:06:14,536
+Slot nineteen contains packed sus
+
+181
+00:06:14,596 --> 00:06:16,155
++ 2, so percent h
+
+182
+00:06:16,215 --> 00:06:16,915
+n writes the high half.
+
+183
+00:06:16,951 --> 00:06:17,651
+Then another width adds zero
+
+184
+00:06:17,687 --> 00:06:18,387
+x zero five zero five.
+
+185
+00:06:18,423 --> 00:06:20,580
+Slot twenty contains packed suss,
+
+186
+00:06:20,640 --> 00:06:25,404
+so the second percent h
+
+187
+00:06:25,464 --> 00:06:28,860
+n writes the low half.
+
+188
+00:06:28,920 --> 00:06:30,185
+The bytes after the recipe
+
+189
+00:06:30,245 --> 00:06:30,981
+are not text for humans.
+
+190
+00:06:31,041 --> 00:06:31,777
+They are address blocks placed
+
+191
+00:06:31,837 --> 00:06:32,466
+exactly where printf will misread
+
+192
+00:06:32,880 --> 00:06:32,466
+them as arguments.
+
+193
+00:06:32,930 --> 00:06:34,490
+During the final run, do
+
+194
+00:06:34,550 --> 00:06:37,230
+not imagine twenty-six thousand literal
+
+195
+00:06:37,290 --> 00:06:38,830
+spaces on screen.
+
+196
+00:06:38,890 --> 00:06:40,830
+Imagine a counter ribbon.
+
+197
+00:06:40,890 --> 00:06:42,543
+It reaches zero x six
+
+198
+00:06:42,603 --> 00:06:43,970
+seven six one, writes at
+
+199
+00:06:44,030 --> 00:06:45,684
+sus + 2, grows by
+
+200
+00:06:45,744 --> 00:06:46,800
+one thousand two hundred eighty-five,
+
+201
+00:06:46,860 --> 00:06:48,743
+and writes zero x six
+
+202
+00:06:48,803 --> 00:06:50,270
+c six six at sus.
+
+203
+00:06:50,330 --> 00:06:52,510
+The ordinary program then checks
+
+204
+00:06:52,570 --> 00:06:54,052
+its variable, finds zero x
+
+205
+00:06:54,112 --> 00:06:54,885
+six seven six one six
+
+206
+00:06:54,945 --> 00:06:56,250
+c six six, and opens
+
+207
+00:06:56,310 --> 00:06:57,870
+its own win branch.
+
+208
+00:06:57,930 --> 00:06:58,810
+The flag text here is
+
+209
+00:06:58,870 --> 00:06:59,570
+a demo placeholder, not a
+
+210
+00:06:58,870 --> 00:07:03,288
+claimed live flag.
+
+211
+00:07:03,530 --> 00:07:05,390
+The payload looks like wizard
+
+212
+00:07:05,450 --> 00:07:07,750
+language, but the mechanism is boring.
+
+213
+00:07:07,810 --> 00:07:09,880
+One: user input controls the
+
+214
+00:07:09,940 --> 00:07:12,070
+first printf argument.
+
+215
+00:07:12,130 --> 00:07:15,630
+Two: format tokens consume argument slots.
+
+216
+00:07:15,690 --> 00:07:18,170
+Three: our own bytes appear
+
+217
+00:07:18,230 --> 00:07:20,030
+in those slots.
+
+218
+00:07:20,090 --> 00:07:21,360
+Four: we place the address
+
+219
+00:07:21,420 --> 00:07:23,110
+of sus there.
+
+220
+00:07:23,170 --> 00:07:24,980
+Five: percent h n writes
+
+221
+00:07:25,040 --> 00:07:28,007
+the counter through that address.
+
+222
+00:07:28,067 --> 00:07:30,609
+Recipes, slots, addresses, counts, writes.
+
+223
+00:07:30,830 --> 00:07:32,270
+The fix is almost insulting
+
+224
+00:07:32,330 --> 00:07:34,670
+in how small it is:
+
+225
+00:07:34,730 --> 00:07:36,620
+never let untrusted input become
+
+226
+00:07:36,680 --> 00:07:39,510
+the format. Replace print f,
+
+227
+00:07:39,570 --> 00:07:41,690
+buff with print f, percent
+
+228
+00:07:41,750 --> 00:07:43,790
+s, buff. Feed it the
+
+229
+00:07:43,850 --> 00:07:45,190
+same scary input;
+
+230
+00:07:45,250 --> 00:07:47,120
+the machine reads one fixed
+
+231
+00:07:47,180 --> 00:07:49,270
+percent s socket, treats the
+
+232
+00:07:49,330 --> 00:07:51,350
+full string as green data,
+
+233
+00:07:51,410 --> 00:07:53,790
+prints it literally, and leaves
+
+234
+00:07:53,850 --> 00:07:54,810
+sus unchanged.
+
+235
+00:07:55,170 --> 00:07:57,700
+When solving these, sort specifiers
+
+236
+00:07:57,760 --> 00:07:59,390
+by what they give you.
+
+237
+00:07:59,450 --> 00:08:01,320
+Percent p and percent x
+
+238
+00:08:01,380 --> 00:08:04,260
+observe values. Percent s follows
+
+239
+00:08:04,320 --> 00:08:05,560
+a pointer to read a
+
+240
+00:08:05,620 --> 00:08:07,950
+string, if the address is valid.
+
+241
+00:08:08,010 --> 00:08:10,450
+Percent n, percent h n,
+
+242
+00:08:10,510 --> 00:08:14,110
+and percent h h n
+
+243
+00:08:14,170 --> 00:08:17,249
+write state. Leaks help us locate.
+
+244
+00:08:17,309 --> 00:08:19,517
+Writes change what the program does.
+
+245
+00:08:20,170 --> 00:08:21,450
+Percent n does not write
+
+246
+00:08:21,510 --> 00:08:22,930
+a number typed inside the
+
+247
+00:08:22,990 --> 00:08:25,180
+format string. It copies the
+
+248
+00:08:25,240 --> 00:08:28,550
+number of characters printed so far.
+
+249
+00:08:28,610 --> 00:08:30,072
+That is why the large
+
+250
+00:08:30,132 --> 00:08:33,630
+widths exist: they are counter fuel.
+
+251
+00:08:33,690 --> 00:08:36,350
+Keyboard bytes become a printf recipe;
+
+252
+00:08:36,410 --> 00:08:38,230
+the recipe creates output;
+
+253
+00:08:38,290 --> 00:08:40,470
+the output creates a counter;
+
+254
+00:08:40,530 --> 00:08:42,390
+then percent h n copies
+
+255
+00:08:42,450 --> 00:08:44,224
+the counter into memory.
+
+256
+00:08:44,610 --> 00:08:47,040
+The dollar syntax makes this precise.
+
+257
+00:08:47,100 --> 00:08:49,540
+Non-positional tokens walk one shelf
+
+258
+00:08:49,600 --> 00:08:51,190
+slot after another.
+
+259
+00:08:51,250 --> 00:08:54,210
+percent 19$hn jumps directly to
+
+260
+00:08:54,270 --> 00:08:57,530
+slot nineteen; percent 20$hn jumps
+
+261
+00:08:57,590 --> 00:08:58,950
+to slot twenty.
+
+262
+00:08:59,010 --> 00:09:02,420
+And because scanf("percent 1024s", buf)
+
+263
+00:09:02,480 --> 00:09:04,650
+stops at whitespace, we do
+
+264
+00:09:04,710 --> 00:09:07,156
+not type literal spaces.
+
+265
+00:09:07,216 --> 00:09:09,560
+Width specifiers make printf create
+
+266
+00:09:09,620 --> 00:09:10,236
+them for us.
+
+267
+00:09:10,570 --> 00:09:12,390
+print f did not get hacked.
+
+268
+00:09:12,450 --> 00:09:13,720
+It followed the recipe it
+
+269
+00:09:13,780 --> 00:09:15,270
+was given. The bug was
+
+270
+00:09:15,330 --> 00:09:17,670
+letting the user write that recipe.
+
+271
+00:09:17,730 --> 00:09:20,960
+Safe code makes data become output.
+
+272
+00:09:21,020 --> 00:09:22,210
+Unsafe code lets data become
+
+273
+00:09:22,270 --> 00:09:25,530
+a recipe, interpretation become memory
+
+274
+00:09:25,590 --> 00:09:27,510
+access, and with percent n,
+
+275
+00:09:27,570 --> 00:09:30,870
+memory access become memory modification.
+
+276
+00:09:30,930 --> 00:09:33,030
+Fix it with print f,
+
+277
+00:09:33,090 --> 00:09:34,910
+percent s, buff.
+
+278
+00:09:34,970 --> 00:09:36,000
+See you in the next
+
+279
+00:09:36,060 --> 00:09:36,713
+one, hackers.
+
+280
+00:09:37,130 --> 00:09:38,930
+Before we leave, replay the
+
+281
+00:09:38,990 --> 00:09:40,050
+exploit as a checklist you
+
+282
+00:09:40,110 --> 00:09:41,100
+could use on the next
+
+283
+00:09:41,160 --> 00:09:43,150
+format string challenge.
+
+284
+00:09:43,210 --> 00:09:44,400
+First, read the source and
+
+285
+00:09:44,460 --> 00:09:45,670
+find the call site.
+
+286
+00:09:45,730 --> 00:09:47,530
+The dangerous shape is not
+
+287
+00:09:47,590 --> 00:09:48,650
+merely a percent sign in
+
+288
+00:09:48,710 --> 00:09:50,090
+user input. It is user
+
+289
+00:09:50,150 --> 00:09:52,050
+input becoming the first argument
+
+290
+00:09:52,110 --> 00:09:53,860
+to printf. Second, run one
+
+291
+00:09:53,920 --> 00:09:56,530
+harmless probe. A sequence such
+
+292
+00:09:56,590 --> 00:09:58,560
+as percent p, dot, percent
+
+293
+00:09:58,620 --> 00:10:00,960
+p tells you whether the
+
+294
+00:10:01,020 --> 00:10:02,200
+program is interpreting your input
+
+295
+00:10:02,260 --> 00:10:03,270
+or printing it literally.
+
+296
+00:10:03,330 --> 00:10:05,270
+Third, put an eight-byte marker
+
+297
+00:10:05,330 --> 00:10:06,205
+in the input and scan
+
+298
+00:10:06,265 --> 00:10:07,950
+the positional slots.
+
+299
+00:10:08,010 --> 00:10:09,100
+When the marker comes back
+
+300
+00:10:09,160 --> 00:10:10,220
+as a hexadecimal value, you
+
+301
+00:10:10,280 --> 00:10:10,980
+know where your own bytes
+
+302
+00:10:10,280 --> 00:10:13,481
+sit from printf's point of view.
+
+303
+00:10:13,660 --> 00:10:16,430
+Fourth, identify the state you
+
+304
+00:10:16,490 --> 00:10:17,270
+actually need to change.
+
+305
+00:10:17,330 --> 00:10:18,600
+In this target, that state
+
+306
+00:10:18,660 --> 00:10:20,848
+is the global variable sus.
+
+307
+00:10:20,908 --> 00:10:23,080
+The winning comparison asks for
+
+308
+00:10:23,140 --> 00:10:24,820
+one precise integer, and the
+
+309
+00:10:24,880 --> 00:10:26,630
+byte view reveals that the
+
+310
+00:10:26,690 --> 00:10:28,990
+value spells flag in memory.
+
+311
+00:10:29,050 --> 00:10:30,920
+Fifth, remember that percent n
+
+312
+00:10:30,980 --> 00:10:32,660
+does not magically write a
+
+313
+00:10:32,720 --> 00:10:34,750
+number typed in the payload.
+
+314
+00:10:34,810 --> 00:10:36,000
+It copies the number of
+
+315
+00:10:36,060 --> 00:10:38,120
+output characters printed so far
+
+316
+00:10:38,180 --> 00:10:39,644
+through a pointer.
+
+317
+00:10:39,704 --> 00:10:41,480
+Width specifiers are how we
+
+318
+00:10:41,540 --> 00:10:44,382
+steer that counter.
+
+319
+00:10:44,442 --> 00:10:47,855
+Positional specifiers are how we
+
+320
+00:10:47,915 --> 00:10:48,910
+select the address.
+
+321
+00:10:48,970 --> 00:10:49,763
+Packed bytes in the tail
+
+322
+00:10:49,823 --> 00:10:50,523
+of the input are how
+
+323
+00:10:50,320 --> 00:10:51,020
+we place that address in
+
+324
+00:10:50,320 --> 00:10:51,384
+a slot.
+
+325
+00:10:51,730 --> 00:10:53,264
+For the write itself, choose
+
+326
+00:10:53,324 --> 00:10:54,440
+a size that makes the
+
+327
+00:10:54,500 --> 00:10:57,070
+arithmetic boring. Two halfword writes
+
+328
+00:10:57,130 --> 00:10:58,560
+are easier to reason about
+
+329
+00:10:58,620 --> 00:11:00,256
+than one giant integer.
+
+330
+00:11:00,316 --> 00:11:01,520
+Write the smaller half first,
+
+331
+00:11:01,580 --> 00:11:03,440
+then add only the difference
+
+332
+00:11:03,500 --> 00:11:05,110
+before the second write.
+
+333
+00:11:05,170 --> 00:11:06,980
+Watch the byte row after
+
+334
+00:11:07,040 --> 00:11:09,414
+every operation. If the little-endian
+
+335
+00:11:09,474 --> 00:11:10,475
+bytes say f, l, a,
+
+336
+00:11:10,535 --> 00:11:12,740
+g, the integer comparison will
+
+337
+00:11:12,800 --> 00:11:15,248
+see the value the branch expects.
+
+338
+00:11:15,650 --> 00:11:17,840
+That method is useful because
+
+339
+00:11:17,900 --> 00:11:21,270
+it replaces mystery with observations:
+
+340
+00:11:21,330 --> 00:11:23,200
+inspect the recipe, leak the
+
+341
+00:11:23,260 --> 00:11:25,330
+shelf, find the marker, locate
+
+342
+00:11:25,390 --> 00:11:27,700
+the target, count carefully, and
+
+343
+00:11:27,760 --> 00:11:30,060
+write only what the challenge
+
+344
+00:11:30,120 --> 00:11:32,130
+asks for. And the defensive
+
+345
+00:11:32,190 --> 00:11:34,150
+lesson remains tiny.
+
+346
+00:11:34,210 --> 00:11:37,300
+Keep the format string fixed.
+
+347
+00:11:37,360 --> 00:11:40,390
+Pass untrusted input as data.
+
+348
+00:11:40,450 --> 00:11:42,320
+When the program owns the
+
+349
+00:11:42,380 --> 00:11:44,930
+recipe, printf is just output again.

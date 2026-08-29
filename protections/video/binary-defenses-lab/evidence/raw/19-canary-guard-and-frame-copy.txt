@@ -1,0 +1,89 @@
+$ objdump -d -M intel -S --disassemble=probe bin/canary-probe
+
+/mnt/data/binary-defenses-lab/bin/canary-probe:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401136 <probe>:
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+__attribute__((noinline))
+static void probe(void) {
+  401136:	55                   	push   rbp
+  401137:	48 89 e5             	mov    rbp,rsp
+  40113a:	48 83 ec 30          	sub    rsp,0x30
+  40113e:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+  401145:	00 00 
+  401147:	48 89 45 f8          	mov    QWORD PTR [rbp-0x8],rax
+  40114b:	31 c0                	xor    eax,eax
+    char buffer[16] = {0};
+  40114d:	48 c7 45 e0 00 00 00 	mov    QWORD PTR [rbp-0x20],0x0
+  401154:	00 
+  401155:	48 c7 45 e8 00 00 00 	mov    QWORD PTR [rbp-0x18],0x0
+  40115c:	00 
+    uintptr_t tls_guard = 0;
+  40115d:	48 c7 45 d0 00 00 00 	mov    QWORD PTR [rbp-0x30],0x0
+  401164:	00 
+    uintptr_t frame_copy = 0;
+  401165:	48 c7 45 d8 00 00 00 	mov    QWORD PTR [rbp-0x28],0x0
+  40116c:	00 
+
+#if defined(__x86_64__)
+    __asm__ volatile("mov %%fs:0x28, %0" : "=r"(tls_guard));
+  40116d:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+  401174:	00 00 
+  401176:	48 89 45 d0          	mov    QWORD PTR [rbp-0x30],rax
+    __asm__ volatile("mov -8(%%rbp), %0" : "=r"(frame_copy));
+  40117a:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  40117e:	48 89 45 d8          	mov    QWORD PTR [rbp-0x28],rax
+#endif
+
+    printf("buffer     %p\n", (void *)buffer);
+  401182:	48 8d 45 e0          	lea    rax,[rbp-0x20]
+  401186:	48 89 c6             	mov    rsi,rax
+  401189:	bf 04 20 40 00       	mov    edi,0x402004
+  40118e:	b8 00 00 00 00       	mov    eax,0x0
+  401193:	e8 a8 fe ff ff       	call   401040 <printf@plt>
+    printf("tls-guard  0x%016" PRIxPTR "\n", tls_guard);
+  401198:	48 8b 45 d0          	mov    rax,QWORD PTR [rbp-0x30]
+  40119c:	48 89 c6             	mov    rsi,rax
+  40119f:	bf 13 20 40 00       	mov    edi,0x402013
+  4011a4:	b8 00 00 00 00       	mov    eax,0x0
+  4011a9:	e8 92 fe ff ff       	call   401040 <printf@plt>
+    printf("frame-copy 0x%016" PRIxPTR "\n", frame_copy);
+  4011ae:	48 8b 45 d8          	mov    rax,QWORD PTR [rbp-0x28]
+  4011b2:	48 89 c6             	mov    rsi,rax
+  4011b5:	bf 28 20 40 00       	mov    edi,0x402028
+  4011ba:	b8 00 00 00 00       	mov    eax,0x0
+  4011bf:	e8 7c fe ff ff       	call   401040 <printf@plt>
+}
+  4011c4:	90                   	nop
+  4011c5:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  4011c9:	64 48 2b 04 25 28 00 	sub    rax,QWORD PTR fs:0x28
+  4011d0:	00 00 
+  4011d2:	74 05                	je     4011d9 <probe+0xa3>
+  4011d4:	e8 57 fe ff ff       	call   401030 <__stack_chk_fail@plt>
+  4011d9:	c9                   	leave
+  4011da:	c3                   	ret
+
+Disassembly of section .fini:
+
+$ ./bin/canary-probe  # run 1
+buffer     0x7fff20e21de0
+tls-guard  0xcc6f66a29f6a2200
+frame-copy 0xcc6f66a29f6a2200
+$ ./bin/canary-probe  # run 2
+buffer     0x7fffcf1193c0
+tls-guard  0x8f19b166cdc47a00
+frame-copy 0x8f19b166cdc47a00
+$ ./bin/canary-probe  # run 3
+buffer     0x7ffdbcf13f50
+tls-guard  0x5b333847125d3800
+frame-copy 0x5b333847125d3800

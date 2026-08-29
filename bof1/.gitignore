@@ -1,0 +1,14 @@
+node_modules/
+dist/
+output/
+*.log
+.chatterbox-runtime/
+.chatterbox-venv/
+.chatterbox-python/
+.chatterbox-cache/
+.chatterbox-models/
+.asr-venv/
+.asr-model/
+.uv-cache/
+audio/chatterbox-clips/*.wav
+audio/chatterbox-clips/qa-batches/*-synthesis.log

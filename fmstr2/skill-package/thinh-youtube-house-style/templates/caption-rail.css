@@ -1,0 +1,37 @@
+:root {
+  --yt-canvas: #0A0D0B;
+  --yt-ink: #F1F3EE;
+  --yt-safe: #8CCB9A;
+  --yt-instruction: #D8BE73;
+}
+
+.yt-caption-rail {
+  position: absolute;
+  z-index: 1000;
+  left: 50%;
+  bottom: 42px;
+  max-width: 78%;
+  padding: 16px 26px 17px;
+  transform: translateX(-50%);
+  border: 2px solid rgba(140, 203, 154, 0.42);
+  border-radius: 14px;
+  background: rgba(10, 13, 11, 0.72);
+  color: var(--yt-ink);
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: 56px;
+  font-weight: 650;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.yt-caption-prompt {
+  margin-right: 0.35em;
+  color: var(--yt-safe);
+}
+
+.yt-caption-code {
+  color: var(--yt-instruction);
+}
+

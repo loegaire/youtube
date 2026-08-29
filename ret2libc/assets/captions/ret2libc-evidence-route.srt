@@ -1,0 +1,977 @@
+1
+00:00:00,000 --> 00:00:03,835
+Hello again,
+hackers.
+Today our target looks
+
+2
+00:00:03,835 --> 00:00:07,030
+harmless:
+an echo server.
+We type text,
+
+3
+00:00:07,030 --> 00:00:10,120
+it gives text back.
+But beneath that
+
+4
+00:00:10,120 --> 00:00:12,783
+echo is a stack frame,
+a missing
+
+5
+00:00:12,783 --> 00:00:16,617
+size limit,
+and one tiny return instruction
+
+6
+00:00:16,617 --> 00:00:19,600
+that lets us borrow code from libc.
+
+7
+00:00:19,600 --> 00:00:22,817
+This is ret2libc:
+not shellcode,
+not guessed
+
+8
+00:00:22,817 --> 00:00:25,945
+addresses,
+but a traced route through code
+
+9
+00:00:25,945 --> 00:00:28,000
+the process already loaded.
+
+10
+00:00:28,000 --> 00:00:33,033
+We start with exactly what the challenge
+
+11
+00:00:33,033 --> 00:00:36,734
+gave us.
+No friendly C source.
+No
+
+12
+00:00:36,734 --> 00:00:41,174
+comment that explains the bug.
+Just a
+
+13
+00:00:41,174 --> 00:00:45,763
+binary,
+a libc,
+and a Makefile fragment.
+
+14
+00:00:45,763 --> 00:00:49,760
+The raw ls output stays on screen
+
+15
+00:00:49,760 --> 00:00:50,500
+first.
+
+16
+00:00:50,500 --> 00:00:53,841
+Then file tells us that vuln is
+
+17
+00:00:53,841 --> 00:00:58,918
+a 64-bit dynamically linked executable and it
+
+18
+00:00:58,918 --> 00:01:02,927
+is not stripped.
+The supplied libc is
+
+19
+00:01:02,927 --> 00:01:07,203
+a stripped 64-bit shared object.
+That is
+
+20
+00:01:07,203 --> 00:01:09,875
+our evidence workspace,
+
+21
+00:01:09,875 --> 00:01:14,184
+and every clean teaching fragment in this
+
+22
+00:01:14,184 --> 00:01:18,000
+episode will visibly descend from it.
+
+23
+00:01:18,000 --> 00:01:23,136
+The Makefile is build context,
+not source.
+
+24
+00:01:23,136 --> 00:01:26,158
+It says 64-bit,
+no PIE,
+and a
+
+25
+00:01:26,158 --> 00:01:31,143
+local runpath.
+The binary still gets the
+
+26
+00:01:31,143 --> 00:01:35,524
+final word.
+readelf says its type is
+
+27
+00:01:35,524 --> 00:01:40,962
+EXEC.
+GNU_STACK is readable and writable,
+but
+
+28
+00:01:40,962 --> 00:01:42,926
+not executable.
+
+29
+00:01:42,926 --> 00:01:47,797
+The dynamic section gives us RUNPATH dot
+
+30
+00:01:47,797 --> 00:01:52,810
+slash and GNU_RELRO,
+while the symbol check
+
+31
+00:01:52,810 --> 00:01:58,111
+finds no stack canary symbol.
+Together those
+
+32
+00:01:58,111 --> 00:02:01,549
+rows mean:
+no PIE,
+NX enabled,
+no
+
+33
+00:02:01,549 --> 00:02:06,276
+canary,
+and partial RELRO.
+NX changes the
+
+34
+00:02:06,276 --> 00:02:07,852
+attack shape.
+
+35
+00:02:07,852 --> 00:02:11,426
+Bytes can sit on the stack,
+but
+
+36
+00:02:11,426 --> 00:02:17,085
+they cannot become instructions.
+So our stack
+
+37
+00:02:17,085 --> 00:02:21,999
+must become a route made from addresses.
+
+38
+00:02:21,999 --> 00:02:26,284
+The symbol table is our map because
+
+39
+00:02:26,284 --> 00:02:30,717
+this binary is not stripped.
+It names
+
+40
+00:02:30,717 --> 00:02:36,775
+convert_case at 0x400677,
+do_stuff at 0x4006d8,
+and
+
+41
+00:02:36,775 --> 00:02:41,355
+main at 0x400771.
+That suggests a flow
+
+42
+00:02:41,355 --> 00:02:46,526
+from main into do_stuff,
+then through scanf,
+
+43
+00:02:46,526 --> 00:02:49,777
+a conversion loop,
+and puts.
+
+44
+00:02:49,777 --> 00:02:53,871
+It is only a provisional map until
+
+45
+00:02:53,871 --> 00:02:59,865
+the disassembly proves it.
+Notice the discipline
+
+46
+00:02:59,865 --> 00:03:04,689
+here:
+the friendly diagram is pulled out
+
+47
+00:03:04,689 --> 00:03:09,806
+of the complete symbol table,
+not invented
+
+48
+00:03:09,806 --> 00:03:11,999
+on an empty canvas.
+
+49
+00:03:11,999 --> 00:03:16,476
+Now we open all of do_stuff before
+
+50
+00:03:16,476 --> 00:03:22,114
+isolating the bug.
+The function creates a
+
+51
+00:03:22,114 --> 00:03:26,425
+stack frame with sub rsp,
+0x90.
+It
+
+52
+00:03:26,425 --> 00:03:32,394
+calculates rbp minus 0x80,
+then passes that
+
+53
+00:03:32,394 --> 00:03:37,535
+address to scanf.
+A second scanf lands
+
+54
+00:03:37,535 --> 00:03:39,856
+at rbp minus 0x81.
+
+55
+00:03:39,856 --> 00:03:46,079
+The loop begins at 0x400728,
+calls convert_case,
+
+56
+00:03:46,079 --> 00:03:51,345
+then the function calls puts,
+leaves,
+and
+
+57
+00:03:51,345 --> 00:03:57,250
+returns.
+The format strings are not friendly
+
+58
+00:03:57,250 --> 00:04:01,558
+source text;
+they are raw bytes in
+
+59
+00:04:01,558 --> 00:04:05,228
+rodata.
+The dump says 25 5b 5e
+
+60
+00:04:05,228 --> 00:04:09,856
+0a 5d 00:
+percent,
+open bracket,
+caret,
+
+61
+00:04:09,856 --> 00:04:15,234
+newline,
+close bracket,
+zero.
+That decodes to
+
+62
+00:04:15,234 --> 00:04:21,509
+percent bracket caret newline bracket:
+scan until
+
+63
+00:04:21,509 --> 00:04:25,990
+newline,
+with no width limit.
+The next
+
+64
+00:04:25,990 --> 00:04:30,323
+bytes decode to percent c.
+The first
+
+65
+00:04:30,323 --> 00:04:32,713
+scanf is the hazard,
+
+66
+00:04:32,713 --> 00:04:37,640
+and its proof is the rodata dump
+
+67
+00:04:37,640 --> 00:04:41,999
+joined back to the call site.
+
+68
+00:04:41,999 --> 00:04:48,007
+The input begins at rbp minus 0x80.
+
+69
+00:04:48,007 --> 00:04:54,873
+That places the saved base pointer 128
+
+70
+00:04:54,873 --> 00:05:01,310
+bytes above the buffer,
+and the saved
+
+71
+00:05:01,310 --> 00:05:08,819
+return address eight bytes after that.
+One
+
+72
+00:05:08,819 --> 00:05:16,758
+hundred twenty-eight plus eight gives us the
+
+73
+00:05:16,758 --> 00:05:21,264
+control offset:
+136 bytes.
+
+74
+00:05:21,264 --> 00:05:27,626
+But this challenge has a strange visible
+
+75
+00:05:27,626 --> 00:05:33,800
+side effect.
+do_stuff sends the first one
+
+76
+00:05:33,800 --> 00:05:43,155
+hundred bytes through convert_case.
+The disassembly checks
+
+77
+00:05:43,155 --> 00:05:49,704
+letter ranges,
+then adds or subtracts 0x20.
+
+78
+00:05:49,704 --> 00:05:56,066
+The loop bound compares the counter with
+
+79
+00:05:56,066 --> 00:06:03,550
+0x63,
+so indices zero through ninety-nine mutate.
+
+80
+00:06:03,550 --> 00:06:07,645
+A wall of As can echo as
+
+81
+00:06:07,645 --> 00:06:15,381
+AaAaAa.
+Our return address begins at byte
+
+82
+00:06:15,381 --> 00:06:22,890
+136,
+safely after that mutation zone.
+The
+
+83
+00:06:22,890 --> 00:06:29,715
+counter itself sits at rbp minus 0x8,
+
+84
+00:06:29,715 --> 00:06:38,134
+inside the overwritten region.
+When the loop
+
+85
+00:06:38,134 --> 00:06:43,822
+finishes,
+it leaves 0x64 there:
+
+86
+00:06:43,822 --> 00:06:50,553
+ASCII lowercase d.
+So a trailing d
+
+87
+00:06:50,553 --> 00:06:57,035
+is an echo artifact,
+not the leak.
+
+88
+00:06:57,035 --> 00:07:02,769
+The leak is the next thing we
+
+89
+00:07:02,769 --> 00:07:09,999
+will deliberately route to stdout.
+
+90
+00:07:09,999 --> 00:07:16,355
+To defeat ASLR,
+we need one real
+
+91
+00:07:16,355 --> 00:07:25,254
+libc address from this run.
+The relocation
+
+92
+00:07:25,254 --> 00:07:32,374
+table says puts uses a JUMP_SLOT at
+
+93
+00:07:32,374 --> 00:07:40,510
+0x601018.
+The PLT says puts at 0x400540
+
+94
+00:07:40,510 --> 00:07:46,612
+jumps through that GOT entry.
+
+95
+00:07:46,612 --> 00:07:53,035
+So puts at PLT can print the
+
+96
+00:07:53,035 --> 00:08:00,627
+pointer stored in puts at GOT.
+On
+
+97
+00:08:00,627 --> 00:08:09,094
+x86-64,
+the first argument is RDI.
+The
+
+98
+00:08:09,094 --> 00:08:17,561
+clean symbol table does not give us
+
+99
+00:08:17,561 --> 00:08:24,861
+pop rdi ret,
+but the byte stream
+
+100
+00:08:24,861 --> 00:08:30,992
+inside libc csu init does.
+
+101
+00:08:30,992 --> 00:08:38,114
+In normal decoding we see 41 5f
+
+102
+00:08:38,114 --> 00:08:44,666
+c3:
+pop r15,
+ret.
+Start one byte
+
+103
+00:08:44,666 --> 00:08:52,927
+later at 0x400913,
+and 5f c3 becomes
+
+104
+00:08:52,927 --> 00:09:00,904
+pop rdi,
+ret.
+That shifted decode is
+
+105
+00:09:00,904 --> 00:09:06,031
+not a guess;
+it is a real
+
+106
+00:09:06,031 --> 00:09:13,153
+disassembly command.
+Finally,
+
+107
+00:09:13,153 --> 00:09:19,029
+init gives us a plain ret at
+
+108
+00:09:19,029 --> 00:09:27,309
+0x40052e.
+It looks boring now.
+Later it
+
+109
+00:09:27,309 --> 00:09:35,322
+will be the alignment shim that lets
+
+110
+00:09:35,322 --> 00:09:42,000
+the second chain survive libc.
+
+111
+00:09:42,000 --> 00:09:47,890
+Stage one now has a provenance trail
+
+112
+00:09:47,890 --> 00:09:55,154
+for every block.
+One hundred thirty-six bytes
+
+113
+00:09:55,154 --> 00:10:01,044
+of padding come from the stack frame.
+
+114
+00:10:01,044 --> 00:10:06,934
+The shifted decode gives pop rdi ret.
+
+115
+00:10:06,934 --> 00:10:13,216
+The relocation table gives puts at GOT.
+
+116
+00:10:13,216 --> 00:10:17,143
+The PLT gives puts at PLT.
+
+117
+00:10:17,143 --> 00:10:24,010
+And the symbol table gives do_stuff again.
+
+118
+00:10:24,010 --> 00:10:28,655
+The chain sets RDI to puts at
+
+119
+00:10:28,655 --> 00:10:33,907
+GOT,
+returns into puts at PLT,
+and
+
+120
+00:10:33,907 --> 00:10:41,380
+re-enters do_stuff.
+On a matching runtime,
+puts
+
+121
+00:10:41,380 --> 00:10:47,439
+would emit ugly raw pointer bytes.
+We
+
+122
+00:10:47,439 --> 00:10:52,286
+do not have that runtime here.
+
+123
+00:10:52,286 --> 00:10:58,851
+The actual local launch fails before the
+
+124
+00:10:58,851 --> 00:11:05,416
+program begins:
+the supplied libc and the
+
+125
+00:11:05,416 --> 00:11:13,719
+host loader disagree at early initialization.
+That
+
+126
+00:11:13,719 --> 00:11:17,388
+is not a shell,
+not a leak,
+
+127
+00:11:17,388 --> 00:11:21,636
+and not a reason to fake one.
+
+128
+00:11:21,636 --> 00:11:27,429
+It is a concrete runtime constraint,
+
+129
+00:11:27,429 --> 00:11:30,000
+saved as evidence.
+
+130
+00:11:30,000 --> 00:11:36,491
+The supplied libc still gives us its
+
+131
+00:11:36,491 --> 00:11:45,362
+internal distances.
+readelf finds puts at offset
+
+132
+00:11:45,362 --> 00:11:53,367
+0x80a30 and system at 0x4f4e0.
+strings finds
+
+133
+00:11:53,367 --> 00:11:59,642
+slash bin slash sh at 0x1b40fa.
+ASLR
+
+134
+00:11:59,642 --> 00:12:05,916
+can slide the entire library,
+but it
+
+135
+00:12:05,916 --> 00:12:11,758
+does not change those distances.
+
+136
+00:12:11,758 --> 00:12:18,363
+With a real stage-one leak,
+libc base
+
+137
+00:12:18,363 --> 00:12:27,019
+equals leaked puts minus 0x80a30.
+Then system
+
+138
+00:12:27,019 --> 00:12:33,396
+is base plus 0x4f4e0,
+and slash bin
+
+139
+00:12:33,396 --> 00:12:39,774
+slash sh is base plus 0x1b40fa.
+One
+
+140
+00:12:39,774 --> 00:12:48,201
+known address would align the whole library
+
+141
+00:12:48,201 --> 00:12:49,340
+ruler.
+
+142
+00:12:49,340 --> 00:12:55,895
+In this render those runtime values remain
+
+143
+00:12:55,895 --> 00:13:02,996
+symbolic because the required matching run is
+
+144
+00:13:02,996 --> 00:13:04,999
+unavailable.
+
+145
+00:13:04,999 --> 00:13:11,041
+Stage two is the borrowed function call.
+
+146
+00:13:11,041 --> 00:13:18,547
+Overflow again with one hundred thirty-six bytes.
+
+147
+00:13:18,547 --> 00:13:23,124
+Use the ret shim at 0x40052e to
+
+148
+00:13:23,124 --> 00:13:28,616
+shift the stack by one address width.
+
+149
+00:13:28,616 --> 00:13:34,078
+Then pop rdi ret loads the runtime
+
+150
+00:13:34,078 --> 00:13:39,539
+address of slash bin slash sh into
+
+151
+00:13:39,539 --> 00:13:45,586
+RDI.
+The final saved return address is
+
+152
+00:13:45,586 --> 00:13:52,218
+runtime system.
+In compact form,
+the stack
+
+153
+00:13:52,218 --> 00:13:57,679
+route becomes ret shim,
+pop rdi ret,
+
+154
+00:13:57,679 --> 00:13:59,825
+binsh,
+system.
+
+155
+00:13:59,825 --> 00:14:05,137
+The added ret is not decorative.
+Some
+
+156
+00:14:05,137 --> 00:14:11,512
+libc paths expect stack alignment.
+The shim
+
+157
+00:14:11,512 --> 00:14:18,596
+consumes eight bytes and changes the alignment
+
+158
+00:14:18,596 --> 00:14:23,731
+before the route enters libc.
+We can
+
+159
+00:14:23,731 --> 00:14:29,929
+teach that mechanism from the real gadget
+
+160
+00:14:29,929 --> 00:14:31,877
+and ABI model,
+
+161
+00:14:31,877 --> 00:14:36,128
+but we do not claim a local
+
+162
+00:14:36,128 --> 00:14:41,999
+shell without the matching loader.
+
+163
+00:14:41,999 --> 00:14:47,202
+Here is the honesty gate.
+A final
+
+164
+00:14:47,202 --> 00:14:54,407
+exploit transcript must come from the real
+
+165
+00:14:54,407 --> 00:15:00,811
+remote service or a local runtime with
+
+166
+00:15:00,811 --> 00:15:09,816
+the matching ld-linux loader.
+This workspace contains
+
+167
+00:15:09,816 --> 00:15:16,421
+neither.
+The captured local result is an
+
+168
+00:15:16,421 --> 00:15:26,627
+ld.so inconsistency assertion during early initialization.
+
+169
+00:15:26,627 --> 00:15:32,245
+That is where this proof stops.
+The
+
+170
+00:15:32,245 --> 00:15:40,472
+analysis does not disappear:
+challenge files led
+
+171
+00:15:40,472 --> 00:15:49,501
+to build context;
+readelf proved protections;
+symbols
+
+172
+00:15:49,501 --> 00:15:57,727
+named do_stuff;
+disassembly found the stack frame;
+
+173
+00:15:57,727 --> 00:16:06,355
+rodata exposed the unbounded scanf;
+the relocation
+
+174
+00:16:06,355 --> 00:16:10,167
+table named puts at GOT;
+
+175
+00:16:10,167 --> 00:16:16,395
+the PLT named puts at PLT;
+shifted
+
+176
+00:16:16,395 --> 00:16:22,854
+bytes revealed pop rdi ret;
+and the
+
+177
+00:16:22,854 --> 00:16:32,081
+provided libc supplied the offsets.
+The missing
+
+178
+00:16:32,081 --> 00:16:39,693
+item is only the runtime transcript,
+and
+
+179
+00:16:39,693 --> 00:16:44,999
+it remains visibly pending.
+
+180
+00:16:44,999 --> 00:16:53,359
+The challenge-specific pitfalls are worth keeping.
+First,
+
+181
+00:16:53,359 --> 00:16:59,628
+AaAaAa output comes from convert_case and a
+
+182
+00:16:59,628 --> 00:17:04,330
+loop bound of 0x63:
+only the first
+
+183
+00:17:04,330 --> 00:17:09,555
+one hundred bytes mutate,
+while a ROP
+
+184
+00:17:09,555 --> 00:17:13,735
+chain at 136 survives.
+Second,
+
+185
+00:17:13,735 --> 00:17:20,548
+the trailing d comes from the loop
+
+186
+00:17:20,548 --> 00:17:27,360
+counter at rbp minus 0x8 ending at
+
+187
+00:17:27,360 --> 00:17:32,713
+0x64.
+It is visible,
+but it is
+
+188
+00:17:32,713 --> 00:17:38,553
+not the leak.
+Third,
+the pop rdi
+
+189
+00:17:38,553 --> 00:17:45,365
+ret gadget begins in the middle of
+
+190
+00:17:45,365 --> 00:17:46,825
+41 5f c3,
+
+191
+00:17:46,825 --> 00:17:51,878
+so the address is 0x400913,
+not the
+
+192
+00:17:51,878 --> 00:17:57,834
+address of the full pop r15 instruction.
+
+193
+00:17:57,834 --> 00:18:02,346
+Fourth,
+a provided libc is not a
+
+194
+00:18:02,346 --> 00:18:09,564
+usable local runtime unless its loader matches.
+
+195
+00:18:09,564 --> 00:18:16,422
+The broader ret2libc lesson is evidence flow.
+
+196
+00:18:16,422 --> 00:18:21,656
+Find the overflow.
+Measure control.
+
+197
+00:18:21,656 --> 00:18:25,575
+Find a way to set the first
+
+198
+00:18:25,575 --> 00:18:33,038
+argument.
+Leak one known libc function.
+Subtract
+
+199
+00:18:33,038 --> 00:18:39,010
+its offset.
+Add the targets.
+Then return
+
+200
+00:18:39,010 --> 00:18:45,727
+into code the process already trusts.
+Today,
+
+201
+00:18:45,727 --> 00:18:53,004
+the stack never became executable.
+The payload
+
+202
+00:18:53,004 --> 00:18:58,229
+never became code.
+It became a path:
+
+203
+00:18:58,229 --> 00:19:03,205
+one route to leak libc,
+and one
+
+204
+00:19:03,205 --> 00:19:09,632
+route to call system.
+That is ret2libc.
+
+205
+00:19:09,632 --> 00:19:15,438
+Not a spell.
+A traced route through
+
+206
+00:19:15,438 --> 00:19:19,999
+the binary's own machinery.
+

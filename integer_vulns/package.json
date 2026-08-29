@@ -1,0 +1,30 @@
+{
+  "name": "integer-vulnerabilities-motion-canvas",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "build:preview": "vite build --config vite.preview.config.ts",
+    "audit:serve": "vite --host 127.0.0.1 --config vite.preview.config.ts",
+    "typecheck": "tsc --noEmit",
+    "render:frames": "motion-canvas render --project src/project.ts --output output/project --fps 24 --parallel 2",
+    "video:encode": "nice -n 10 ffmpeg -y -hide_banner -loglevel warning -stats -framerate 24 -start_number 0 -i output/project/%06d.png -i audio/final-mix.wav -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -threads 2 -c:a aac -b:a 192k -shortest -movflags +faststart output/integer-bugs-numbers-are-boundaries.mp4",
+    "narration:pilot": "node scripts/run-chatterbox-bounded.mjs --ids 00-hook --force",
+    "narration:generate": "node scripts/run-chatterbox-batches.mjs",
+    "narration:finalize": "node scripts/finalize-chatterbox.mjs",
+    "captions:ass": "python3 scripts/write-captions.py"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

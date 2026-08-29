@@ -1,0 +1,37 @@
+$ objdump -d -M intel ./vuln | sed -n "/<convert_case>:/,/^$/p"
+0000000000400677 <convert_case>:
+  400677:	55                   	push   rbp
+  400678:	48 89 e5             	mov    rbp,rsp
+  40067b:	89 f8                	mov    eax,edi
+  40067d:	48 89 75 f0          	mov    QWORD PTR [rbp-0x10],rsi
+  400681:	88 45 fc             	mov    BYTE PTR [rbp-0x4],al
+  400684:	80 7d fc 60          	cmp    BYTE PTR [rbp-0x4],0x60
+  400688:	7e 21                	jle    4006ab <convert_case+0x34>
+  40068a:	80 7d fc 7a          	cmp    BYTE PTR [rbp-0x4],0x7a
+  40068e:	7f 1b                	jg     4006ab <convert_case+0x34>
+  400690:	48 8b 45 f0          	mov    rax,QWORD PTR [rbp-0x10]
+  400694:	83 e0 01             	and    eax,0x1
+  400697:	48 85 c0             	test   rax,rax
+  40069a:	74 06                	je     4006a2 <convert_case+0x2b>
+  40069c:	0f b6 45 fc          	movzx  eax,BYTE PTR [rbp-0x4]
+  4006a0:	eb 34                	jmp    4006d6 <convert_case+0x5f>
+  4006a2:	0f b6 45 fc          	movzx  eax,BYTE PTR [rbp-0x4]
+  4006a6:	83 e8 20             	sub    eax,0x20
+  4006a9:	eb 2b                	jmp    4006d6 <convert_case+0x5f>
+  4006ab:	80 7d fc 40          	cmp    BYTE PTR [rbp-0x4],0x40
+  4006af:	7e 21                	jle    4006d2 <convert_case+0x5b>
+  4006b1:	80 7d fc 5a          	cmp    BYTE PTR [rbp-0x4],0x5a
+  4006b5:	7f 1b                	jg     4006d2 <convert_case+0x5b>
+  4006b7:	48 8b 45 f0          	mov    rax,QWORD PTR [rbp-0x10]
+  4006bb:	83 e0 01             	and    eax,0x1
+  4006be:	48 85 c0             	test   rax,rax
+  4006c1:	74 09                	je     4006cc <convert_case+0x55>
+  4006c3:	0f b6 45 fc          	movzx  eax,BYTE PTR [rbp-0x4]
+  4006c7:	83 c0 20             	add    eax,0x20
+  4006ca:	eb 0a                	jmp    4006d6 <convert_case+0x5f>
+  4006cc:	0f b6 45 fc          	movzx  eax,BYTE PTR [rbp-0x4]
+  4006d0:	eb 04                	jmp    4006d6 <convert_case+0x5f>
+  4006d2:	0f b6 45 fc          	movzx  eax,BYTE PTR [rbp-0x4]
+  4006d6:	5d                   	pop    rbp
+  4006d7:	c3                   	ret
+

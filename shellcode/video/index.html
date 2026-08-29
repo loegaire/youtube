@@ -1,0 +1,1130 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[
+    {"id":"captioned","type":"boolean","label":"Show captions","default":true}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/segments.js"></script>
+    <script src="assets/captions/cues.js"></script>
+    <style>
+      @font-face {
+        font-family: "JetBrainsMono Nerd Font";
+        src: url("assets/fonts/JetBrainsMonoNerdFont-Regular.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("assets/fonts/JetBrainsMonoNerdFont-Regular.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      @font-face {
+        font-family: Inter;
+        src: url("assets/fonts/NotoSans-wght.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+
+      :root {
+        --canvas: #0a0d0b;
+        --panel: #111713;
+        --raised: #17201a;
+        --rule: #26332b;
+        --safe: #8ccb9a;
+        --secondary: #b3d8c2;
+        --instruction: #d8be73;
+        --danger: #f0786e;
+        --ink: #f1f3ee;
+        --muted: #9ea8a0;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--canvas);
+        color: var(--ink);
+      }
+
+      body {
+        font-family: Inter, sans-serif;
+      }
+
+      .mono,
+      .byte,
+      .tile,
+      .beat,
+      .meta,
+      .ticket,
+      .gate,
+      .caption {
+        font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--canvas);
+      }
+
+      .frame-fill {
+        position: absolute;
+        inset: 0;
+        background: var(--canvas);
+      }
+
+      .frame-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.045;
+        border: 2px solid var(--safe);
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        padding: 76px 112px 126px;
+        background: transparent;
+      }
+
+      .scene::after {
+        content: "";
+        position: absolute;
+        left: 112px;
+        right: 112px;
+        bottom: 92px;
+        height: 2px;
+        background: var(--rule);
+      }
+
+      .topline {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 42px;
+        color: var(--muted);
+        font: 750 22px/1 "JetBrains Mono", monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .chapter {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .chapter::before {
+        content: ">";
+        color: var(--safe);
+        font-size: 27px;
+      }
+
+      .timecode {
+        min-width: 122px;
+        text-align: right;
+        color: var(--instruction);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .headline {
+        position: absolute;
+        z-index: 6;
+        top: 132px;
+        left: 112px;
+        max-width: 620px;
+        font-size: 78px;
+        font-weight: 880;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
+      }
+
+      .headline .accent {
+        color: var(--instruction);
+      }
+
+      .stage {
+        position: absolute;
+        z-index: 3;
+        left: 770px;
+        top: 138px;
+        width: 1038px;
+        height: 690px;
+        overflow: hidden;
+        border: 2px solid var(--rule);
+        border-radius: 28px;
+        background: var(--panel);
+      }
+
+      .stage::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset: 32px;
+        opacity: 0.055;
+        border: 2px solid var(--secondary);
+        border-radius: 16px;
+      }
+
+      .stage-label {
+        position: absolute;
+        z-index: 12;
+        top: 22px;
+        left: 26px;
+        padding: 9px 15px;
+        border: 2px solid var(--rule);
+        border-radius: 10px;
+        background: var(--canvas);
+        color: var(--muted);
+        font: 750 18px/1 "JetBrains Mono", monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .beats {
+        position: absolute;
+        z-index: 8;
+        left: 112px;
+        top: 474px;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 17px;
+      }
+
+      .beat {
+        display: flex;
+        align-items: center;
+        min-height: 65px;
+        gap: 18px;
+        padding: 13px 18px;
+        border: 2px solid var(--rule);
+        border-radius: 14px;
+        background: var(--panel);
+        color: var(--muted);
+        font-size: 28px;
+        font-weight: 720;
+        letter-spacing: -0.025em;
+        opacity: 0;
+      }
+
+      .beat .number {
+        display: grid;
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--raised);
+        color: var(--instruction);
+        font-size: 20px;
+      }
+
+      .beat.active {
+        border-color: var(--safe);
+        color: var(--ink);
+      }
+
+      .beat.active .number {
+        background: var(--safe);
+        color: var(--canvas);
+      }
+
+      .world {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        transform-origin: 50% 50%;
+      }
+
+      .ground {
+        position: absolute;
+        left: 52px;
+        right: 52px;
+        bottom: 92px;
+        height: 3px;
+        background: var(--rule);
+      }
+
+      .label {
+        padding: 9px 13px;
+        border: 2px solid currentColor;
+        border-radius: 9px;
+        background: var(--canvas);
+        font: 760 19px/1 "JetBrains Mono", monospace;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .byte,
+      .tile,
+      .card {
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--safe);
+        border-radius: 12px;
+        background: var(--raised);
+        color: var(--ink);
+        font-weight: 820;
+      }
+
+      .byte {
+        width: 64px;
+        height: 64px;
+        font-size: 23px;
+      }
+
+      .tile {
+        min-width: 86px;
+        height: 68px;
+        padding: 0 13px;
+        font-size: 25px;
+      }
+
+      .card {
+        width: 198px;
+        height: 132px;
+        padding: 18px;
+        border-color: var(--instruction);
+        color: var(--instruction);
+        font: 800 24px/1.08 "JetBrains Mono", monospace;
+        text-align: center;
+      }
+
+      .arrow {
+        color: var(--instruction);
+        font: 850 44px/1 "JetBrains Mono", monospace;
+      }
+
+      .memory-shelf {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 284px;
+        height: 148px;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 10px;
+        padding: 16px;
+        border: 3px solid var(--rule);
+        border-radius: 18px;
+        background: var(--canvas);
+      }
+
+      .cell {
+        position: relative;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--rule);
+        border-radius: 9px;
+        background: var(--panel);
+        color: var(--muted);
+        font: 760 22px/1 "JetBrains Mono", monospace;
+      }
+
+      .cell.hot {
+        border-color: var(--instruction);
+        background: var(--instruction);
+        color: var(--canvas);
+      }
+
+      .spot {
+        position: absolute;
+        z-index: 7;
+        top: 142px;
+        left: 92px;
+        width: 126px;
+        height: 126px;
+        border: 4px solid var(--instruction);
+        border-radius: 50%;
+        background: var(--panel);
+      }
+
+      .spot::after {
+        content: "PROGRAM\A COUNTER";
+        white-space: pre;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--instruction);
+        font: 800 16px/1.08 "JetBrains Mono", monospace;
+        text-align: center;
+      }
+
+      .rail {
+        position: absolute;
+        left: 76px;
+        right: 76px;
+        bottom: 154px;
+        height: 10px;
+        border-radius: 6px;
+        background: var(--rule);
+      }
+
+      .station {
+        position: absolute;
+        bottom: 116px;
+        width: 76px;
+        height: 76px;
+        border: 3px solid var(--safe);
+        border-radius: 50%;
+        background: var(--panel);
+      }
+
+      .train {
+        position: absolute;
+        z-index: 5;
+        left: 102px;
+        bottom: 167px;
+        width: 210px;
+        height: 112px;
+        border: 3px solid var(--instruction);
+        border-radius: 22px 46px 16px 16px;
+        background: var(--raised);
+      }
+
+      .train::before,
+      .train::after {
+        content: "";
+        position: absolute;
+        bottom: -26px;
+        width: 44px;
+        height: 44px;
+        border: 4px solid var(--rule);
+        border-radius: 50%;
+        background: var(--canvas);
+      }
+
+      .train::before { left: 26px; }
+      .train::after { right: 26px; }
+
+      .train span {
+        position: absolute;
+        left: 24px;
+        bottom: 22px;
+        color: var(--instruction);
+        font: 800 20px/1 "JetBrains Mono", monospace;
+      }
+
+      .ticket {
+        position: absolute;
+        z-index: 8;
+        right: 82px;
+        top: 118px;
+        width: 292px;
+        min-height: 148px;
+        padding: 24px;
+        border: 3px solid var(--instruction);
+        border-radius: 16px;
+        background: var(--raised);
+        color: var(--instruction);
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      .ticket small {
+        display: block;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .cup {
+        position: absolute;
+        left: 426px;
+        bottom: 98px;
+        width: 208px;
+        height: 300px;
+        overflow: hidden;
+        border: 5px solid var(--safe);
+        border-top: 0;
+        border-radius: 0 0 34px 34px;
+        background: var(--panel);
+      }
+
+      .fill-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 82px;
+        border-top: 3px dashed var(--safe);
+      }
+
+      .river {
+        position: absolute;
+        left: -140px;
+        top: 228px;
+        display: flex;
+        gap: 16px;
+      }
+
+      .bridge {
+        position: absolute;
+        right: 58px;
+        bottom: 150px;
+        width: 250px;
+        height: 86px;
+        border-top: 9px solid var(--instruction);
+        border-bottom: 9px solid var(--instruction);
+      }
+
+      .bridge::before,
+      .bridge::after {
+        content: "";
+        position: absolute;
+        top: -9px;
+        bottom: -9px;
+        width: 9px;
+        background: var(--instruction);
+      }
+      .bridge::before { left: 30%; }
+      .bridge::after { right: 30%; }
+
+      .gate-row {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+      }
+
+      .gate {
+        position: relative;
+        width: 188px;
+        height: 260px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 22px;
+        border: 3px solid var(--safe);
+        border-radius: 20px;
+        background: var(--raised);
+        color: var(--safe);
+        font-size: 22px;
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .gate::before {
+        content: "";
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        top: 24px;
+        height: 112px;
+        border: 12px solid currentColor;
+        border-bottom: 0;
+        border-radius: 60px 60px 0 0;
+      }
+
+      .cpu {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 238px;
+        height: 238px;
+        display: grid;
+        place-items: center;
+        transform: translate(-50%, -50%);
+        border: 8px solid var(--instruction);
+        border-radius: 42px;
+        background: var(--raised);
+        color: var(--instruction);
+        font: 900 48px/1 "JetBrains Mono", monospace;
+      }
+
+      .chamber {
+        position: absolute;
+        width: 180px;
+        height: 70px;
+        display: grid;
+        place-items: center;
+        border: 3px solid var(--safe);
+        border-radius: 14px;
+        background: var(--canvas);
+        color: var(--safe);
+        font: 820 22px/1 "JetBrains Mono", monospace;
+      }
+
+      .robot {
+        position: absolute;
+        right: 100px;
+        bottom: 114px;
+        width: 210px;
+        height: 234px;
+        border: 4px solid var(--safe);
+        border-radius: 34px;
+        background: var(--raised);
+      }
+
+      .robot::before,
+      .robot::after {
+        content: "";
+        position: absolute;
+        top: 64px;
+        width: 34px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--safe);
+      }
+
+      .robot::before { left: 48px; }
+      .robot::after { right: 48px; }
+
+      .robot .screen {
+        position: absolute;
+        left: 32px;
+        right: 32px;
+        bottom: 40px;
+        height: 76px;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--rule);
+        border-radius: 12px;
+        color: var(--muted);
+        font: 760 18px/1 "JetBrains Mono", monospace;
+      }
+
+      .toy-cards {
+        position: absolute;
+        left: 74px;
+        top: 230px;
+        display: flex;
+        gap: 20px;
+      }
+
+      .toy-card {
+        width: 190px;
+        height: 132px;
+        display: grid;
+        place-items: center;
+        padding: 14px;
+        border: 3px solid var(--instruction);
+        border-radius: 18px;
+        background: var(--raised);
+        color: var(--instruction);
+        font: 860 22px/1.1 "JetBrains Mono", monospace;
+        text-align: center;
+      }
+
+      .domino-row {
+        position: absolute;
+        left: 62px;
+        right: 62px;
+        top: 244px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .domino {
+        width: 196px;
+        height: 250px;
+        display: grid;
+        place-items: center;
+        padding: 22px;
+        border: 3px solid var(--safe);
+        border-radius: 18px;
+        background: var(--raised);
+        color: var(--ink);
+        font: 850 24px/1.12 "JetBrains Mono", monospace;
+        text-align: center;
+        transform-origin: 50% 100%;
+      }
+
+      .seal {
+        position: absolute;
+        z-index: 5;
+        left: 50%;
+        top: 50%;
+        width: 136px;
+        height: 136px;
+        display: grid;
+        place-items: center;
+        transform: translate(-50%, -50%);
+        border: 12px double var(--danger);
+        border-radius: 50%;
+        background: var(--raised);
+        color: var(--danger);
+        font: 900 22px/1 "JetBrains Mono", monospace;
+      }
+
+      .seal .crack {
+        position: absolute;
+        width: 5px;
+        height: 94px;
+        background: var(--danger);
+        transform: rotate(27deg) scaleY(0);
+        transform-origin: 50% 0%;
+      }
+
+      .equation {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 70px;
+      }
+
+      .eq-block {
+        min-width: 180px;
+        max-width: 245px;
+        min-height: 140px;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+        border: 3px solid var(--safe);
+        border-radius: 18px;
+        background: var(--raised);
+        color: var(--ink);
+        font: 850 24px/1.12 "JetBrains Mono", monospace;
+        text-align: center;
+      }
+
+      .eq-block.amber {
+        border-color: var(--instruction);
+        color: var(--instruction);
+      }
+
+      .eq-block.coral {
+        border-color: var(--danger);
+        color: var(--danger);
+      }
+
+      .glass-box {
+        position: absolute;
+        inset: 62px;
+        border: 5px solid var(--secondary);
+        border-radius: 34px;
+      }
+
+      .glass-box::before {
+        content: "GLASS-BOX LAB";
+        position: absolute;
+        right: 24px;
+        top: -19px;
+        padding: 9px 14px;
+        background: var(--panel);
+        color: var(--secondary);
+        font: 850 18px/1 "JetBrains Mono", monospace;
+      }
+
+      .glass-box::after {
+        content: "";
+        position: absolute;
+        left: 28px;
+        top: 28px;
+        width: 220px;
+        height: 4px;
+        background: var(--secondary);
+        opacity: 0.55;
+      }
+
+      .caption {
+        position: absolute;
+        z-index: 1000;
+        left: 50%;
+        bottom: 35px;
+        max-width: 78%;
+        padding: 15px 25px 16px;
+        transform: translateX(-50%);
+        border: 2px solid rgba(140, 203, 154, 0.52);
+        border-radius: 14px;
+        background: rgba(10, 13, 11, 0.86);
+        color: var(--ink);
+        font-size: 52px;
+        font-weight: 680;
+        line-height: 1.13;
+        letter-spacing: -0.03em;
+        text-align: center;
+        text-wrap: balance;
+      }
+
+      .caption::before {
+        content: ">";
+        margin-right: 0.34em;
+        color: var(--safe);
+      }
+
+      #root.captions-off .caption {
+        opacity: 0 !important;
+      }
+
+      .safe { color: var(--safe); }
+      .amber { color: var(--instruction); }
+      .coral { color: var(--danger); }
+      .muted { color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="1265"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="frame-fill"></div>
+      <div class="frame-grid"></div>
+      <audio
+        id="narration"
+        class="clip"
+        src="assets/audio/owner-voice-narration.m4a"
+        data-start="0"
+        data-duration="1265"
+        data-track-index="20"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      const segments = window.SHELLCODE_SEGMENTS;
+      const root = document.getElementById("root");
+      const vars = window.__hyperframes?.getVariables?.() || { captioned: true };
+      if (vars.captioned === false || vars.captioned === "false") root.classList.add("captions-off");
+
+      const mmss = (value) => {
+        const m = Math.floor(value / 60);
+        const s = Math.floor(value % 60);
+        return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      };
+
+      const escapeHtml = (value) => String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+
+      const cells = (count = 10) => Array.from({ length: count }, (_, i) =>
+        `<div class="cell" data-cell="${i}">${String(i).padStart(2, "0")}</div>`).join("");
+
+      const bytes = (count = 10) => Array.from({ length: count }, (_, i) =>
+        `<div class="byte" data-byte="${i}">${(72 + i * 7) % 256}</div>`).join("");
+
+      function worldMarkup(seg, index) {
+        const id = `w${index}`;
+        const toyCards = `<div class="toy-cards">
+          <div class="toy-card actor-a">BLINK</div>
+          <div class="toy-card actor-b">DRAW<br>SQUARE</div>
+          <div class="toy-card actor-c">STOP</div>
+        </div><div class="robot actor-d"><div class="screen">TOY ONLY</div></div>`;
+
+        if (["train", "path", "timeline"].includes(seg.world)) {
+          return `<div class="world train-world">
+            <div class="rail"></div>
+            <div class="station" style="left:96px"></div><div class="station" style="left:462px"></div><div class="station" style="right:92px"></div>
+            <div class="train"><span>EXECUTION</span></div>
+            <div class="ticket actor-b">RETURN TICKET<small>NORMAL ROUTE</small></div>
+            <div class="label actor-c safe" style="position:absolute;left:426px;bottom:72px">CONTINUE NORMALLY</div>
+            <div class="label actor-d amber" style="position:absolute;right:82px;bottom:72px">SYMBOLIC DETOUR</div>
+          </div>`;
+        }
+
+        if (["spotlight", "memory"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="spot"></div>
+            <div class="memory-shelf">${cells()}</div>
+            <div class="label actor-b safe" style="position:absolute;left:84px;bottom:100px">INPUT</div>
+            <div class="label actor-c amber" style="position:absolute;left:430px;bottom:100px">SAVED RETURN</div>
+            <div class="label actor-d muted" style="position:absolute;right:82px;bottom:100px">NORMAL CODE</div>
+          </div>`;
+        }
+
+        if (["river", "overflow", "macro"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="river actor-a">${bytes(12)}</div>
+            <div class="cup actor-b"><div class="fill-line"></div></div>
+            <div class="bridge actor-c"></div>
+            <div class="label safe" style="position:absolute;left:426px;bottom:68px">BUFFER</div>
+            <div class="label amber actor-d" style="position:absolute;right:78px;bottom:66px">RETURN PATH</div>
+          </div>`;
+        }
+
+        if (["guards", "gates", "workbench"].includes(seg.world)) {
+          return `<div class="world"><div class="gate-row">
+            <div class="gate actor-a">NX</div>
+            <div class="gate actor-b">RANDOM LAYOUT</div>
+            <div class="gate actor-c">CANARY</div>
+            <div class="gate actor-d">CONTROL FLOW</div>
+          </div></div>`;
+        }
+
+        if (["cpu", "decoder", "court"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="cpu actor-a">CPU</div>
+            <div class="chamber actor-b" style="left:72px;top:176px">FETCH</div>
+            <div class="chamber actor-c" style="right:72px;top:176px">DECODE</div>
+            <div class="chamber actor-d" style="left:50%;bottom:72px;transform:translateX(-50%)">EXECUTE</div>
+            <div class="row actor-e" style="position:absolute;left:52px;bottom:186px">${bytes(7)}</div>
+          </div>`;
+        }
+
+        if (["toy", "costume", "split"].includes(seg.world)) {
+          return `<div class="world">${toyCards}
+            <div class="label actor-e safe" style="position:absolute;left:78px;bottom:92px">DATA REGION</div>
+            <div class="label actor-f amber" style="position:absolute;right:82px;bottom:92px">DECODED ROLE</div>
+          </div>`;
+        }
+
+        if (["formula", "domino", "chain", "comic"].includes(seg.world)) {
+          return `<div class="world"><div class="equation">
+            ${seg.beats.slice(0, 4).map((beat, i) => `<div class="eq-block actor-${String.fromCharCode(97 + i)} ${i === 1 ? "amber" : i === 2 ? "coral" : ""}">${escapeHtml(beat)}</div>${i < Math.min(3, seg.beats.length - 1) ? '<span class="arrow">→</span>' : ""}`).join("")}
+          </div></div>`;
+        }
+
+        if (["canary"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="memory-shelf">${cells(8)}</div>
+            <div class="seal actor-a" data-layout-allow-occlusion>SEAL<i class="crack"></i></div>
+            <div class="label safe actor-b" style="position:absolute;left:92px;bottom:100px">BUFFER</div>
+            <div class="label amber actor-c" style="position:absolute;right:88px;bottom:100px">SAVED RETURN</div>
+            <div class="label coral actor-d" style="position:absolute;right:82px;top:92px">ABORT SAFELY</div>
+          </div>`;
+        }
+
+        if (["random", "city", "nx", "cfi", "safe"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="domino-row">
+              <div class="domino actor-a">DATA<br>FLOOR</div>
+              <div class="domino actor-b">CODE<br>ROAD</div>
+              <div class="domino actor-c">ROUTE<br>MAP</div>
+              <div class="domino actor-d">LOCKED<br>GATE</div>
+            </div>
+            <div class="label safe" style="position:absolute;left:72px;bottom:68px">LAYOUT CHANGES EACH RUN</div>
+          </div>`;
+        }
+
+        if (["bytes", "physical"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="row actor-a" style="position:absolute;left:70px;top:170px">${["H", "E", "L", "L", "O"].map(v => `<div class="tile">${v}</div>`).join("")}</div>
+            <div class="arrow actor-b" style="position:absolute;left:466px;top:276px">↓</div>
+            <div class="row actor-c" style="position:absolute;left:70px;top:360px">${[72, 101, 108, 108, 111].map(v => `<div class="tile">${v}</div>`).join("")}</div>
+            <div class="row actor-d" style="position:absolute;right:60px;bottom:74px">${["0","1","0","0","1","0","0","0"].map(v => `<div class="byte">${v}</div>`).join("")}</div>
+          </div>`;
+        }
+
+        if (["lab"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="glass-box actor-a"></div>
+            <div class="cpu actor-b" style="width:190px;height:190px;font-size:38px">TOY</div>
+            <div class="label safe actor-c" style="position:absolute;left:92px;bottom:92px">SANDBOX DEMO</div>
+            <div class="label coral actor-d" style="position:absolute;right:92px;bottom:92px;text-decoration:line-through">REAL-WORLD TARGET</div>
+          </div>`;
+        }
+
+        if (["crash", "machine", "factory"].includes(seg.world)) {
+          return `<div class="world">
+            <div class="cpu actor-a" style="left:28%">COPY</div>
+            <div class="row actor-b" style="position:absolute;left:430px;top:300px">${bytes(7)}</div>
+            <div class="gate actor-c" style="position:absolute;right:88px;top:210px;height:250px;color:var(--danger)">BOUNDS CHECK</div>
+            <div class="label coral actor-d" style="position:absolute;left:50%;bottom:72px;transform:translateX(-50%)">MECHANICAL, NOT MAGIC</div>
+          </div>`;
+        }
+
+        return `<div class="world">
+          <div class="row actor-a" style="position:absolute;left:72px;top:168px">${bytes(8)}</div>
+          <div class="arrow actor-b" style="position:absolute;z-index:5;left:486px;top:224px">↓</div>
+          <div class="memory-shelf actor-c">${cells()}</div>
+          <div class="spot" style="top:480px;left:726px"></div>
+        </div>`;
+      }
+
+      function captionChunks(text) {
+        const words = text.trim().split(/\s+/);
+        const cues = [];
+        let cursor = 0;
+        while (cursor < words.length) {
+          let stop = Math.min(cursor + 7, words.length);
+          for (let i = cursor + 4; i < Math.min(cursor + 9, words.length); i++) {
+            if (/[,!?;:.]$/.test(words[i])) {
+              stop = i + 1;
+              break;
+            }
+          }
+          cues.push(words.slice(cursor, stop).join(" "));
+          cursor = stop;
+        }
+        return cues;
+      }
+
+      const captionCues = window.SHELLCODE_CAPTION_CUES || [];
+      segments.forEach((seg, index) => {
+        const scene = document.createElement("section");
+        scene.id = `scene-${index}`;
+        scene.className = "scene clip";
+        scene.dataset.index = String(index);
+        scene.dataset.start = String(seg.start);
+        scene.dataset.duration = String(seg.duration);
+        scene.dataset.trackIndex = "1";
+        const titleWords = escapeHtml(seg.title).split(" ");
+        const midpoint = Math.max(1, Math.floor(titleWords.length / 2));
+        const title = `${titleWords.slice(0, midpoint).join(" ")} <span class="accent">${titleWords.slice(midpoint).join(" ")}</span>`;
+        scene.innerHTML = `
+          <div class="topline">
+            <div class="chapter">GLASS-BOX LAB / ${String(index + 1).padStart(2, "0")}</div>
+            <div class="timecode">${mmss(seg.start)} → ${mmss(seg.end)}</div>
+          </div>
+          <h1 class="headline" style="font-size:${seg.title.length > 32 ? 64 : seg.title.length > 24 ? 70 : 78}px">${title}</h1>
+          <div class="beats">${seg.beats.map((beat, beatIndex) => `
+            <div class="beat" data-beat="${beatIndex}">
+              <span class="number">${String(beatIndex + 1).padStart(2, "0")}</span>
+              <span>${escapeHtml(beat)}</span>
+            </div>`).join("")}
+          </div>
+          <div class="stage">
+            <div class="stage-label">${escapeHtml(seg.world)}</div>
+            ${worldMarkup(seg, index)}
+          </div>`;
+        root.appendChild(scene);
+
+        if (!window.SHELLCODE_CAPTION_CUES) {
+          const chunks = captionChunks(seg.narration);
+          const totalWords = chunks.reduce((sum, cue) => sum + cue.split(/\s+/).length, 0);
+          let cueStart = seg.start;
+          chunks.forEach((cue) => {
+            const cueWords = cue.split(/\s+/).length;
+            const cueDuration = seg.duration * cueWords / totalWords;
+            captionCues.push({
+              start: cueStart,
+              end: cueStart + Math.max(0.55, cueDuration - 0.05),
+              text: cue,
+            });
+            cueStart += cueDuration;
+          });
+        }
+      });
+
+      const captionRail = document.createElement("div");
+      captionRail.id = "caption-rail";
+      captionRail.className = "caption";
+      root.appendChild(captionRail);
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const captionDriver = { t: 0 };
+      let lastCaption = -1;
+      const cueAt = (time) => {
+        let low = 0;
+        let high = captionCues.length - 1;
+        while (low <= high) {
+          const mid = (low + high) >> 1;
+          const cue = captionCues[mid];
+          if (time < cue.start) high = mid - 1;
+          else if (time >= cue.end) low = mid + 1;
+          else return mid;
+        }
+        return -1;
+      };
+      tl.to(captionDriver, {
+        t: 1265,
+        duration: 1265,
+        ease: "none",
+        onUpdate: () => {
+          const next = cueAt(captionDriver.t);
+          if (next === lastCaption) return;
+          lastCaption = next;
+          captionRail.textContent = next >= 0 ? captionCues[next].text : "";
+          captionRail.style.opacity = next >= 0 ? "1" : "0";
+        },
+      }, 0);
+
+      segments.forEach((seg, index) => {
+        const base = seg.start;
+        const duration = seg.duration;
+        const sceneSel = `#scene-${index}`;
+        const sceneEl = document.getElementById(`scene-${index}`);
+        const beats = sceneEl.querySelectorAll(".beat");
+        const actors = sceneEl.querySelectorAll('[class*="actor-"]');
+
+        tl.set(`${sceneSel} .headline`, { opacity: 1 }, base);
+        tl.fromTo(`${sceneSel} .headline`, { x: 126 }, { x: 0, duration: 0.52, ease: "power4.out" }, base);
+        tl.fromTo(`${sceneSel} .stage`, { x: 220 }, { x: 0, duration: 0.52, ease: "power4.out" }, base);
+        tl.fromTo(`${sceneSel} .topline`, { y: -40 }, { y: 0, duration: 0.52, ease: "power3.out" }, base + 0.16);
+
+        beats.forEach((beat, beatIndex) => {
+          const at = base + 0.8 + beatIndex * Math.max(2.5, (duration - 3.8) / Math.max(1, beats.length));
+          tl.fromTo(beat, { opacity: 0, y: 52 }, {
+            opacity: 1,
+            y: 0,
+            borderColor: "#8CCB9A",
+            color: "#F1F3EE",
+            duration: 0.38,
+            ease: "power4.out",
+          }, at);
+        });
+
+        actors.forEach((actor, actorIndex) => {
+          const phase = actorIndex / Math.max(1, actors.length - 1);
+          const at = base + 1.0 + phase * Math.max(2.5, duration - 5.2);
+          const fromX = actorIndex % 2 === 0 ? 130 : -130;
+          tl.fromTo(actor, { opacity: 0, x: fromX, scale: 0.9 }, {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.68,
+            ease: "power4.out",
+          }, at);
+        });
+
+        if (sceneEl.querySelector(".train")) {
+          tl.to(`${sceneSel} .train`, { x: 570, duration: Math.max(4.5, duration - 4.4), ease: "power1.inOut" }, base + 1.6);
+        }
+        const spotEl = sceneEl.querySelector(".spot");
+        if (spotEl) {
+          const stageWidth = spotEl.parentElement?.clientWidth || 1038;
+          const spotTravel = Math.max(0, stageWidth - spotEl.offsetLeft - spotEl.offsetWidth - 42);
+          tl.to(spotEl, { x: spotTravel, duration: Math.max(4.5, duration - 4.6), ease: "steps(9)" }, base + 1.4);
+        }
+        if (sceneEl.querySelector(".seal")) {
+          tl.to(`${sceneSel} .seal .crack`, { scaleY: 1, duration: 0.4, ease: "power2.out" }, base + duration * 0.62);
+          tl.to(`${sceneSel} .seal`, { rotation: 5, duration: 0.1, yoyo: true, repeat: 5, ease: "none" }, base + duration * 0.67);
+        }
+        if (sceneEl.querySelector(".domino")) {
+          sceneEl.querySelectorAll(".domino").forEach((item, itemIndex) => {
+            tl.to(item, { rotation: itemIndex % 2 ? -8 : 8, duration: 0.42, ease: "power2.inOut" }, base + 2.2 + itemIndex * Math.max(1.2, (duration - 5) / 4));
+            tl.to(item, { rotation: 0, duration: 0.55, ease: "power3.out" }, base + 2.8 + itemIndex * Math.max(1.2, (duration - 5) / 4));
+          });
+        }
+
+        tl.to(`${sceneSel} .headline`, { x: -170, duration: 0.42, ease: "power4.in" }, base + duration - 0.48);
+        tl.to(`${sceneSel} .stage`, { x: -220, duration: 0.44, ease: "power4.in" }, base + duration - 0.48);
+      });
+
+      window.__timelines.main = tl;
+    </script>
+  </body>
+</html>

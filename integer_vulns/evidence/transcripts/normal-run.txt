@@ -1,0 +1,44 @@
+Welcome to the flag exchange
+We sell flags
+
+1. Check Account Balance
+
+2. Buy Flags
+
+3. Exit
+
+ Enter a menu selection
+
+
+
+ Balance: 1100 
+
+
+Welcome to the flag exchange
+We sell flags
+
+1. Check Account Balance
+
+2. Buy Flags
+
+3. Exit
+
+ Enter a menu selection
+Currently for sale
+1. Defintely not the flag Flag
+2. 1337 Flag
+1337 flags cost 100000 dollars, and we only have 1 in stock
+Enter 1 to buy one
+Not enough funds for transaction
+
+
+Welcome to the flag exchange
+We sell flags
+
+1. Check Account Balance
+
+2. Buy Flags
+
+3. Exit
+
+ Enter a menu selection

@@ -1,0 +1,17 @@
+$ objdump -d -M intel --start-address=0x400906 --stop-address=0x400916 ./vuln
+
+./vuln:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000400906 <__libc_csu_init+0x56>:
+  400906:	48 83 c4 08          	add    rsp,0x8
+  40090a:	5b                   	pop    rbx
+  40090b:	5d                   	pop    rbp
+  40090c:	41 5c                	pop    r12
+  40090e:	41 5d                	pop    r13
+  400910:	41 5e                	pop    r14
+  400912:	41 5f                	pop    r15
+  400914:	c3                   	ret
+  400915:	90                   	nop

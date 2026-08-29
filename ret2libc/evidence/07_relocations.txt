@@ -1,0 +1,15 @@
+$ readelf -rW ./vuln
+
+Relocation section '.rela.dyn' at offset 0x458 contains 3 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000600ff0  0000000400000006 R_X86_64_GLOB_DAT      0000000000000000 __libc_start_main@GLIBC_2.2.5 + 0
+0000000000600ff8  0000000500000006 R_X86_64_GLOB_DAT      0000000000000000 __gmon_start__ + 0
+0000000000601050  0000000800000005 R_X86_64_COPY          0000000000601050 stdout@GLIBC_2.2.5 + 0
+
+Relocation section '.rela.plt' at offset 0x4a0 contains 5 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000601018  0000000100000007 R_X86_64_JUMP_SLOT     0000000000000000 puts@GLIBC_2.2.5 + 0
+0000000000601020  0000000200000007 R_X86_64_JUMP_SLOT     0000000000000000 setresgid@GLIBC_2.2.5 + 0
+0000000000601028  0000000300000007 R_X86_64_JUMP_SLOT     0000000000000000 setbuf@GLIBC_2.2.5 + 0
+0000000000601030  0000000600000007 R_X86_64_JUMP_SLOT     0000000000000000 getegid@GLIBC_2.2.5 + 0
+0000000000601038  0000000700000007 R_X86_64_JUMP_SLOT     0000000000000000 __isoc99_scanf@GLIBC_2.7 + 0

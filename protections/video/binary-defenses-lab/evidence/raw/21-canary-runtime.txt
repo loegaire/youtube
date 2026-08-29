@@ -1,0 +1,20 @@
+$ python3 -c 'import sys; sys.stdout.buffer.write(b"A"*96)' | ./bin/vuln-plain
+name:
+read 96 bytes
+terminated_by_signal=11
+shell_status=139
+
+$ python3 -c 'import sys; sys.stdout.buffer.write(b"A"*96)' | ./bin/vuln-canary
+name:
+read 96 bytes
+*** stack smashing detected ***: terminated
+terminated_by_signal=6
+shell_status=134
+
+$ python3 -c 'import sys; sys.stdout.buffer.write(b"A"*96)' | ./bin/vuln-full
+name:
+read 96 bytes
+*** stack smashing detected ***: terminated
+terminated_by_signal=6
+shell_status=134
+

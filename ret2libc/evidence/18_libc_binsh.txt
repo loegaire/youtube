@@ -1,0 +1,2 @@
+$ strings -a -t x ./libc.so.6 | grep "/bin/sh"
+ 1b40fa /bin/sh

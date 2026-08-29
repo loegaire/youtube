@@ -1,0 +1,122 @@
+===== address-nopie =====
+$ readelf -hW bin/address-nopie
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x4010a0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          16792 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         14
+  Size of section headers:           64 (bytes)
+  Number of section headers:         36
+  Section header string table index: 35
+
+$ nm -n bin/address-nopie
+                 w __gmon_start__
+                 U __libc_start_main@GLIBC_2.34
+                 U dlsym@GLIBC_2.34
+                 U fflush@GLIBC_2.2.5
+                 U getchar@GLIBC_2.2.5
+                 U getpid@GLIBC_2.2.5
+                 U printf@GLIBC_2.2.5
+                 U puts@GLIBC_2.2.5
+                 U strcmp@GLIBC_2.2.5
+0000000000401000 T _init
+00000000004010a0 T _start
+00000000004010d0 T _dl_relocate_static_pie
+00000000004010e0 t deregister_tm_clones
+0000000000401110 t register_tm_clones
+0000000000401150 t __do_global_dtors_aux
+0000000000401180 t frame_dummy
+0000000000401186 T main
+0000000000401268 T _fini
+0000000000402000 R _IO_stdin_used
+0000000000402078 r __GNU_EH_FRAME_HDR
+0000000000402148 r __FRAME_END__
+000000000040214c r __abi_tag
+0000000000403df8 d __frame_dummy_init_array_entry
+0000000000403e00 d __do_global_dtors_aux_fini_array_entry
+0000000000403e08 d _DYNAMIC
+0000000000403fe8 d _GLOBAL_OFFSET_TABLE_
+0000000000404038 D __data_start
+0000000000404038 W data_start
+0000000000404040 D __dso_handle
+0000000000404048 D __TMC_END__
+0000000000404048 B __bss_start
+0000000000404048 D _edata
+0000000000404048 B stdout@GLIBC_2.2.5
+0000000000404050 b completed.0
+0000000000404058 B _end
+
+===== address-pie =====
+$ readelf -hW bin/address-pie
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x10a0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          16888 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         14
+  Size of section headers:           64 (bytes)
+  Number of section headers:         37
+  Section header string table index: 36
+
+$ nm -n bin/address-pie
+                 w _ITM_deregisterTMCloneTable
+                 w _ITM_registerTMCloneTable
+                 w __cxa_finalize@GLIBC_2.2.5
+                 w __gmon_start__
+                 U __libc_start_main@GLIBC_2.34
+                 U dlsym@GLIBC_2.34
+                 U fflush@GLIBC_2.2.5
+                 U getchar@GLIBC_2.2.5
+                 U getpid@GLIBC_2.2.5
+                 U printf@GLIBC_2.2.5
+                 U puts@GLIBC_2.2.5
+                 U strcmp@GLIBC_2.2.5
+0000000000001000 T _init
+00000000000010a0 T _start
+00000000000010d0 t deregister_tm_clones
+0000000000001100 t register_tm_clones
+0000000000001140 t __do_global_dtors_aux
+0000000000001180 t frame_dummy
+0000000000001189 T main
+000000000000129c T _fini
+0000000000002000 R _IO_stdin_used
+0000000000002078 r __GNU_EH_FRAME_HDR
+0000000000002150 r __FRAME_END__
+0000000000002154 r __abi_tag
+0000000000003dc8 d __frame_dummy_init_array_entry
+0000000000003dd0 d __do_global_dtors_aux_fini_array_entry
+0000000000003dd8 d _DYNAMIC
+0000000000003fe8 d _GLOBAL_OFFSET_TABLE_
+0000000000004030 D __data_start
+0000000000004030 W data_start
+0000000000004038 D __dso_handle
+0000000000004040 D __TMC_END__
+0000000000004040 B __bss_start
+0000000000004040 D _edata
+0000000000004040 B stdout@GLIBC_2.2.5
+0000000000004048 b completed.0
+0000000000004050 B _end
+

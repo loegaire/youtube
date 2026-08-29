@@ -1,0 +1,13 @@
+===== relro-none =====
+$ readelf -W -l bin/relro-none | grep GNU_RELRO
+$ readelf -W -d bin/relro-none | grep -E 'BIND_NOW|FLAGS_1'
+===== relro-partial =====
+$ readelf -W -l bin/relro-partial | grep GNU_RELRO
+  GNU_RELRO      0x002df8 0x0000000000403df8 0x0000000000403df8 0x000208 0x000208 R   0x1
+$ readelf -W -d bin/relro-partial | grep -E 'BIND_NOW|FLAGS_1'
+===== relro-full =====
+$ readelf -W -l bin/relro-full | grep GNU_RELRO
+  GNU_RELRO      0x002dc0 0x0000000000403dc0 0x0000000000403dc0 0x000240 0x000240 R   0x1
+$ readelf -W -d bin/relro-full | grep -E 'BIND_NOW|FLAGS_1'
+ 0x000000000000001e (FLAGS)              BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW

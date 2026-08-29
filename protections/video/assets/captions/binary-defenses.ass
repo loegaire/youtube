@@ -1,0 +1,513 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Caption,JetBrainsMono Nerd Font,56,&H00EEF3F1,&H00000000,&H5C0B0D0A,&H5C0B0D0A,-1,0,0,0,100,100,-1,0,3,12,0,2,140,140,42,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:02.97,Caption,,0,0,0,,Hello again, hackers. In the last few lessons,
+Dialogue: 0,0:00:02.97,0:00:06.52,Caption,,0,0,0,,we turned an innocent-looking input into control of
+Dialogue: 0,0:00:06.52,0:00:09.41,Caption,,0,0,0,,a program. First the bytes escaped a buffer.
+Dialogue: 0,0:00:09.41,0:00:11.31,Caption,,0,0,0,,Then they crossed the stack,
+Dialogue: 0,0:00:11.31,0:00:13.54,Caption,,0,0,0,,replaced a saved return address,
+Dialogue: 0,0:00:13.54,0:00:17.58,Caption,,0,0,0,,and sent the processor somewhere the original programmer
+Dialogue: 0,0:00:17.58,0:00:19.73,Caption,,0,0,0,,never selected. With shellcode,
+Dialogue: 0,0:00:19.73,0:00:22.04,Caption,,0,0,0,,that destination was our own data.
+Dialogue: 0,0:00:22.04,0:00:24.68,Caption,,0,0,0,,With ROP, it was a chain of instructions
+Dialogue: 0,0:00:24.68,0:00:26.83,Caption,,0,0,0,,already inside the executable.
+Dialogue: 0,0:00:26.83,0:00:30.21,Caption,,0,0,0,,Our earlier targets were intentionally generous.
+Dialogue: 0,0:00:30.21,0:00:31.82,Caption,,0,0,0,,The stack could execute.
+Dialogue: 0,0:00:31.82,0:00:35.04,Caption,,0,0,0,,The executable lived at predictable addresses.
+Dialogue: 0,0:00:35.04,0:00:37.93,Caption,,0,0,0,,No secret value guarded the return address.
+Dialogue: 0,0:00:37.93,0:00:40.02,Caption,,0,0,0,,Linker data remained writable.
+Dialogue: 0,0:00:40.02,0:00:42.44,Caption,,0,0,0,,That was not a mistake in the lessons;
+Dialogue: 0,0:00:42.44,0:00:45.90,Caption,,0,0,0,,stripping away defenses let us isolate one exploit
+Dialogue: 0,0:00:45.90,0:00:47.18,Caption,,0,0,0,,primitive at a time.
+Dialogue: 0,0:00:47.18,0:00:49.52,Caption,,0,0,0,,But it also gave us a distorted idea
+Dialogue: 0,0:00:49.52,0:00:52.98,Caption,,0,0,0,,of what a contemporary Linux binary normally looks
+Dialogue: 0,0:00:52.98,0:00:53.30,Caption,,0,0,0,,like.
+Dialogue: 0,0:00:53.30,0:00:55.68,Caption,,0,0,0,,So today, we reverse perspectives.
+Dialogue: 0,0:00:55.68,0:00:57.20,Caption,,0,0,0,,We keep the memory bug,
+Dialogue: 0,0:00:57.20,0:00:59.58,Caption,,0,0,0,,then add the defenses one at a time
+Dialogue: 0,0:00:59.58,0:01:03.14,Caption,,0,0,0,,and observe exactly what changes—from source code,
+Dialogue: 0,0:01:03.14,0:01:05.34,Caption,,0,0,0,,to ELF metadata, to disassembly,
+Dialogue: 0,0:01:05.34,0:01:06.95,Caption,,0,0,0,,to the live process map.
+Dialogue: 0,0:01:06.95,0:01:08.90,Caption,,0,0,0,,And one historical warning:
+Dialogue: 0,0:01:08.90,0:01:11.87,Caption,,0,0,0,,these defenses did not all emerge from one
+Dialogue: 0,0:01:11.87,0:01:14.08,Caption,,0,0,0,,neat sequence of famous papers.
+Dialogue: 0,0:01:14.08,0:01:17.13,Caption,,0,0,0,,StackGuard has a canonical research paper.
+Dialogue: 0,0:01:17.13,0:01:22.64,Caption,,0,0,0,,PaX developed executable-space protection and ASLR through implementation
+Dialogue: 0,0:01:22.64,0:01:25.95,Caption,,0,0,0,,documents. PIE and RELRO grew through compiler,
+Dialogue: 0,0:01:25.95,0:01:29.17,Caption,,0,0,0,,linker, loader, and distribution engineering.
+Dialogue: 0,0:01:29.17,0:01:32.48,Caption,,0,0,0,,We will show those primary artifacts honestly.
+Dialogue: 0,0:01:32.48,0:01:35.00,Caption,,0,0,0,,Before discussing a single instruction,
+Dialogue: 0,0:01:35.00,0:01:37.01,Caption,,0,0,0,,here is the complete laboratory.
+Dialogue: 0,0:01:37.01,0:01:39.24,Caption,,0,0,0,,It contains five small source files,
+Dialogue: 0,0:01:39.24,0:01:41.17,Caption,,0,0,0,,one reproducible build script,
+Dialogue: 0,0:01:41.17,0:01:43.55,Caption,,0,0,0,,one capture script, thirteen binaries,
+Dialogue: 0,0:01:43.55,0:01:46.44,Caption,,0,0,0,,and the raw outputs used throughout this video.
+Dialogue: 0,0:01:46.44,0:01:49.41,Caption,,0,0,0,,We are not beginning from a cropped instruction
+Dialogue: 0,0:01:49.41,0:01:50.45,Caption,,0,0,0,,or a tidy diagram.
+Dialogue: 0,0:01:50.45,0:01:53.28,Caption,,0,0,0,,We are beginning from the files that produced
+Dialogue: 0,0:01:53.28,0:01:54.39,Caption,,0,0,0,,every later claim.
+Dialogue: 0,0:01:54.39,0:01:57.73,Caption,,0,0,0,,This capture was made on sixty-four-bit Linux with
+Dialogue: 0,0:01:57.73,0:02:00.67,Caption,,0,0,0,,GCC fourteen point two and GNU binutils two
+Dialogue: 0,0:02:00.67,0:02:04.50,Caption,,0,0,0,,point forty-four. Kernel address randomization is set to
+Dialogue: 0,0:02:04.50,0:02:06.78,Caption,,0,0,0,,mode two. We do not disable ASLR for
+Dialogue: 0,0:02:06.78,0:02:10.54,Caption,,0,0,0,,convenient screenshots, and we do not invent addresses
+Dialogue: 0,0:02:10.54,0:02:12.82,Caption,,0,0,0,,that remain stable across reruns.
+Dialogue: 0,0:02:12.82,0:02:14.94,Caption,,0,0,0,,When this lab is captured again,
+Dialogue: 0,0:02:14.94,0:02:18.20,Caption,,0,0,0,,several pointers and process IDs should change.
+Dialogue: 0,0:02:18.20,0:02:19.83,Caption,,0,0,0,,That change is evidence,
+Dialogue: 0,0:02:19.83,0:02:21.30,Caption,,0,0,0,,not an inconvenience.
+Dialogue: 0,0:02:21.30,0:02:23.72,Caption,,0,0,0,,This is the complete vulnerable program.
+Dialogue: 0,0:02:23.72,0:02:26.08,Caption,,0,0,0,,There is no hidden helper and no omitted
+Dialogue: 0,0:02:26.08,0:02:29.28,Caption,,0,0,0,,cleanup path. `greet` reserves thirty-two bytes for `name`,
+Dialogue: 0,0:02:29.28,0:02:32.28,Caption,,0,0,0,,then passes that address to `read` while requesting
+Dialogue: 0,0:02:32.28,0:02:34.91,Caption,,0,0,0,,as many as one hundred and twenty-eight bytes.
+Dialogue: 0,0:02:34.91,0:02:37.98,Caption,,0,0,0,,`main` disables output buffering only so the runtime
+Dialogue: 0,0:02:37.98,0:02:40.40,Caption,,0,0,0,,evidence appears in a predictable order.
+Dialogue: 0,0:02:40.40,0:02:43.61,Caption,,0,0,0,,Every protected variant begins with this same source.
+Dialogue: 0,0:02:43.61,0:02:45.69,Caption,,0,0,0,,When we build the variants,
+Dialogue: 0,0:02:45.69,0:02:48.90,Caption,,0,0,0,,GCC warns us before the program ever runs.
+Dialogue: 0,0:02:48.90,0:02:51.45,Caption,,0,0,0,,The warning is unusually direct:
+Dialogue: 0,0:02:51.45,0:02:55.32,Caption,,0,0,0,,`read` may write one hundred and twenty-eight bytes
+Dialogue: 0,0:02:55.32,0:02:57.87,Caption,,0,0,0,,into an object of size thirty-two.
+Dialogue: 0,0:02:57.87,0:02:59.57,Caption,,0,0,0,,That warning is not NX,
+Dialogue: 0,0:02:59.57,0:03:00.90,Caption,,0,0,0,,a canary, ASLR, PIE,
+Dialogue: 0,0:03:00.90,0:03:03.54,Caption,,0,0,0,,or RELRO. It identifies the defect.
+Dialogue: 0,0:03:03.54,0:03:07.60,Caption,,0,0,0,,The mitigations we study later only constrain what
+Dialogue: 0,0:03:07.60,0:03:11.38,Caption,,0,0,0,,can happen after the defective write is allowed
+Dialogue: 0,0:03:11.38,0:03:12.04,Caption,,0,0,0,,to exist.
+Dialogue: 0,0:03:12.04,0:03:14.17,Caption,,0,0,0,,The build produces real ELF files,
+Dialogue: 0,0:03:14.17,0:03:16.38,Caption,,0,0,0,,with distinct build IDs and hashes.
+Dialogue: 0,0:03:16.38,0:03:20.12,Caption,,0,0,0,,`file` identifies which are ordinary executables and which
+Dialogue: 0,0:03:20.12,0:03:24.92,Caption,,0,0,0,,are position-independent executables. We record those identities because
+Dialogue: 0,0:03:24.92,0:03:27.89,Caption,,0,0,0,,later screenshots must point back to the exact
+Dialogue: 0,0:03:27.89,0:03:29.80,Caption,,0,0,0,,artifact that generated them.
+Dialogue: 0,0:03:29.80,0:03:32.31,Caption,,0,0,0,,A clean diagram is useful only after the
+Dialogue: 0,0:03:32.31,0:03:33.92,Caption,,0,0,0,,evidence chain is intact.
+Dialogue: 0,0:03:33.92,0:03:35.90,Caption,,0,0,0,,Before drawing a stack frame,
+Dialogue: 0,0:03:35.90,0:03:38.88,Caption,,0,0,0,,we ask the binary what GCC actually emitted.
+Dialogue: 0,0:03:38.88,0:03:42.60,Caption,,0,0,0,,`objdump` interleaves the full source with the machine
+Dialogue: 0,0:03:42.60,0:03:46.40,Caption,,0,0,0,,instructions for `greet`. The function starts at address
+Dialogue: 0,0:03:46.40,0:03:48.47,Caption,,0,0,0,,`0x401156`, reserves `0x30` bytes,
+Dialogue: 0,0:03:48.47,0:03:51.20,Caption,,0,0,0,,calculates the buffer as `rbp minus 0x30`,
+Dialogue: 0,0:03:51.20,0:03:55.58,Caption,,0,0,0,,loads `0x80`—one hundred and twenty-eight—into the third argument
+Dialogue: 0,0:03:55.58,0:03:58.80,Caption,,0,0,0,,register, calls `read`, then reaches `leave` and `ret`
+Dialogue: 0,0:03:58.80,0:04:00.70,Caption,,0,0,0,,without an integrity check.
+Dialogue: 0,0:04:00.70,0:04:02.85,Caption,,0,0,0,,Now the diagram has a provenance.
+Dialogue: 0,0:04:02.85,0:04:05.39,Caption,,0,0,0,,`sub rsp,0x30` gives the local frame area.
+Dialogue: 0,0:04:05.39,0:04:08.01,Caption,,0,0,0,,`rbp minus 0x30` locates the first byte of
+Dialogue: 0,0:04:08.01,0:04:11.19,Caption,,0,0,0,,`name`. The saved frame pointer and return address
+Dialogue: 0,0:04:11.19,0:04:13.02,Caption,,0,0,0,,sit above the current frame.
+Dialogue: 0,0:04:13.02,0:04:16.03,Caption,,0,0,0,,This is still a reconstruction—we did not dump
+Dialogue: 0,0:04:16.03,0:04:19.45,Caption,,0,0,0,,every stack byte—but its distances are derived from
+Dialogue: 0,0:04:19.45,0:04:21.83,Caption,,0,0,0,,the instructions we just inspected,
+Dialogue: 0,0:04:21.83,0:04:24.14,Caption,,0,0,0,,not from a generic textbook layout.
+Dialogue: 0,0:04:24.14,0:04:26.24,Caption,,0,0,0,,To isolate execute permission,
+Dialogue: 0,0:04:26.24,0:04:28.43,Caption,,0,0,0,,we use a second complete program.
+Dialogue: 0,0:04:28.43,0:04:31.19,Caption,,0,0,0,,Its local array contains six x86-64 bytes:
+Dialogue: 0,0:04:31.19,0:04:32.08,Caption,,0,0,0,,`mov eax, 42; ret`.
+Dialogue: 0,0:04:32.08,0:04:34.68,Caption,,0,0,0,,The program prints the array’s address,
+Dialogue: 0,0:04:34.68,0:04:37.44,Caption,,0,0,0,,casts that address to a function pointer,
+Dialogue: 0,0:04:37.44,0:04:40.36,Caption,,0,0,0,,and calls it. The two binaries are identical
+Dialogue: 0,0:04:40.36,0:04:43.60,Caption,,0,0,0,,except for the linker’s stack-execution request.
+Dialogue: 0,0:04:43.60,0:04:46.20,Caption,,0,0,0,,This is safer and clearer than asking a
+Dialogue: 0,0:04:46.20,0:04:49.28,Caption,,0,0,0,,full shell payload to prove several things at
+Dialogue: 0,0:04:49.28,0:04:49.60,Caption,,0,0,0,,once.
+Dialogue: 0,0:04:49.60,0:04:52.58,Caption,,0,0,0,,First we inspect the ELF program headers,
+Dialogue: 0,0:04:52.58,0:04:55.11,Caption,,0,0,0,,not a hand-written permission card.
+Dialogue: 0,0:04:55.11,0:04:57.29,Caption,,0,0,0,,In the executable-stack build,
+Dialogue: 0,0:04:57.29,0:04:59.39,Caption,,0,0,0,,the `GNU_STACK` row ends in `RWE`:
+Dialogue: 0,0:04:59.39,0:05:02.45,Caption,,0,0,0,,read, write, execute. In the protected build,
+Dialogue: 0,0:05:02.45,0:05:04.02,Caption,,0,0,0,,the same row ends in `RW`:
+Dialogue: 0,0:05:04.02,0:05:06.55,Caption,,0,0,0,,read and write, with execute absent.
+Dialogue: 0,0:05:06.55,0:05:10.31,Caption,,0,0,0,,The close-up only appears after the complete header
+Dialogue: 0,0:05:10.31,0:05:13.72,Caption,,0,0,0,,table has established where that row came from.
+Dialogue: 0,0:05:13.72,0:05:15.34,Caption,,0,0,0,,Now we run both artifacts.
+Dialogue: 0,0:05:15.34,0:05:17.03,Caption,,0,0,0,,With the executable stack,
+Dialogue: 0,0:05:17.03,0:05:19.35,Caption,,0,0,0,,the program prints its stack buffer,
+Dialogue: 0,0:05:19.35,0:05:22.67,Caption,,0,0,0,,calls those bytes, and returns forty-two with status
+Dialogue: 0,0:05:22.67,0:05:25.22,Caption,,0,0,0,,zero. With NX, the same call is terminated
+Dialogue: 0,0:05:25.22,0:05:28.15,Caption,,0,0,0,,by signal eleven and the shell reports status
+Dialogue: 0,0:05:28.15,0:05:29.92,Caption,,0,0,0,,one hundred and thirty-nine.
+Dialogue: 0,0:05:29.92,0:05:32.40,Caption,,0,0,0,,The bytes were accepted as data in both
+Dialogue: 0,0:05:32.40,0:05:35.41,Caption,,0,0,0,,cases. The difference appears only when the CPU
+Dialogue: 0,0:05:35.41,0:05:38.18,Caption,,0,0,0,,tries to fetch instructions from that page.
+Dialogue: 0,0:05:38.18,0:05:41.08,Caption,,0,0,0,,The wider idea is executable-space protection.
+Dialogue: 0,0:05:41.08,0:05:44.80,Caption,,0,0,0,,PaX developed PAGEEXEC and related mechanisms for systems
+Dialogue: 0,0:05:44.80,0:05:48.60,Caption,,0,0,0,,where convenient hardware support was not always available,
+Dialogue: 0,0:05:48.60,0:05:51.20,Caption,,0,0,0,,and its documents describe making stacks,
+Dialogue: 0,0:05:51.20,0:05:55.73,Caption,,0,0,0,,heaps, and anonymous mappings non-executable while reserving execution
+Dialogue: 0,0:05:55.73,0:05:57.67,Caption,,0,0,0,,for mappings that contain code.
+Dialogue: 0,0:05:57.67,0:06:00.34,Caption,,0,0,0,,NX is not a detector looking for suspicious
+Dialogue: 0,0:06:00.34,0:06:03.10,Caption,,0,0,0,,byte patterns. It is permission enforcement.
+Dialogue: 0,0:06:03.10,0:06:06.40,Caption,,0,0,0,,The write into the array succeeds because the
+Dialogue: 0,0:06:06.40,0:06:10.06,Caption,,0,0,0,,stack is writable. The indirect call also succeeds
+Dialogue: 0,0:06:10.06,0:06:13.37,Caption,,0,0,0,,in changing RIP because NX is not control-flow
+Dialogue: 0,0:06:13.37,0:06:16.51,Caption,,0,0,0,,integrity. Failure occurs at the next stage:
+Dialogue: 0,0:06:16.51,0:06:21.38,Caption,,0,0,0,,instruction fetch. The translation and permission machinery sees
+Dialogue: 0,0:06:21.38,0:06:24.87,Caption,,0,0,0,,an address in a page without execute permission,
+Dialogue: 0,0:06:24.87,0:06:27.74,Caption,,0,0,0,,so no instruction from `b8 2a...` reaches the
+Dialogue: 0,0:06:27.74,0:06:29.66,Caption,,0,0,0,,decoder. The data survives;
+Dialogue: 0,0:06:29.66,0:06:31.48,Caption,,0,0,0,,execution does not begin.
+Dialogue: 0,0:06:31.48,0:06:33.81,Caption,,0,0,0,,This is why ROP was the next logical
+Dialogue: 0,0:06:33.81,0:06:38.69,Caption,,0,0,0,,technique. The corrupted stack supplies data—addresses and values—while
+Dialogue: 0,0:06:38.69,0:06:42.46,Caption,,0,0,0,,instruction fetches stay inside executable code pages.
+Dialogue: 0,0:06:42.46,0:06:45.98,Caption,,0,0,0,,NX removed the assumption that writable bytes could
+Dialogue: 0,0:06:45.98,0:06:48.79,Caption,,0,0,0,,also be instructions. It did not remove the
+Dialogue: 0,0:06:48.79,0:06:51.67,Caption,,0,0,0,,overflow, stop `ret`, or erase the program’s own
+Dialogue: 0,0:06:51.67,0:06:54.39,Caption,,0,0,0,,executable code. One attack route closed;
+Dialogue: 0,0:06:54.39,0:06:55.60,Caption,,0,0,0,,another remained.
+Dialogue: 0,0:06:55.60,0:06:58.39,Caption,,0,0,0,,To see what stack protection changes,
+Dialogue: 0,0:06:58.39,0:07:01.45,Caption,,0,0,0,,we compare the complete `greet` functions.
+Dialogue: 0,0:07:01.45,0:07:05.77,Caption,,0,0,0,,The unprotected version reserves `0x30` bytes and returns
+Dialogue: 0,0:07:05.77,0:07:09.28,Caption,,0,0,0,,directly. The protected version reserves `0x40`,
+Dialogue: 0,0:07:09.28,0:07:11.17,Caption,,0,0,0,,loads a value from `fs:0x28`,
+Dialogue: 0,0:07:11.17,0:07:13.24,Caption,,0,0,0,,stores it at `rbp minus eight`,
+Dialogue: 0,0:07:13.24,0:07:15.85,Caption,,0,0,0,,performs the same vulnerable `read`,
+Dialogue: 0,0:07:15.85,0:07:19.64,Caption,,0,0,0,,then reloads and compares that saved value before
+Dialogue: 0,0:07:19.64,0:07:20.62,Caption,,0,0,0,,`leave` and `ret`.
+Dialogue: 0,0:07:20.62,0:07:24.40,Caption,,0,0,0,,The disassembly tells us where the compiler reads
+Dialogue: 0,0:07:24.40,0:07:25.93,Caption,,0,0,0,,and stores the guard,
+Dialogue: 0,0:07:25.93,0:07:28.45,Caption,,0,0,0,,but we can also measure the values.
+Dialogue: 0,0:07:28.45,0:07:33.67,Caption,,0,0,0,,This architecture-specific probe reads the x86-64 thread-local guard
+Dialogue: 0,0:07:33.67,0:07:37.08,Caption,,0,0,0,,from `fs:0x28` and the compiler’s frame copy from
+Dialogue: 0,0:07:37.08,0:07:39.51,Caption,,0,0,0,,`rbp minus eight`, then prints both.
+Dialogue: 0,0:07:39.51,0:07:42.12,Caption,,0,0,0,,It is instrumentation for this lab,
+Dialogue: 0,0:07:42.12,0:07:44.46,Caption,,0,0,0,,not portable application code,
+Dialogue: 0,0:07:44.46,0:07:48.15,Caption,,0,0,0,,and its complete source remains on screen before
+Dialogue: 0,0:07:48.15,0:07:49.86,Caption,,0,0,0,,we inspect the numbers.
+Dialogue: 0,0:07:49.86,0:07:52.71,Caption,,0,0,0,,Across three executions, the guard changes.
+Dialogue: 0,0:07:52.71,0:07:54.45,Caption,,0,0,0,,In each execution, however,
+Dialogue: 0,0:07:54.45,0:07:57.38,Caption,,0,0,0,,the thread-local guard and the frame copy are
+Dialogue: 0,0:07:57.38,0:08:00.08,Caption,,0,0,0,,identical. The first run prints `cc6f...2200`;
+Dialogue: 0,0:08:00.08,0:08:01.90,Caption,,0,0,0,,the second prints `8f19...7a00`;
+Dialogue: 0,0:08:01.90,0:08:03.64,Caption,,0,0,0,,the third prints `5b33...3800`.
+Dialogue: 0,0:08:03.64,0:08:07.21,Caption,,0,0,0,,We are not choosing aesthetically convenient values.
+Dialogue: 0,0:08:07.21,0:08:09.98,Caption,,0,0,0,,These are the values recorded by the probe
+Dialogue: 0,0:08:09.98,0:08:11.01,Caption,,0,0,0,,on this capture.
+Dialogue: 0,0:08:11.01,0:08:14.34,Caption,,0,0,0,,In 1998, Crispin Cowan and his coauthors presented
+Dialogue: 0,0:08:14.34,0:08:17.84,Caption,,0,0,0,,StackGuard. Their paper places a canary word between
+Dialogue: 0,0:08:17.84,0:08:20.06,Caption,,0,0,0,,local data and the return address,
+Dialogue: 0,0:08:20.06,0:08:23.08,Caption,,0,0,0,,then verifies it before the function returns.
+Dialogue: 0,0:08:23.08,0:08:26.25,Caption,,0,0,0,,Its Figure Two is not merely decorative history;
+Dialogue: 0,0:08:26.25,0:08:29.59,Caption,,0,0,0,,it gives us a primary-source stack relationship to
+Dialogue: 0,0:08:29.59,0:08:32.92,Caption,,0,0,0,,compare with the compiler output we just measured.
+Dialogue: 0,0:08:32.92,0:08:36.90,Caption,,0,0,0,,At function entry, the protected binary reserves sixty-four
+Dialogue: 0,0:08:36.90,0:08:41.12,Caption,,0,0,0,,bytes. Instruction `0x40116e` copies the thread-local guard into
+Dialogue: 0,0:08:41.12,0:08:44.30,Caption,,0,0,0,,`rax`. Instruction `0x401177` stores it at `rbp minus
+Dialogue: 0,0:08:44.30,0:08:47.01,Caption,,0,0,0,,eight`. The buffer begins at `rbp minus 0x30`.
+Dialogue: 0,0:08:47.01,0:08:49.63,Caption,,0,0,0,,That puts the canary above the buffer in
+Dialogue: 0,0:08:49.63,0:08:51.78,Caption,,0,0,0,,the path toward saved frame data.
+Dialogue: 0,0:08:51.78,0:08:53.93,Caption,,0,0,0,,The diagram is a reconstruction,
+Dialogue: 0,0:08:53.93,0:08:57.20,Caption,,0,0,0,,but every distance shown comes from the selected
+Dialogue: 0,0:08:57.20,0:08:58.15,Caption,,0,0,0,,instructions.
+Dialogue: 0,0:08:58.15,0:09:00.41,Caption,,0,0,0,,The canary does not stop the write.
+Dialogue: 0,0:09:00.41,0:09:03.95,Caption,,0,0,0,,The first thirty-two bytes occupy the declared array.
+Dialogue: 0,0:09:03.95,0:09:07.50,Caption,,0,0,0,,More bytes continue through adjacent frame storage.
+Dialogue: 0,0:09:07.50,0:09:10.89,Caption,,0,0,0,,Eventually the stream overwrites the saved guard,
+Dialogue: 0,0:09:10.89,0:09:13.71,Caption,,0,0,0,,then can continue toward saved `rbp` and the
+Dialogue: 0,0:09:13.71,0:09:16.93,Caption,,0,0,0,,return address. The defensive action is delayed.
+Dialogue: 0,0:09:16.93,0:09:20.40,Caption,,0,0,0,,Stack protection records that corruption now so it
+Dialogue: 0,0:09:20.40,0:09:23.30,Caption,,0,0,0,,can react before control is returned later.
+Dialogue: 0,0:09:23.30,0:09:26.08,Caption,,0,0,0,,The epilogue reloads the frame copy at `0x4011b8`,
+Dialogue: 0,0:09:26.08,0:09:29.21,Caption,,0,0,0,,subtracts the current thread-local guard at `0x4011bc`,
+Dialogue: 0,0:09:29.21,0:09:31.44,Caption,,0,0,0,,and jumps over the failure call only if
+Dialogue: 0,0:09:31.44,0:09:32.48,Caption,,0,0,0,,the result is zero.
+Dialogue: 0,0:09:32.48,0:09:33.66,Caption,,0,0,0,,If the values differ,
+Dialogue: 0,0:09:33.66,0:09:37.34,Caption,,0,0,0,,`0x4011c7` calls `__stack_chk_fail`. Only after the equality path
+Dialogue: 0,0:09:37.34,0:09:39.78,Caption,,0,0,0,,reaches `0x4011cc` do `leave` and `ret` execute.
+Dialogue: 0,0:09:39.78,0:09:42.63,Caption,,0,0,0,,The corrupted return address can exist in memory
+Dialogue: 0,0:09:42.63,0:09:44.09,Caption,,0,0,0,,and still never reach RIP.
+Dialogue: 0,0:09:44.09,0:09:45.56,Caption,,0,0,0,,With ninety-six `A` bytes,
+Dialogue: 0,0:09:45.56,0:09:48.49,Caption,,0,0,0,,the plain build prints that it read ninety-six
+Dialogue: 0,0:09:48.49,0:09:51.34,Caption,,0,0,0,,bytes, then dies by signal eleven with status
+Dialogue: 0,0:09:51.34,0:09:53.12,Caption,,0,0,0,,one hundred and thirty-nine.
+Dialogue: 0,0:09:53.12,0:09:56.20,Caption,,0,0,0,,The canary build reads the same ninety-six bytes,
+Dialogue: 0,0:09:56.20,0:09:58.29,Caption,,0,0,0,,prints `stack smashing detected`,
+Dialogue: 0,0:09:58.29,0:10:01.22,Caption,,0,0,0,,then terminates by signal six with status one
+Dialogue: 0,0:10:01.22,0:10:05.16,Caption,,0,0,0,,hundred and thirty-four. One crashes after corrupted control
+Dialogue: 0,0:10:05.16,0:10:08.71,Caption,,0,0,0,,state is consumed. The other detects corruption before
+Dialogue: 0,0:10:08.71,0:10:09.40,Caption,,0,0,0,,returning.
+Dialogue: 0,0:10:09.40,0:10:12.15,Caption,,0,0,0,,A stack canary is therefore a tamper check
+Dialogue: 0,0:10:12.15,0:10:14.36,Caption,,0,0,0,,for particular protected frames,
+Dialogue: 0,0:10:14.36,0:10:16.80,Caption,,0,0,0,,not a universal memory-safety system.
+Dialogue: 0,0:10:16.80,0:10:18.29,Caption,,0,0,0,,It does not repair `read`,
+Dialogue: 0,0:10:18.29,0:10:20.02,Caption,,0,0,0,,protect every heap object,
+Dialogue: 0,0:10:20.02,0:10:22.85,Caption,,0,0,0,,or make all pointer corruption impossible.
+Dialogue: 0,0:10:22.85,0:10:25.76,Caption,,0,0,0,,And if another bug reveals the current guard,
+Dialogue: 0,0:10:25.76,0:10:29.46,Caption,,0,0,0,,an attacker may reproduce that value while overwriting
+Dialogue: 0,0:10:29.46,0:10:32.22,Caption,,0,0,0,,data around it. The next defenses also rely
+Dialogue: 0,0:10:32.22,0:10:35.99,Caption,,0,0,0,,on hidden values—and that makes disclosure our recurring
+Dialogue: 0,0:10:35.99,0:10:36.38,Caption,,0,0,0,,enemy.
+Dialogue: 0,0:10:36.38,0:10:38.89,Caption,,0,0,0,,To observe address randomization,
+Dialogue: 0,0:10:38.89,0:10:41.22,Caption,,0,0,0,,we use another complete program.
+Dialogue: 0,0:10:41.22,0:10:42.95,Caption,,0,0,0,,It prints its process ID,
+Dialogue: 0,0:10:42.95,0:10:44.34,Caption,,0,0,0,,the address of `main`,
+Dialogue: 0,0:10:44.34,0:10:46.15,Caption,,0,0,0,,one local stack variable,
+Dialogue: 0,0:10:46.15,0:10:47.53,Caption,,0,0,0,,a reference to `puts`,
+Dialogue: 0,0:10:47.53,0:10:51.34,Caption,,0,0,0,,and the actual libc implementation found with `dlsym`.
+Dialogue: 0,0:10:51.34,0:10:52.89,Caption,,0,0,0,,If launched with `--hold`,
+Dialogue: 0,0:10:52.89,0:10:55.48,Caption,,0,0,0,,it waits so we can inspect `/proc` while
+Dialogue: 0,0:10:55.48,0:10:57.90,Caption,,0,0,0,,that exact process is still alive.
+Dialogue: 0,0:10:57.90,0:11:01.02,Caption,,0,0,0,,The kernel reports randomization mode two.
+Dialogue: 0,0:11:01.02,0:11:03.95,Caption,,0,0,0,,Across four runs of the non-PIE binary,
+Dialogue: 0,0:11:03.95,0:11:07.73,Caption,,0,0,0,,`main` remains `0x401186`, and its PLT reference for
+Dialogue: 0,0:11:07.73,0:11:12.08,Caption,,0,0,0,,`puts` remains `0x401030`. The local stack pointer changes
+Dialogue: 0,0:11:12.08,0:11:15.87,Caption,,0,0,0,,every time. The actual libc `puts` address changes
+Dialogue: 0,0:11:15.87,0:11:19.84,Caption,,0,0,0,,every time. This is the first important separation:
+Dialogue: 0,0:11:19.84,0:11:23.16,Caption,,0,0,0,,ASLR is active, but an ordinary non-PIE main
+Dialogue: 0,0:11:23.16,0:11:26.84,Caption,,0,0,0,,executable can still provide fixed addresses.
+Dialogue: 0,0:11:26.84,0:11:29.10,Caption,,0,0,0,,This is the actual map for that held
+Dialogue: 0,0:11:29.10,0:11:32.06,Caption,,0,0,0,,process. The executable begins at `0x00400000`.
+Dialogue: 0,0:11:32.06,0:11:34.64,Caption,,0,0,0,,Its executable page is the next mapping.
+Dialogue: 0,0:11:34.64,0:11:37.60,Caption,,0,0,0,,Libc’s file mapping begins at `0x7f704aa1e000`,
+Dialogue: 0,0:11:37.60,0:11:40.87,Caption,,0,0,0,,and the user stack occupies the high-address range
+Dialogue: 0,0:11:40.87,0:11:44.14,Caption,,0,0,0,,beginning at `0x7ffe4a34d000`. We show the whole map
+Dialogue: 0,0:11:44.14,0:11:47.34,Caption,,0,0,0,,first because a selected row without its process
+Dialogue: 0,0:11:47.34,0:11:49.60,Caption,,0,0,0,,and file context is easy to misread.
+Dialogue: 0,0:11:49.60,0:11:52.82,Caption,,0,0,0,,The PaX ASLR design states the central objective
+Dialogue: 0,0:11:52.82,0:11:57.31,Caption,,0,0,0,,plainly: introduce randomness into addresses so attacks requiring
+Dialogue: 0,0:11:57.31,0:11:59.83,Caption,,0,0,0,,advance knowledge become unreliable.
+Dialogue: 0,0:11:59.83,0:12:02.19,Caption,,0,0,0,,It also states the central weakness:
+Dialogue: 0,0:12:02.19,0:12:05.50,Caption,,0,0,0,,if the process can disclose its randomized layout,
+Dialogue: 0,0:12:05.50,0:12:07.63,Caption,,0,0,0,,guessing is no longer necessary.
+Dialogue: 0,0:12:07.63,0:12:10.70,Caption,,0,0,0,,The protection is not that the addresses cease
+Dialogue: 0,0:12:10.70,0:12:13.30,Caption,,0,0,0,,to exist. It is that their current values
+Dialogue: 0,0:12:13.30,0:12:15.18,Caption,,0,0,0,,become secret process state.
+Dialogue: 0,0:12:15.18,0:12:18.52,Caption,,0,0,0,,ASLR does not normally throw every function into
+Dialogue: 0,0:12:18.52,0:12:20.39,Caption,,0,0,0,,an independent random slot.
+Dialogue: 0,0:12:20.39,0:12:23.47,Caption,,0,0,0,,It randomizes the base of mappings or regions.
+Dialogue: 0,0:12:23.47,0:12:25.42,Caption,,0,0,0,,In one particular libc build,
+Dialogue: 0,0:12:25.42,0:12:28.02,Caption,,0,0,0,,`puts` remains at a fixed offset from the
+Dialogue: 0,0:12:28.02,0:12:30.54,Caption,,0,0,0,,library’s base. When the library moves,
+Dialogue: 0,0:12:30.54,0:12:32.66,Caption,,0,0,0,,the base and `puts` move together.
+Dialogue: 0,0:12:32.66,0:12:36.64,Caption,,0,0,0,,That preserved internal distance is precisely what later
+Dialogue: 0,0:12:36.64,0:12:39.73,Caption,,0,0,0,,allows one leaked pointer to reveal the whole
+Dialogue: 0,0:12:39.73,0:12:40.22,Caption,,0,0,0,,region.
+Dialogue: 0,0:12:40.22,0:12:41.82,Caption,,0,0,0,,For PID fifteen twenty-one,
+Dialogue: 0,0:12:41.82,0:12:45.01,Caption,,0,0,0,,the captured libc mapping begins at `0x7f704aa1e000`,
+Dialogue: 0,0:12:45.01,0:12:47.70,Caption,,0,0,0,,while `dlsym` reports `puts` at `0x7f704aa9e5a0`.
+Dialogue: 0,0:12:47.70,0:12:50.83,Caption,,0,0,0,,`nm` independently reports the `puts` symbol offset as
+Dialogue: 0,0:12:50.83,0:12:52.72,Caption,,0,0,0,,`0x805a0` in this exact libc file.
+Dialogue: 0,0:12:52.72,0:12:55.48,Caption,,0,0,0,,Adding the captured base and that file offset
+Dialogue: 0,0:12:55.48,0:12:57.96,Caption,,0,0,0,,reproduces the runtime address exactly.
+Dialogue: 0,0:12:57.96,0:13:00.58,Caption,,0,0,0,,These numbers belong to this build and this
+Dialogue: 0,0:13:00.58,0:13:03.12,Caption,,0,0,0,,run; the relationship is the reusable part.
+Dialogue: 0,0:13:03.12,0:13:06.66,Caption,,0,0,0,,Address randomization was also studied as a broader
+Dialogue: 0,0:13:06.66,0:13:08.66,Caption,,0,0,0,,compiler and loader strategy.
+Dialogue: 0,0:13:08.66,0:13:13.16,Caption,,0,0,0,,Bhatkar, DuVarney, and Sekar described address obfuscation across
+Dialogue: 0,0:13:13.16,0:13:16.78,Caption,,0,0,0,,code and data. Shacham and colleagues later evaluated
+Dialogue: 0,0:13:16.78,0:13:19.91,Caption,,0,0,0,,the practical limits of ASLR in a thirty-two-bit
+Dialogue: 0,0:13:19.91,0:13:24.41,Caption,,0,0,0,,setting, where restricted entropy and repeated attempts mattered
+Dialogue: 0,0:13:24.41,0:13:27.78,Caption,,0,0,0,,greatly. The correct lesson is neither ‘ASLR solves
+Dialogue: 0,0:13:27.78,0:13:31.48,Caption,,0,0,0,,exploitation’ nor ‘ASLR is useless.’ Its strength depends
+Dialogue: 0,0:13:31.48,0:13:33.41,Caption,,0,0,0,,on entropy, restart behavior,
+Dialogue: 0,0:13:33.41,0:13:37.10,Caption,,0,0,0,,architecture, and especially information disclosure.
+Dialogue: 0,0:13:37.10,0:13:40.19,Caption,,0,0,0,,When a program reveals a pointer into libc,
+Dialogue: 0,0:13:40.19,0:13:43.27,Caption,,0,0,0,,the attacker no longer needs to guess that
+Dialogue: 0,0:13:43.27,0:13:46.35,Caption,,0,0,0,,run’s base. Subtract the known offset of the
+Dialogue: 0,0:13:46.35,0:13:50.84,Caption,,0,0,0,,revealed object, and the randomized base becomes measurable.
+Dialogue: 0,0:13:50.84,0:13:53.04,Caption,,0,0,0,,ASLR has not been switched off.
+Dialogue: 0,0:13:53.04,0:13:55.60,Caption,,0,0,0,,Its hidden state has been observed.
+Dialogue: 0,0:13:55.60,0:13:58.77,Caption,,0,0,0,,That is the ASLR part of ret2libc—but before
+Dialogue: 0,0:13:58.77,0:14:01.76,Caption,,0,0,0,,we can use the main executable to perform
+Dialogue: 0,0:14:01.76,0:14:04.23,Caption,,0,0,0,,such a leak, we must ask whether the
+Dialogue: 0,0:14:04.23,0:14:06.26,Caption,,0,0,0,,executable itself is fixed.
+Dialogue: 0,0:14:06.26,0:14:08.12,Caption,,0,0,0,,PIE is visible before runtime.
+Dialogue: 0,0:14:08.12,0:14:11.69,Caption,,0,0,0,,`readelf` identifies `address-nopie` as type `EXEC` with entry
+Dialogue: 0,0:14:11.69,0:14:14.30,Caption,,0,0,0,,point `0x4010a0`; `nm` places `main` at `0x401186`.
+Dialogue: 0,0:14:14.30,0:14:15.79,Caption,,0,0,0,,The PIE build is type `DYN`,
+Dialogue: 0,0:14:15.79,0:14:18.92,Caption,,0,0,0,,specifically a position-independent executable,
+Dialogue: 0,0:14:18.92,0:14:20.41,Caption,,0,0,0,,with entry point `0x10a0`;
+Dialogue: 0,0:14:20.41,0:14:22.42,Caption,,0,0,0,,`nm` records `main` as offset `0x1189`.
+Dialogue: 0,0:14:22.42,0:14:25.47,Caption,,0,0,0,,We first inspect the complete headers and symbol
+Dialogue: 0,0:14:25.47,0:14:27.41,Caption,,0,0,0,,tables, then extract those rows.
+Dialogue: 0,0:14:27.41,0:14:30.90,Caption,,0,0,0,,PIE and ASLR are related but not synonymous.
+Dialogue: 0,0:14:30.90,0:14:34.48,Caption,,0,0,0,,PIE is the property that lets the executable
+Dialogue: 0,0:14:34.48,0:14:36.71,Caption,,0,0,0,,operate at different bases.
+Dialogue: 0,0:14:36.71,0:14:40.00,Caption,,0,0,0,,ASLR is the runtime policy that selects a
+Dialogue: 0,0:14:40.00,0:14:42.62,Caption,,0,0,0,,base for a particular execution.
+Dialogue: 0,0:14:42.62,0:14:46.98,Caption,,0,0,0,,A relocatable executable can be placed somewhere new.
+Dialogue: 0,0:14:46.98,0:14:51.62,Caption,,0,0,0,,A fixed-address executable still expects its linked home.
+Dialogue: 0,0:14:51.62,0:14:55.50,Caption,,0,0,0,,Only the combination gives us a randomized main
+Dialogue: 0,0:14:55.50,0:14:56.08,Caption,,0,0,0,,binary.
+Dialogue: 0,0:14:56.08,0:14:57.47,Caption,,0,0,0,,In the four PIE executions,
+Dialogue: 0,0:14:57.47,0:15:00.38,Caption,,0,0,0,,`main` changes from `0x55949c2c2189` to three other bases.
+Dialogue: 0,0:15:00.38,0:15:02.72,Caption,,0,0,0,,The stack changes, and libc changes as before.
+Dialogue: 0,0:15:02.72,0:15:05.30,Caption,,0,0,0,,Here the printed `puts` reference also resolves to
+Dialogue: 0,0:15:05.30,0:15:07.26,Caption,,0,0,0,,the randomized libc implementation.
+Dialogue: 0,0:15:07.26,0:15:09.86,Caption,,0,0,0,,The important result is that the executable’s own
+Dialogue: 0,0:15:09.86,0:15:12.00,Caption,,0,0,0,,code address is no longer a stable island
+Dialogue: 0,0:15:12.00,0:15:12.64,Caption,,0,0,0,,across runs.
+Dialogue: 0,0:15:12.64,0:15:14.24,Caption,,0,0,0,,For PID fifteen twenty-two,
+Dialogue: 0,0:15:14.24,0:15:16.95,Caption,,0,0,0,,`/proc` shows the PIE file mapping beginning at
+Dialogue: 0,0:15:16.95,0:15:20.31,Caption,,0,0,0,,`0x55bce0674000`. The binary’s symbol table gives `main` an
+Dialogue: 0,0:15:20.31,0:15:21.85,Caption,,0,0,0,,offset of `0x1189`. Add them,
+Dialogue: 0,0:15:21.85,0:15:24.92,Caption,,0,0,0,,and we obtain the printed runtime address exactly:
+Dialogue: 0,0:15:24.92,0:15:29.67,Caption,,0,0,0,,`0x55bce0675189`. PIE therefore changes absolute addresses while preserving
+Dialogue: 0,0:15:29.67,0:15:31.28,Caption,,0,0,0,,offsets within that build,
+Dialogue: 0,0:15:31.28,0:15:34.42,Caption,,0,0,0,,just as ASLR-preserved offsets existed inside libc.
+Dialogue: 0,0:15:34.42,0:15:37.97,Caption,,0,0,0,,Without PIE, fixed addresses in the main binary
+Dialogue: 0,0:15:37.97,0:15:39.60,Caption,,0,0,0,,can provide a PLT call,
+Dialogue: 0,0:15:39.60,0:15:41.87,Caption,,0,0,0,,a GOT location, a re-entry point,
+Dialogue: 0,0:15:41.87,0:15:44.59,Caption,,0,0,0,,or a ROP gadget even while libc moves.
+Dialogue: 0,0:15:44.59,0:15:48.04,Caption,,0,0,0,,With PIE, those objects move together with the
+Dialogue: 0,0:15:48.04,0:15:51.95,Caption,,0,0,0,,executable. An exploit often needs a binary pointer
+Dialogue: 0,0:15:51.95,0:15:54.40,Caption,,0,0,0,,leak before using them reliably.
+Dialogue: 0,0:15:54.40,0:15:56.94,Caption,,0,0,0,,But PIE does not erase the objects,
+Dialogue: 0,0:15:56.94,0:16:00.48,Caption,,0,0,0,,change their internal offsets on every launch,
+Dialogue: 0,0:16:00.48,0:16:03.66,Caption,,0,0,0,,fix the overflow, or conceal a pointer that
+Dialogue: 0,0:16:03.66,0:16:05.66,Caption,,0,0,0,,the program itself prints.
+Dialogue: 0,0:16:05.66,0:16:08.15,Caption,,0,0,0,,To observe dynamic binding order,
+Dialogue: 0,0:16:08.15,0:16:10.55,Caption,,0,0,0,,we use a fourth complete program.
+Dialogue: 0,0:16:10.55,0:16:14.46,Caption,,0,0,0,,It writes explicit markers to standard error before
+Dialogue: 0,0:16:14.46,0:16:16.78,Caption,,0,0,0,,and after the first call to `puts`,
+Dialogue: 0,0:16:16.78,0:16:20.07,Caption,,0,0,0,,then sleeps so its mappings can be inspected.
+Dialogue: 0,0:16:20.07,0:16:23.72,Caption,,0,0,0,,Three non-PIE binaries are built from this source:
+Dialogue: 0,0:16:23.72,0:16:25.68,Caption,,0,0,0,,no RELRO with lazy binding,
+Dialogue: 0,0:16:25.68,0:16:28.08,Caption,,0,0,0,,partial RELRO with lazy binding,
+Dialogue: 0,0:16:28.08,0:16:30.92,Caption,,0,0,0,,and full RELRO with immediate binding.
+Dialogue: 0,0:16:30.92,0:16:34.02,Caption,,0,0,0,,RELRO cannot be understood from one green label.
+Dialogue: 0,0:16:34.02,0:16:36.72,Caption,,0,0,0,,For each binary, we record program headers,
+Dialogue: 0,0:16:36.72,0:16:39.34,Caption,,0,0,0,,the dynamic section, relocation records,
+Dialogue: 0,0:16:39.34,0:16:42.28,Caption,,0,0,0,,and section headers. No RELRO has no `GNU_RELRO`
+Dialogue: 0,0:16:42.28,0:16:45.68,Caption,,0,0,0,,segment. Partial RELRO has one beginning at `0x403df8`,
+Dialogue: 0,0:16:45.68,0:16:48.15,Caption,,0,0,0,,but no `BIND_NOW`. Full RELRO has a larger
+Dialogue: 0,0:16:48.15,0:16:50.70,Caption,,0,0,0,,protected range beginning at `0x403dc0`,
+Dialogue: 0,0:16:50.70,0:16:54.02,Caption,,0,0,0,,and its dynamic section contains both `BIND_NOW` and
+Dialogue: 0,0:16:54.02,0:16:54.80,Caption,,0,0,0,,the `NOW` flag.
+Dialogue: 0,0:16:54.80,0:16:57.67,Caption,,0,0,0,,Next we connect the file’s relocation address to
+Dialogue: 0,0:16:57.67,0:16:59.96,Caption,,0,0,0,,the live process page that contains it.
+Dialogue: 0,0:16:59.96,0:17:01.26,Caption,,0,0,0,,In the no-RELRO binary,
+Dialogue: 0,0:17:01.26,0:17:03.55,Caption,,0,0,0,,`puts` has relocation address `0x4033a0`,
+Dialogue: 0,0:17:03.55,0:17:05.13,Caption,,0,0,0,,inside a writable mapping.
+Dialogue: 0,0:17:05.13,0:17:07.43,Caption,,0,0,0,,With partial RELRO, `puts` is at `0x404000`,
+Dialogue: 0,0:17:07.43,0:17:09.36,Caption,,0,0,0,,again inside a writable mapping.
+Dialogue: 0,0:17:09.36,0:17:11.45,Caption,,0,0,0,,With full RELRO, `puts` is at `0x403fd8`,
+Dialogue: 0,0:17:11.45,0:17:14.03,Caption,,0,0,0,,and the containing page is mapped read-only.
+Dialogue: 0,0:17:14.03,0:17:16.24,Caption,,0,0,0,,To see *when* symbols are resolved,
+Dialogue: 0,0:17:16.24,0:17:19.68,Caption,,0,0,0,,we ask the dynamic loader for binding diagnostics.
+Dialogue: 0,0:17:19.68,0:17:22.55,Caption,,0,0,0,,The raw output is dense—more than a hundred
+Dialogue: 0,0:17:22.55,0:17:26.81,Caption,,0,0,0,,lines—because the loader reports bindings for the executable,
+Dialogue: 0,0:17:26.81,0:17:28.61,Caption,,0,0,0,,libc, and the loader itself.
+Dialogue: 0,0:17:28.61,0:17:30.98,Caption,,0,0,0,,We show that complete stream first.
+Dialogue: 0,0:17:30.98,0:17:33.61,Caption,,0,0,0,,Only then do we select the lines around
+Dialogue: 0,0:17:33.61,0:17:36.56,Caption,,0,0,0,,`transferring control`, our program markers,
+Dialogue: 0,0:17:36.56,0:17:38.36,Caption,,0,0,0,,and the bindings for `write`,
+Dialogue: 0,0:17:38.36,0:17:39.34,Caption,,0,0,0,,`puts`, and `sleep`.
+Dialogue: 0,0:17:39.34,0:17:40.74,Caption,,0,0,0,,In the partial build,
+Dialogue: 0,0:17:40.74,0:17:44.21,Caption,,0,0,0,,the loader transfers control to the program first.
+Dialogue: 0,0:17:44.21,0:17:46.85,Caption,,0,0,0,,`write` is bound as the first marker runs.
+Dialogue: 0,0:17:46.85,0:17:49.82,Caption,,0,0,0,,The program announces that it is before its
+Dialogue: 0,0:17:49.82,0:17:52.63,Caption,,0,0,0,,first `puts`. Only then does the loader bind
+Dialogue: 0,0:17:52.63,0:17:54.86,Caption,,0,0,0,,`puts`. `sleep` is bound later as well.
+Dialogue: 0,0:17:54.86,0:17:59.15,Caption,,0,0,0,,Lazy binding postpones these writes until the corresponding
+Dialogue: 0,0:17:59.15,0:18:00.31,Caption,,0,0,0,,call path is used,
+Dialogue: 0,0:18:00.31,0:18:03.86,Caption,,0,0,0,,which is why the procedure-linkage slot must remain
+Dialogue: 0,0:18:03.86,0:18:06.25,Caption,,0,0,0,,writable during normal execution.
+Dialogue: 0,0:18:06.25,0:18:07.32,Caption,,0,0,0,,In the full build,
+Dialogue: 0,0:18:07.32,0:18:09.94,Caption,,0,0,0,,the order reverses. The loader binds `puts`,
+Dialogue: 0,0:18:09.94,0:18:12.93,Caption,,0,0,0,,`write`, and `sleep` before the line that transfers
+Dialogue: 0,0:18:12.93,0:18:14.62,Caption,,0,0,0,,control to the executable.
+Dialogue: 0,0:18:14.62,0:18:17.54,Caption,,0,0,0,,Only afterward do our `entered main` and `before
+Dialogue: 0,0:18:17.54,0:18:19.22,Caption,,0,0,0,,first puts` markers appear.
+Dialogue: 0,0:18:19.22,0:18:23.68,Caption,,0,0,0,,Because the required procedure-linkage writes are completed during
+Dialogue: 0,0:18:23.68,0:18:26.82,Caption,,0,0,0,,startup, the page containing `puts` can be read-only
+Dialogue: 0,0:18:26.82,0:18:29.28,Caption,,0,0,0,,by the time ordinary program code runs.
+Dialogue: 0,0:18:29.28,0:18:33.42,Caption,,0,0,0,,Drepper’s engineering report explains the layout problem behind
+Dialogue: 0,0:18:33.42,0:18:36.50,Caption,,0,0,0,,RELRO. Some ELF structures must be writable while
+Dialogue: 0,0:18:36.50,0:18:40.18,Caption,,0,0,0,,relocations are performed, but should not remain writable
+Dialogue: 0,0:18:40.18,0:18:43.64,Caption,,0,0,0,,afterward. The report’s own diagrams show protected ELF
+Dialogue: 0,0:18:43.64,0:18:46.35,Caption,,0,0,0,,data reordered next to read-only data so the
+Dialogue: 0,0:18:46.35,0:18:48.83,Caption,,0,0,0,,loader can cover it with a read-only page
+Dialogue: 0,0:18:48.83,0:18:52.36,Caption,,0,0,0,,range after relocation. Full RELRO combines that layout
+Dialogue: 0,0:18:52.36,0:18:53.86,Caption,,0,0,0,,with immediate binding.
+Dialogue: 0,0:18:53.86,0:18:56.89,Caption,,0,0,0,,The conceptual calling path is now safe to
+Dialogue: 0,0:18:56.89,0:19:00.43,Caption,,0,0,0,,animate because we have already located its real
+Dialogue: 0,0:19:00.43,0:19:03.28,Caption,,0,0,0,,relocation entries and binding events.
+Dialogue: 0,0:19:03.28,0:19:05.26,Caption,,0,0,0,,A call reaches the PLT route.
+Dialogue: 0,0:19:05.26,0:19:08.20,Caption,,0,0,0,,The route consults the relevant GOT slot.
+Dialogue: 0,0:19:08.20,0:19:11.91,Caption,,0,0,0,,Before resolution, that route can enter the dynamic
+Dialogue: 0,0:19:11.91,0:19:15.79,Caption,,0,0,0,,resolver. After resolution, the slot contains the libc
+Dialogue: 0,0:19:15.79,0:19:20.11,Caption,,0,0,0,,destination. Partial RELRO permits later loader writes for
+Dialogue: 0,0:19:20.11,0:19:22.96,Caption,,0,0,0,,lazy binding. Full RELRO resolves first,
+Dialogue: 0,0:19:22.96,0:19:25.20,Caption,,0,0,0,,then removes write permission.
+Dialogue: 0,0:19:25.20,0:19:29.01,Caption,,0,0,0,,Full RELRO blocks writes to the protected relocation
+Dialogue: 0,0:19:29.01,0:19:31.88,Caption,,0,0,0,,page. It does not make the page unreadable.
+Dialogue: 0,0:19:31.88,0:19:33.90,Caption,,0,0,0,,The mapping we measured is `r--p`,
+Dialogue: 0,0:19:33.90,0:19:37.88,Caption,,0,0,0,,not inaccessible. A disclosure primitive may still read
+Dialogue: 0,0:19:37.88,0:19:39.73,Caption,,0,0,0,,the resolved `puts` pointer,
+Dialogue: 0,0:19:39.73,0:19:43.37,Caption,,0,0,0,,and that pointer can still reveal libc’s randomized
+Dialogue: 0,0:19:43.37,0:19:46.32,Caption,,0,0,0,,base. RELRO closes the GOT-overwrite route.
+Dialogue: 0,0:19:46.32,0:19:48.26,Caption,,0,0,0,,It does not close code reuse,
+Dialogue: 0,0:19:48.26,0:19:53.00,Caption,,0,0,0,,information leakage, or corruption of unrelated writable objects.
+Dialogue: 0,0:19:53.00,0:19:56.11,Caption,,0,0,0,,Only now do we compress the evidence into
+Dialogue: 0,0:19:56.11,0:19:59.86,Caption,,0,0,0,,a summary. NX comes from stack execution metadata
+Dialogue: 0,0:19:59.86,0:20:04.71,Caption,,0,0,0,,and page enforcement. The canary appears as compiler-generated
+Dialogue: 0,0:20:04.71,0:20:07.55,Caption,,0,0,0,,prologue and epilogue instructions.
+Dialogue: 0,0:20:07.55,0:20:10.84,Caption,,0,0,0,,ASLR appears in changing runtime mappings.
+Dialogue: 0,0:20:10.84,0:20:13.59,Caption,,0,0,0,,PIE changes the ELF type and lets the
+Dialogue: 0,0:20:13.59,0:20:16.52,Caption,,0,0,0,,main binary receive a randomized base.
+Dialogue: 0,0:20:16.52,0:20:18.53,Caption,,0,0,0,,RELRO combines ELF layout,
+Dialogue: 0,0:20:18.53,0:20:22.46,Caption,,0,0,0,,binding policy, and loader-enforced read-only pages.
+Dialogue: 0,0:20:22.46,0:20:25.29,Caption,,0,0,0,,The source-level defect never changed:
+Dialogue: 0,0:20:25.29,0:20:27.32,Caption,,0,0,0,,thirty-two bytes of storage,
+Dialogue: 0,0:20:27.32,0:20:30.68,Caption,,0,0,0,,one hundred and twenty-eight bytes requested.
+Dialogue: 0,0:20:30.68,0:20:33.42,Caption,,0,0,0,,What changed was the point at which an
+Dialogue: 0,0:20:33.42,0:20:38.10,Caption,,0,0,0,,exploit’s assumptions failed. NX waits until instruction fetch.
+Dialogue: 0,0:20:38.10,0:20:40.22,Caption,,0,0,0,,The canary reacts before `ret`.
+Dialogue: 0,0:20:40.22,0:20:43.67,Caption,,0,0,0,,ASLR invalidates yesterday’s runtime pointer.
+Dialogue: 0,0:20:43.67,0:20:46.67,Caption,,0,0,0,,PIE removes fixed main-binary addresses.
+Dialogue: 0,0:20:46.67,0:20:49.94,Caption,,0,0,0,,Full RELRO rejects a write to the relocation
+Dialogue: 0,0:20:49.94,0:20:50.30,Caption,,0,0,0,,page.
+Dialogue: 0,0:20:50.30,0:20:52.75,Caption,,0,0,0,,No single layer is the final answer.
+Dialogue: 0,0:20:52.75,0:20:54.36,Caption,,0,0,0,,ROP can route around NX.
+Dialogue: 0,0:20:54.36,0:20:57.49,Caption,,0,0,0,,A pointer disclosure can reveal an ASLR base.
+Dialogue: 0,0:20:57.49,0:21:00.62,Caption,,0,0,0,,A leaked canary can preserve the stack check.
+Dialogue: 0,0:21:00.62,0:21:03.25,Caption,,0,0,0,,A leaked code pointer can reveal a PIE
+Dialogue: 0,0:21:03.25,0:21:06.21,Caption,,0,0,0,,base. Full RELRO can force an attacker away
+Dialogue: 0,0:21:06.21,0:21:10.62,Caption,,0,0,0,,from GOT overwrites without preventing every code-reuse path.
+Dialogue: 0,0:21:10.62,0:21:13.83,Caption,,0,0,0,,Defense in depth works by making a successful
+Dialogue: 0,0:21:13.83,0:21:18.15,Caption,,0,0,0,,chain require several independent capabilities in the same
+Dialogue: 0,0:21:18.15,0:21:19.59,Caption,,0,0,0,,vulnerable process.
+Dialogue: 0,0:21:19.59,0:21:22.53,Caption,,0,0,0,,Return once more to the compiler warning.
+Dialogue: 0,0:21:22.53,0:21:26.67,Caption,,0,0,0,,It identified the actual engineering failure before any
+Dialogue: 0,0:21:26.67,0:21:30.56,Caption,,0,0,0,,mitigation activated. NX did not reduce the requested
+Dialogue: 0,0:21:30.56,0:21:33.93,Caption,,0,0,0,,length. The canary did not make the destination
+Dialogue: 0,0:21:33.93,0:21:36.78,Caption,,0,0,0,,larger. ASLR and PIE did not validate the
+Dialogue: 0,0:21:36.78,0:21:39.46,Caption,,0,0,0,,pointer. RELRO did not constrain `read`.
+Dialogue: 0,0:21:39.46,0:21:42.66,Caption,,0,0,0,,A corrected bound, a memory-safe abstraction,
+Dialogue: 0,0:21:42.66,0:21:45.94,Caption,,0,0,0,,or a design that cannot express this mismatch
+Dialogue: 0,0:21:45.94,0:21:47.75,Caption,,0,0,0,,addresses the bug itself.
+Dialogue: 0,0:21:47.75,0:21:51.90,Caption,,0,0,0,,The protections reduce exploitability when bugs remain.
+Dialogue: 0,0:21:51.90,0:21:55.13,Caption,,0,0,0,,And now ret2libc stops looking like a bag
+Dialogue: 0,0:21:55.13,0:21:58.65,Caption,,0,0,0,,of arbitrary tricks. NX explains why we reuse
+Dialogue: 0,0:21:58.65,0:22:02.65,Caption,,0,0,0,,executable code instead of running bytes from the
+Dialogue: 0,0:22:02.65,0:22:05.98,Caption,,0,0,0,,stack. ASLR explains why libc’s base must be
+Dialogue: 0,0:22:05.98,0:22:09.59,Caption,,0,0,0,,learned. PIE explains why even our PLT entries,
+Dialogue: 0,0:22:09.59,0:22:13.68,Caption,,0,0,0,,GOT locations, and gadgets may require a binary-base
+Dialogue: 0,0:22:13.68,0:22:17.30,Caption,,0,0,0,,leak. The canary explains why a blind overflow
+Dialogue: 0,0:22:17.30,0:22:18.72,Caption,,0,0,0,,can die before `ret`.
+Dialogue: 0,0:22:18.72,0:22:22.06,Caption,,0,0,0,,RELRO explains why reading a GOT entry may
+Dialogue: 0,0:22:22.06,0:22:26.05,Caption,,0,0,0,,remain useful even when overwriting it is blocked.
+Dialogue: 0,0:22:26.05,0:22:28.65,Caption,,0,0,0,,Today we did not begin with five floating
+Dialogue: 0,0:22:28.65,0:22:31.18,Caption,,0,0,0,,shields and assign them magical powers.
+Dialogue: 0,0:22:31.18,0:22:33.93,Caption,,0,0,0,,We followed real source into real binaries,
+Dialogue: 0,0:22:33.93,0:22:36.69,Caption,,0,0,0,,inspected their headers and instructions,
+Dialogue: 0,0:22:36.69,0:22:38.83,Caption,,0,0,0,,ran them, read their live mappings,
+Dialogue: 0,0:22:38.83,0:22:41.82,Caption,,0,0,0,,and then built the diagrams from that evidence.
+Dialogue: 0,0:22:41.82,0:22:44.73,Caption,,0,0,0,,The result is a defender’s map of exploitation:
+Dialogue: 0,0:22:44.73,0:22:47.33,Caption,,0,0,0,,executable permission, stack integrity,
+Dialogue: 0,0:22:47.33,0:22:49.93,Caption,,0,0,0,,randomized placement, relocatable code,
+Dialogue: 0,0:22:49.93,0:22:51.84,Caption,,0,0,0,,and hardened relocation data.
+Dialogue: 0,0:22:51.84,0:22:54.22,Caption,,0,0,0,,Next time, we ask what happens when the
+Dialogue: 0,0:22:54.22,0:22:55.60,Caption,,0,0,0,,program leaks the map.

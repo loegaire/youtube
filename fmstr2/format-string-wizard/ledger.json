@@ -1,0 +1,17 @@
+{
+  "fps": 30,
+  "seams": [
+    {"id":"intro-to-machine","cut":17,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-00","axis":"x","dir":-1},"entry":{"selector":"#el-01","axis":"x","dir":-1}},
+    {"id":"machine-to-target","cut":52,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-01","axis":"x","dir":-1},"entry":{"selector":"#el-02","axis":"x","dir":-1}},
+    {"id":"target-to-probes","cut":130,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-02","axis":"x","dir":-1},"entry":{"selector":"#el-08","axis":"x","dir":-1}},
+    {"id":"probes-to-ghosts","cut":160,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-08","axis":"x","dir":-1},"entry":{"selector":"#el-09","axis":"x","dir":-1}},
+    {"id":"ghosts-to-marker","cut":190,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-09","axis":"x","dir":-1},"entry":{"selector":"#el-10","axis":"x","dir":-1}},
+    {"id":"marker-to-sus","cut":235,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-10","axis":"x","dir":-1},"entry":{"selector":"#el-11","axis":"x","dir":-1}},
+    {"id":"sus-to-write","cut":270,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-11","axis":"x","dir":-1},"entry":{"selector":"#el-12","axis":"x","dir":-1}},
+    {"id":"write-to-halfwords","cut":315,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-12","axis":"x","dir":-1},"entry":{"selector":"#el-13","axis":"x","dir":-1}},
+    {"id":"halfwords-to-builder","cut":340,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-13","axis":"x","dir":-1},"entry":{"selector":"#el-14","axis":"x","dir":-1}},
+    {"id":"builder-to-final","cut":410,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-14","axis":"x","dir":-1},"entry":{"selector":"#el-15","axis":"x","dir":-1}},
+    {"id":"final-to-patch","cut":505,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-15","axis":"x","dir":-1},"entry":{"selector":"#el-17","axis":"x","dir":-1}},
+    {"id":"patch-to-moral","cut":575,"technique":"cut-the-curve LEFT","exit":{"selector":"#el-17","axis":"x","dir":-1},"entry":{"selector":"#el-19","axis":"x","dir":-1}}
+  ]
+}

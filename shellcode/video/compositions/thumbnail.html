@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="hyperframes" content='{"duration":1,"width":1920,"height":1080,"fps":24}'>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    @font-face { font-family:"Inter"; src:url("assets/fonts/NotoSans-wght.ttf") format("truetype"); font-weight:100 900; }
+    @font-face { font-family:"JetBrains Mono"; src:url("assets/fonts/JetBrainsMonoNerdFont-Regular.ttf") format("truetype"); font-weight:100 900; }
+    * { box-sizing: border-box; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#0c0f0d; }
+    body { color:#f1f3ee; font-family:Inter,system-ui,sans-serif; }
+    #root {
+      position:relative; width:1920px; height:1080px; overflow:hidden;
+      background:#0c0f0d;
+    }
+    .eyebrow {
+      position:absolute; left:100px; top:72px; color:#8ccb9a;
+      font:800 28px/1 "JetBrains Mono",monospace; letter-spacing:.13em;
+    }
+    h1 {
+      position:absolute; z-index:5; left:96px; top:122px; width:1090px; margin:0;
+      font:900 126px/.86 Inter,system-ui,sans-serif; letter-spacing:-.07em;
+    }
+    h1 span { color:#f0ab72; }
+    .sub {
+      position:absolute; z-index:5; left:104px; bottom:98px; color:#adb6ad;
+      font:760 31px/1 "JetBrains Mono",monospace; letter-spacing:.01em;
+    }
+    .shelf {
+      position:absolute; z-index:2; left:700px; right:100px; top:380px; height:270px;
+      display:grid; grid-template-columns:repeat(7,1fr); gap:15px; padding:22px;
+      border:4px solid #3b443e; border-radius:28px; background:#151a17;
+      transform:rotate(-4deg);
+    }
+    .byte {
+      display:grid; place-items:center; border:3px solid #3b443e; border-radius:16px;
+      background:#202622; color:#8ccb9a; font:850 34px/1 "JetBrains Mono",monospace;
+    }
+    .byte.hot { border-color:#f0ab72; color:#0c0f0d; background:#f0ab72; }
+    .beam {
+      position:absolute; z-index:3; left:1290px; top:-190px; width:250px; height:940px;
+      background:rgba(240,171,114,.17); border-left:5px solid #f0ab72;
+      border-right:5px solid #f0ab72; transform:rotate(16deg);
+      clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);
+    }
+    .spot {
+      position:absolute; z-index:4; left:1260px; top:510px; width:230px; height:230px;
+      border:10px solid #f0ab72; border-radius:50%; background:#151a17;
+      box-shadow:0 0 0 18px #0c0f0d;
+    }
+    .spot::before {
+      content:"NEXT"; position:absolute; inset:0; display:grid; place-items:center;
+      color:#f0ab72; font:900 38px/1 "JetBrains Mono",monospace;
+    }
+    .route {
+      position:absolute; z-index:1; left:780px; top:790px; width:850px; height:0;
+      border-top:15px solid #8ccb9a; transform:rotate(-8deg);
+    }
+    .route::after {
+      content:""; position:absolute; right:-8px; top:-31px; border-left:48px solid #8ccb9a;
+      border-top:23px solid transparent; border-bottom:23px solid transparent;
+    }
+    .tag {
+      position:absolute; z-index:6; right:86px; bottom:72px; padding:20px 28px;
+      border:3px solid #8ccb9a; border-radius:16px; color:#8ccb9a; background:#0c0f0d;
+      font:850 25px/1 "JetBrains Mono",monospace; transform:rotate(-2deg);
+    }
+  </style>
+</head>
+<body>
+  <main id="root" class="clip" data-composition-id="thumbnail" data-start="0" data-duration="1" data-width="1920" data-height="1080">
+    <div class="eyebrow">GLASS-BOX LAB / EPISODE 03</div>
+    <h1>TEXT BECOMES <span>COMMANDS?</span></h1>
+    <div class="sub">BYTES ARE MATERIAL. CONTROL FLOW IS ATTENTION.</div>
+    <div class="beam"></div>
+    <div class="shelf">
+      <div class="byte">48</div><div class="byte">65</div><div class="byte">6C</div>
+      <div class="byte hot">DO</div><div class="byte hot">NEXT</div>
+      <div class="byte">6F</div><div class="byte">21</div>
+    </div>
+    <div class="spot"></div>
+    <div class="route"></div>
+    <div class="tag">CONCEPT ONLY</div>
+  </main>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const thumbnailTimeline = gsap.timeline({ paused: true });
+    thumbnailTimeline.to({}, { duration: 1 });
+    window.__timelines.thumbnail = thumbnailTimeline;
+  </script>
+</body>
+</html>

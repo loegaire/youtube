@@ -1,0 +1,30 @@
+{
+  "name": "binary-defenses-motion-canvas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "audit:build": "vite build --config vite.preview.config.ts",
+    "audit:serve": "vite --config vite.preview.config.ts --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "narration:pilot": "/home/thinh/proj/youtube/fmstr2/.chatterbox-venv/bin/python scripts/generate_owner_voice.py --ids scene-04,scene-18,scene-50 --force",
+    "narration:generate": "node scripts/run_owner_voice_batches.mjs",
+    "narration:finalize": "node scripts/finalize_owner_voice.mjs",
+    "captions:build": "node scripts/build_captions.mjs",
+    "render:master": "node scripts/render_motion_canvas_master.mjs"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "chrome-remote-interface": "^0.34.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

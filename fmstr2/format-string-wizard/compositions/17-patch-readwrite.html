@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <template>
+      <style>
+        #root { position:relative; width:1920px; height:1080px; overflow:hidden; color:#F1F3EE; font-family:Inter,Arial,sans-serif; }
+        .patch,.rw { position:absolute; inset:0; overflow:hidden; background:radial-gradient(circle at 55% 40%,#17201A 0%,#0A0D0B 58%,#0A0D0B 100%); }
+        .scan { position:absolute; inset:0; opacity:.22; background-image:linear-gradient(#8CCB9A12 1px,transparent 1px),linear-gradient(90deg,#8CCB9A12 1px,transparent 1px); background-size:52px 52px; }
+        .headline { position:absolute; left:126px; top:90px; font-size:76px; line-height:1; letter-spacing:-.05em; } .sub { position:absolute; left:130px; top:225px; color:#B3D8C2; font:600 25px 'JetBrains Mono',monospace; }
+        .code { position:absolute; left:126px; top:290px; width:1050px; min-height:320px; padding:54px 62px; border:2px solid #3E5745; border-radius:30px; background:#111713e8; box-shadow:0 28px 90px #0008; font:700 49px/1.45 'JetBrains Mono',monospace; }
+        .bad { color:#F0786E; text-decoration:line-through; text-decoration-thickness:4px; } .good { color:#8CCB9A; } .format { color:#D8BE73; } .data { color:#8CCB9A; } .muted { color:#9EA8A0; } .out { color:#B3D8C2; }
+        .machine { position:absolute; right:126px; top:286px; width:560px; height:496px; border:2px solid #D8BE73; border-radius:32px; background:#15140fe8; box-shadow:0 0 50px #D8BE7325; overflow:hidden; }
+        .machine-title { padding:28px 36px; color:#D8BE73; border-bottom:2px solid #5c4422; font:800 32px 'JetBrains Mono',monospace; } .slot { margin:24px 32px; padding:18px 20px; border:2px solid #3E5745; border-radius:16px; background:#0d1b2c; font:700 24px 'JetBrains Mono',monospace; } .slot small { display:block; margin-bottom:8px; color:#9EA8A0; font:700 15px Inter,Arial,sans-serif; letter-spacing:.13em; } .shield { position:absolute; right:32px; bottom:28px; color:#8CCB9A; font-size:58px; }
+        .literal { position:absolute; left:126px; right:126px; bottom:102px; padding:25px 34px; border:2px solid #8CCB9A; border-radius:20px; background:#0c281de8; color:#B3D8C2; font:700 27px 'JetBrains Mono',monospace; overflow:hidden; white-space:nowrap; }
+        .rw-title { position:absolute; left:126px; top:88px; font-size:72px; letter-spacing:-.05em; } .rw-sub { position:absolute; left:130px; top:185px; color:#B3D8C2; font:600 25px 'JetBrains Mono',monospace; }
+        .columns { position:absolute; left:126px; right:126px; top:300px; display:flex; gap:34px; } .column { flex:1; min-height:482px; padding:40px; border:2px solid #3E5745; border-radius:30px; background:#111713e8; position:relative; overflow:hidden; }
+        .column h3 { font-size:44px; } .token { display:inline-block; margin-top:35px; padding:16px 22px; border-radius:14px; font:800 44px 'JetBrains Mono',monospace; } .observe .token { color:#B3D8C2; background:#12314e; border:2px solid #8CCB9A; } .follow .token { color:#D8BE73; background:#2d210d; border:2px solid #D8BE73; } .write .token { color:#F0786E; background:#32151d; border:2px solid #F0786E; }
+        .column p { margin-top:32px; color:#B3D8C2; font-size:27px; line-height:1.25; max-width:340px; } .mini { position:absolute; left:40px; right:40px; bottom:44px; height:92px; border-radius:16px; display:flex; align-items:center; justify-content:center; font:700 22px 'JetBrains Mono',monospace; } .observe .mini { color:#B3D8C2; background:#102b45; } .follow .mini { color:#D8BE73; background:#2b220e; } .write .mini { color:#F0786E; background:#37151d; }
+        .arrow { position:absolute; right:48px; bottom:82px; color:#D8BE73; font-size:52px; } .write-arrow { font-size:60px; color:#F0786E; }
+        .patch, .rw { background:#0A0D0B !important; background-image:none !important; }
+      </style>
+      <div id="root" data-composition-id="patch-readwrite" data-width="1920" data-height="1080" data-duration="70">
+        <div id="patch-stage" class="clip patch" data-start="0" data-duration="40" data-track-index="1"><div class="scan"></div><h2 class="headline">the one-line patch</h2><p class="sub">Give printf a recipe you control. Pass input as data.</p><div id="patch-code" class="code"><span id="patch-bad" class="bad">printf(buf);</span><span id="patch-good" class="good">printf(<span class="format">"%s"</span>, <span class="data">buf</span>);</span></div><div id="patch-machine" class="machine"><div class="machine-title">printf machine</div><div class="slot"><small>format recipe</small><span class="format">"%s"</span></div><div class="slot"><small>user data</small><span class="data">%14$26465c%19$hn…</span></div><div class="shield">🛡</div></div><div id="patch-literal" class="literal"><span class="muted">output → </span>%14$26465c%19$hn%14$1285c%20$hn <span class="good">(printed literally)</span></div></div>
+        <div id="rw-stage" class="clip rw" style="opacity:0" data-start="40" data-duration="30" data-track-index="1"><div class="scan"></div><h2 class="rw-title">sort the specifiers by power</h2><p class="rw-sub">Leaks help us locate. Writes let us change state.</p><div class="columns"><div id="rw-observe" class="column observe"><h3>observe</h3><span class="token">%p&nbsp; %x</span><p>Print a value in address or hexadecimal form.</p><div class="mini">shelf value → hex output</div><span class="arrow">→</span></div><div id="rw-follow" class="column follow"><h3>follow</h3><span class="token">%s</span><p>Treat the value as an address and read bytes until <code>\0</code>.</p><div class="mini">pointer → memory → string</div><span class="arrow">↪</span></div><div id="rw-write" class="column write"><h3>write</h3><span class="token">%n&nbsp; %hn&nbsp; %hhn</span><p>Copy the printed character count through a pointer.</p><div class="mini">counter → pointer → memory</div><span class="write-arrow">⇣</span></div></div></div>
+      </div>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl=gsap.timeline({paused:true});
+        tl.set('#patch-good',{autoAlpha:0,x:60}).set('#patch-literal',{autoAlpha:0,y:40});
+        tl.fromTo('.headline,.sub',{x:150,autoAlpha:0},{x:0,autoAlpha:1,duration:.6,stagger:.12,ease:'power4.out'},0)
+          .fromTo('#patch-code',{x:160,autoAlpha:0},{x:0,autoAlpha:1,duration:.7,ease:'power4.out'},.35)
+          .fromTo('#patch-machine',{x:150,autoAlpha:0},{x:0,autoAlpha:1,duration:.65,ease:'power3.out'},.7)
+          .to('#patch-bad',{x:-90,autoAlpha:0,duration:.55,ease:'power3.in'},3.5).to('#patch-good',{x:0,autoAlpha:1,duration:.65,ease:'back.out(1.5)'},3.8)
+          .to('#patch-literal',{y:0,autoAlpha:1,duration:.55,ease:'power3.out'},6).to('#patch-stage',{x:-130,duration:.7,ease:'power4.in'},39.3);
+        tl.set('#rw-stage',{autoAlpha:0},40).to('#rw-stage',{autoAlpha:1,duration:.01},40)
+          .fromTo('.rw-title,.rw-sub',{x:150,autoAlpha:0},{x:0,autoAlpha:1,duration:.6,stagger:.12,ease:'power4.out'},40.1)
+          .fromTo('#rw-observe',{x:130,autoAlpha:0},{x:0,autoAlpha:1,duration:.55,ease:'power3.out'},41)
+          .fromTo('#rw-follow',{x:130,autoAlpha:0},{x:0,autoAlpha:1,duration:.55,ease:'power3.out'},42.1)
+          .fromTo('#rw-write',{x:130,autoAlpha:0},{x:0,autoAlpha:1,duration:.55,ease:'power3.out'},43.2)
+          .to('#rw-write .token',{scale:1.12,duration:.35,ease:'power2.out'},45.7).to('#rw-stage',{x:-130,duration:.7,ease:'power4.in'},69.3);
+        window.__timelines['patch-readwrite']=tl;
+      </script>
+    </template>
+  </body>
+</html>

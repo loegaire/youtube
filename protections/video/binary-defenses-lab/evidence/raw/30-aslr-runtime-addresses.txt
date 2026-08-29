@@ -1,0 +1,55 @@
+$ cat /proc/sys/kernel/randomize_va_space
+2
+
+=== address-nopie: four runs ===
+-- run 1 --
+pid       1499
+main      0x401186
+stack     0x7ffd41bd9e14
+puts-ref  0x401030
+libc-puts 0x7fd54356a5a0
+-- run 2 --
+pid       1500
+main      0x401186
+stack     0x7ffdab18d3b4
+puts-ref  0x401030
+libc-puts 0x7ff27aca75a0
+-- run 3 --
+pid       1501
+main      0x401186
+stack     0x7fff781b3584
+puts-ref  0x401030
+libc-puts 0x7fafcd6315a0
+-- run 4 --
+pid       1502
+main      0x401186
+stack     0x7fff5ba25774
+puts-ref  0x401030
+libc-puts 0x7f3b1a6aa5a0
+
+=== address-pie: four runs ===
+-- run 1 --
+pid       1503
+main      0x55949c2c2189
+stack     0x7ffdb60b9154
+puts-ref  0x7f909251d5a0
+libc-puts 0x7f909251d5a0
+-- run 2 --
+pid       1504
+main      0x55c7fd728189
+stack     0x7ffc0c7cfeb4
+puts-ref  0x7f6a22c835a0
+libc-puts 0x7f6a22c835a0
+-- run 3 --
+pid       1505
+main      0x55686ed59189
+stack     0x7fff5b3818a4
+puts-ref  0x7f0f6cb885a0
+libc-puts 0x7f0f6cb885a0
+-- run 4 --
+pid       1506
+main      0x562de290f189
+stack     0x7ffd93deaf74
+puts-ref  0x7f81093865a0
+libc-puts 0x7f81093865a0
+

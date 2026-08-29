@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html, body { margin: 0; width: 100%; height: 100%; background: #101412; overflow: hidden; }
+      motion-canvas-player { display: block; width: 1920px; height: 1080px; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "@motion-canvas/core": "file:///home/thinh/proj/youtube/bof1/node_modules/@motion-canvas/core/lib/index.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import('file:///home/thinh/proj/youtube/bof1/node_modules/@motion-canvas/player/dist/main.js')
+        .then(() => { window.__playerModule = 'loaded'; })
+        .catch(error => { window.__playerModule = `error: ${String(error)}`; });
+    </script>
+  </head>
+  <body>
+    <motion-canvas-player
+      id="uaf-player"
+      src="file:///home/thinh/proj/youtube/uaf/dist/project.js"
+      width="1920"
+      height="1080"
+      quality="1"
+    ></motion-canvas-player>
+    <script>
+      window.__uafPlayer = document.querySelector('#uaf-player');
+    </script>
+  </body>
+</html>

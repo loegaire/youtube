@@ -1,0 +1,62 @@
+$ ./bin/address-nopie --hold
+pid       1521
+main      0x401186
+stack     0x7ffe4a36c354
+puts-ref  0x401030
+libc-puts 0x7f704aa9e5a0
+$ cat /proc/1521/maps
+00400000-00401000 r--p 00000000 fe:00 3588945                            /mnt/data/binary-defenses-lab/bin/address-nopie
+00401000-00402000 r-xp 00001000 fe:00 3588945                            /mnt/data/binary-defenses-lab/bin/address-nopie
+00402000-00403000 r--p 00002000 fe:00 3588945                            /mnt/data/binary-defenses-lab/bin/address-nopie
+00403000-00404000 r--p 00002000 fe:00 3588945                            /mnt/data/binary-defenses-lab/bin/address-nopie
+00404000-00405000 rw-p 00003000 fe:00 3588945                            /mnt/data/binary-defenses-lab/bin/address-nopie
+3fe00000-3fe21000 rw-p 00000000 00:00 0                                  [heap]
+7f704aa1b000-7f704aa1e000 rw-p 00000000 00:00 0 
+7f704aa1e000-7f704aa46000 r--p 00000000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f704aa46000-7f704aba9000 r-xp 00028000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f704aba9000-7f704abff000 r--p 0018b000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f704abff000-7f704ac03000 r--p 001e0000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f704ac03000-7f704ac05000 rw-p 001e4000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f704ac05000-7f704ac12000 rw-p 00000000 00:00 0 
+7f704ac22000-7f704ac24000 rw-p 00000000 00:00 0 
+7f704ac24000-7f704ac28000 r--p 00000000 00:00 0                          [vvar]
+7f704ac28000-7f704ac2a000 r-xp 00000000 00:00 0                          [vdso]
+7f704ac2a000-7f704ac2b000 r--p 00000000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f704ac2b000-7f704ac53000 r-xp 00001000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f704ac53000-7f704ac5e000 r--p 00029000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f704ac5e000-7f704ac60000 r--p 00034000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f704ac60000-7f704ac61000 rw-p 00036000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f704ac61000-7f704ac62000 rw-p 00000000 00:00 0 
+7ffe4a34d000-7ffe4a36f000 rw-p 00000000 00:00 0                          [stack]
+
+$ ./bin/address-pie --hold
+pid       1522
+main      0x55bce0675189
+stack     0x7fff99a10754
+puts-ref  0x7f12b6eab5a0
+libc-puts 0x7f12b6eab5a0
+$ cat /proc/1522/maps
+55bce0674000-55bce0675000 r--p 00000000 fe:00 3588946                    /mnt/data/binary-defenses-lab/bin/address-pie
+55bce0675000-55bce0676000 r-xp 00001000 fe:00 3588946                    /mnt/data/binary-defenses-lab/bin/address-pie
+55bce0676000-55bce0677000 r--p 00002000 fe:00 3588946                    /mnt/data/binary-defenses-lab/bin/address-pie
+55bce0677000-55bce0678000 r--p 00002000 fe:00 3588946                    /mnt/data/binary-defenses-lab/bin/address-pie
+55bce0678000-55bce0679000 rw-p 00003000 fe:00 3588946                    /mnt/data/binary-defenses-lab/bin/address-pie
+55bd17d1a000-55bd17d3b000 rw-p 00000000 00:00 0                          [heap]
+7f12b6e28000-7f12b6e2b000 rw-p 00000000 00:00 0 
+7f12b6e2b000-7f12b6e53000 r--p 00000000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f12b6e53000-7f12b6fb6000 r-xp 00028000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f12b6fb6000-7f12b700c000 r--p 0018b000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f12b700c000-7f12b7010000 r--p 001e0000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f12b7010000-7f12b7012000 rw-p 001e4000 fe:00 2753131                    /usr/lib/x86_64-linux-gnu/libc.so.6
+7f12b7012000-7f12b701f000 rw-p 00000000 00:00 0 
+7f12b702f000-7f12b7031000 rw-p 00000000 00:00 0 
+7f12b7031000-7f12b7035000 r--p 00000000 00:00 0                          [vvar]
+7f12b7035000-7f12b7037000 r-xp 00000000 00:00 0                          [vdso]
+7f12b7037000-7f12b7038000 r--p 00000000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f12b7038000-7f12b7060000 r-xp 00001000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f12b7060000-7f12b706b000 r--p 00029000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f12b706b000-7f12b706d000 r--p 00034000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f12b706d000-7f12b706e000 rw-p 00036000 fe:00 2753111                    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f12b706e000-7f12b706f000 rw-p 00000000 00:00 0 
+7fff999f2000-7fff99a14000 rw-p 00000000 00:00 0                          [stack]
+

@@ -1,0 +1,163 @@
+===== src/address_probe.c =====
+     1	#define _GNU_SOURCE
+     2	#include <dlfcn.h>
+     3	#include <stdint.h>
+     4	#include <stdio.h>
+     5	#include <string.h>
+     6	#include <unistd.h>
+     7	
+     8	int main(int argc, char **argv) {
+     9	    int local = 0;
+    10	    void *libc_puts = dlsym(RTLD_NEXT, "puts");
+    11	
+    12	    printf("pid       %ld\n", (long)getpid());
+    13	    printf("main      %p\n", (void *)(uintptr_t)&main);
+    14	    printf("stack     %p\n", (void *)&local);
+    15	    printf("puts-ref  %p\n", (void *)(uintptr_t)&puts);
+    16	    printf("libc-puts %p\n", libc_puts);
+    17	    fflush(stdout);
+    18	
+    19	    if (argc == 2 && strcmp(argv[1], "--hold") == 0) {
+    20	        puts("hold      press Enter to exit");
+    21	        (void)getchar();
+    22	    }
+    23	
+    24	    return 0;
+    25	}
+
+===== src/canary_probe.c =====
+     1	#include <inttypes.h>
+     2	#include <stdint.h>
+     3	#include <stdio.h>
+     4	
+     5	__attribute__((noinline))
+     6	static void probe(void) {
+     7	    char buffer[16] = {0};
+     8	    uintptr_t tls_guard = 0;
+     9	    uintptr_t frame_copy = 0;
+    10	
+    11	#if defined(__x86_64__)
+    12	    __asm__ volatile("mov %%fs:0x28, %0" : "=r"(tls_guard));
+    13	    __asm__ volatile("mov -8(%%rbp), %0" : "=r"(frame_copy));
+    14	#endif
+    15	
+    16	    printf("buffer     %p\n", (void *)buffer);
+    17	    printf("tls-guard  0x%016" PRIxPTR "\n", tls_guard);
+    18	    printf("frame-copy 0x%016" PRIxPTR "\n", frame_copy);
+    19	}
+    20	
+    21	int main(void) {
+    22	    probe();
+    23	    return 0;
+    24	}
+
+===== src/exec_probe.c =====
+     1	#include <stdio.h>
+     2	
+     3	typedef int (*code_fn)(void);
+     4	
+     5	int main(void) {
+     6	    /* x86-64: mov eax, 42 ; ret */
+     7	    unsigned char code[] = {0xb8, 0x2a, 0x00, 0x00, 0x00, 0xc3};
+     8	
+     9	    printf("code buffer: %p\n", (void *)code);
+    10	    puts("calling bytes stored on the stack...");
+    11	    int result = ((code_fn)(void *)code)();
+    12	    printf("returned: %d\n", result);
+    13	    return 0;
+    14	}
+
+===== src/relro_demo.c =====
+     1	#include <stdio.h>
+     2	#include <unistd.h>
+     3	
+     4	static void marker(const char *text, size_t length) {
+     5	    (void)write(STDERR_FILENO, text, length);
+     6	}
+     7	
+     8	int main(void) {
+     9	    static const char entered[] = "PROGRAM: entered main\n";
+    10	    static const char before[] = "PROGRAM: before first puts\n";
+    11	    static const char after[] = "PROGRAM: after first puts\n";
+    12	
+    13	    marker(entered, sizeof entered - 1);
+    14	    marker(before, sizeof before - 1);
+    15	    puts("hello from puts");
+    16	    marker(after, sizeof after - 1);
+    17	    sleep(2);
+    18	    return 0;
+    19	}
+
+===== src/vuln.c =====
+     1	#include <stdio.h>
+     2	#include <unistd.h>
+     3	
+     4	__attribute__((noinline))
+     5	static void greet(void) {
+     6	    char name[32];
+     7	
+     8	    puts("name:");
+     9	    ssize_t count = read(STDIN_FILENO, name, 128);
+    10	    printf("read %zd bytes\n", count);
+    11	}
+    12	
+    13	int main(void) {
+    14	    setvbuf(stdout, NULL, _IONBF, 0);
+    15	    greet();
+    16	    return 0;
+    17	}
+
+===== scripts/build.sh =====
+     1	#!/usr/bin/env bash
+     2	set -euo pipefail
+     3	ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+     4	SRC="$ROOT/src"
+     5	BIN="$ROOT/bin"
+     6	mkdir -p "$BIN"
+     7	CC="${CC:-gcc}"
+     8	COMMON=(-O0 -g -fno-omit-frame-pointer -fcf-protection=none -Wall -Wextra)
+     9	
+    10	"$CC" "${COMMON[@]}" "$SRC/vuln.c" -o "$BIN/vuln-plain" \
+    11	  -fno-stack-protector -fno-pie -no-pie \
+    12	  -Wl,-z,execstack -Wl,-z,norelro
+    13	
+    14	"$CC" "${COMMON[@]}" "$SRC/vuln.c" -o "$BIN/vuln-nx" \
+    15	  -fno-stack-protector -fno-pie -no-pie \
+    16	  -Wl,-z,noexecstack -Wl,-z,norelro
+    17	
+    18	"$CC" "${COMMON[@]}" "$SRC/vuln.c" -o "$BIN/vuln-canary" \
+    19	  -fstack-protector-strong -fno-pie -no-pie \
+    20	  -Wl,-z,noexecstack -Wl,-z,norelro
+    21	
+    22	"$CC" "${COMMON[@]}" "$SRC/vuln.c" -o "$BIN/vuln-pie" \
+    23	  -fstack-protector-strong -fPIE -pie \
+    24	  -Wl,-z,noexecstack -Wl,-z,norelro
+    25	
+    26	"$CC" "${COMMON[@]}" "$SRC/vuln.c" -o "$BIN/vuln-full" \
+    27	  -fstack-protector-strong -fPIE -pie \
+    28	  -Wl,-z,noexecstack -Wl,-z,relro,-z,now
+    29	
+    30	"$CC" "${COMMON[@]}" "$SRC/exec_probe.c" -o "$BIN/exec-probe-rwx" \
+    31	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,execstack,-z,norelro
+    32	
+    33	"$CC" "${COMMON[@]}" "$SRC/exec_probe.c" -o "$BIN/exec-probe-nx" \
+    34	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,noexecstack,-z,norelro
+    35	
+    36	"$CC" "${COMMON[@]}" "$SRC/canary_probe.c" -o "$BIN/canary-probe" \
+    37	  -fstack-protector-all -fno-pie -no-pie -Wl,-z,noexecstack,-z,norelro
+    38	
+    39	"$CC" "${COMMON[@]}" "$SRC/address_probe.c" -o "$BIN/address-nopie" \
+    40	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,noexecstack,-z,relro -ldl
+    41	
+    42	"$CC" "${COMMON[@]}" "$SRC/address_probe.c" -o "$BIN/address-pie" \
+    43	  -fno-stack-protector -fPIE -pie -Wl,-z,noexecstack,-z,relro -ldl
+    44	
+    45	"$CC" "${COMMON[@]}" "$SRC/relro_demo.c" -o "$BIN/relro-none" \
+    46	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,norelro,-z,lazy
+    47	
+    48	"$CC" "${COMMON[@]}" "$SRC/relro_demo.c" -o "$BIN/relro-partial" \
+    49	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,relro,-z,lazy
+    50	
+    51	"$CC" "${COMMON[@]}" "$SRC/relro_demo.c" -o "$BIN/relro-full" \
+    52	  -fno-stack-protector -fno-pie -no-pie -Wl,-z,relro,-z,now
+

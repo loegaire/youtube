@@ -1,0 +1,6 @@
+$ cat -n Makefile.share
+     1	all:
+     2		gcc -Xlinker -rpath=./ -Wall -m64 -pedantic -no-pie --std=gnu99 -o heapedit heapedit.c
+     3	
+     4	clean:
+     5		rm heapedit

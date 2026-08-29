@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <template>
+      <style>
+        #root { position:relative; width:1920px; height:1080px; overflow:hidden; color:#F1F3EE; font-family:Inter,Arial,sans-serif; }
+        .stage { position:absolute; inset:0; overflow:hidden; background:radial-gradient(circle at 72% 50%,#17201A 0%,#0A0D0B 48%,#0A0D0B 100%); }
+        .grid { position:absolute; inset:0; opacity:.22; background-image:linear-gradient(#8CCB9A1a 1px,transparent 1px),linear-gradient(90deg,#8CCB9A1a 1px,transparent 1px); background-size:56px 56px; }
+        .terminal { position:absolute; left:126px; top:145px; width:1135px; height:720px; border:2px solid #3E5745; border-radius:30px; background:#111713e8; box-shadow:0 30px 100px #0009,0 0 48px #8CCB9A22; overflow:hidden; }
+        .bar { height:68px; display:flex; align-items:center; gap:13px; padding:0 28px; border-bottom:2px solid #254361; background:#10233a; }
+        .dot { width:16px; height:16px; border-radius:50%; background:#F0786E; } .dot:nth-child(2){background:#D8BE73}.dot:nth-child(3){background:#8CCB9A}
+        .file { margin-left:22px; color:#B3D8C2; font:600 24px 'JetBrains Mono',monospace; letter-spacing:.08em; }
+        .prompt { padding:36px 48px; font:500 29px/1.55 'JetBrains Mono',monospace; color:#B3D8C2; } .line { display:block; }
+        .muted { color:#9EA8A0; } .orange { color:#D8BE73; } .red { color:#F0786E; } .green { color:#8CCB9A; } .purple { color:#B3D8C2; } .white { color:#F1F3EE; }
+        .ribbon { position:absolute; left:38px; right:38px; top:430px; height:70px; display:flex; align-items:center; padding:0 28px; overflow:hidden; border:2px solid #D8BE73; border-radius:18px; color:#D8BE73; background:#251b0d; font:700 26px 'JetBrains Mono',monospace; letter-spacing:.04em; }
+        .ribbon-line { display:block; white-space:nowrap; }
+        .meter { position:absolute; left:1360px; top:164px; width:410px; border:2px solid #D8BE73; border-radius:26px; background:#101b2cf5; padding:28px; box-shadow:0 0 40px #D8BE7322; }
+        .eyebrow { color:#9EA8A0; font:700 17px Inter,Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
+        .counter { margin:12px 0 16px; color:#D8BE73; font:800 56px 'JetBrains Mono',monospace; }
+        .meter-track { height:15px; border-radius:10px; overflow:hidden; background:#23354b; } .meter-fill { width:100%; height:100%; transform-origin:left; background:#D8BE73; }
+        .byte-card { position:absolute; left:1360px; top:490px; width:410px; padding:27px; border:2px solid #8CCB9A; border-radius:26px; background:#0c1a2cf5; }
+        .byte-row { display:flex; gap:9px; margin-top:18px; } .byte { width:76px; height:74px; display:grid; place-items:center; border:2px solid #8CCB9A; border-radius:12px; color:#B3D8C2; background:#112844; font:700 25px 'JetBrains Mono',monospace; }
+        .byte.changed { border-color:#8CCB9A; color:#8CCB9A; box-shadow:0 0 20px #8CCB9A55; }
+        .write-arrow { position:absolute; left:1260px; top:590px; width:104px; height:18px; background:#F0786E; transform-origin:left center; } .write-arrow:after { content:""; position:absolute; right:-2px; top:-12px; border-left:30px solid #F0786E; border-top:21px solid transparent; border-bottom:21px solid transparent; }
+        .gate { position:absolute; right:90px; bottom:74px; width:530px; height:210px; border:3px solid #8CCB9A; border-radius:28px; background:linear-gradient(130deg,#0a241c,#123a2c); box-shadow:0 0 54px #8CCB9A44; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+        .gate .lock { font-size:58px; } .gate code { color:#8CCB9A; font:700 24px 'JetBrains Mono',monospace; margin-top:10px; }
+        .recap { position:absolute; inset:0; padding:96px 126px; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:130px 1fr; gap:36px; background:radial-gradient(circle at 55% 45%,#182a45 0%,#0A0D0B 58%,#0A0D0B 100%); }
+        .recap-title { grid-column:1/-1; display:flex; align-items:end; gap:30px; } .recap-title h2 { font-size:76px; line-height:1; letter-spacing:-.05em; } .recap-title p { margin-bottom:8px; color:#B3D8C2; font:600 25px 'JetBrains Mono',monospace; }
+        .pipeline { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+        .step { position:relative; width:318px; height:365px; padding:30px; border:2px solid #3E5745; border-radius:28px; background:#0c1a2ce8; box-shadow:0 18px 44px #0006; }
+        .num { color:#D8BE73; font:800 28px 'JetBrains Mono',monospace; } .step h3 { margin-top:22px; font-size:31px; line-height:1.04; } .step code { display:block; margin-top:28px; color:#B3D8C2; font:700 21px/1.35 'JetBrains Mono',monospace; white-space:normal; } .step .icon { position:absolute; right:26px; bottom:24px; color:#F0786E; font-size:54px; }
+        .pipe { width:74px; height:10px; background:#D8BE73; position:relative; } .pipe:after { content:""; position:absolute; right:-2px; top:-10px; border-left:22px solid #D8BE73; border-top:15px solid transparent; border-bottom:15px solid transparent; }
+        .equation { position:absolute; left:126px; right:126px; bottom:82px; color:#B3D8C2; text-align:center; font:700 32px 'JetBrains Mono',monospace; }
+        .stage, .recap { background:#0A0D0B !important; background-image:none !important; } .gate { background:#111713 !important; box-shadow:none !important; }
+      </style>
+      <div id="root" data-composition-id="final-run-recap" data-width="1920" data-height="1080" data-duration="95">
+        <div id="final-stage" class="clip stage" data-start="0" data-duration="55" data-track-index="1">
+          <div class="grid"></div>
+          <div id="final-terminal" class="terminal"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="file">wizard@picoctf: ~/vuln</span></div><div class="prompt"><span class="line"><span class="muted">$</span> ./vuln</span><span class="line white">You don't have what it takes. Only a true wizard could change my suspicions.</span><span class="line orange">What do you have to say?</span><span class="line"><span class="muted">&gt;</span> <span class="orange">[format recipe][alignment][sus+2][sus]</span></span><span class="line muted" style="margin-top:38px">Here's your input:</span></div><div id="final-ribbon" class="ribbon"><span id="final-ribbon-line" class="ribbon-line">printing 26,465 characters ·······································</span></div><div id="final-result" class="prompt" style="position:absolute;left:0;right:0;top:520px"><span class="line green">I have NO clue how you did that, you must be a wizard.</span><span class="line green">picoCTF{format_string_wizard}<span class="muted">  demo flag text</span></span></div></div>
+          <div id="final-meter" class="meter"><div class="eyebrow">printed character count</div><div id="final-counter" class="counter">0x0000</div><div class="meter-track"><div id="final-meter-fill" class="meter-fill"></div></div><div id="final-meter-note" class="eyebrow" style="margin-top:18px;color:#D8BE73">counter fuel from field width</div></div>
+          <div id="final-bytes" class="byte-card"><div class="eyebrow">sus @ <span class="purple">0x404060</span></div><div class="byte-row"><div id="final-b0" class="byte">73</div><div id="final-b1" class="byte">75</div><div id="final-b2" class="byte">73</div><div id="final-b3" class="byte">21</div></div><div id="final-ascii" class="eyebrow" style="margin-top:16px;color:#B3D8C2">s&nbsp;&nbsp;&nbsp;u&nbsp;&nbsp;&nbsp;s&nbsp;&nbsp;&nbsp;!</div></div>
+          <div id="final-arrow" class="write-arrow"></div><div id="final-gate" class="gate"><div class="lock">🔓</div><code>sus == 0x67616c66</code><div class="eyebrow" style="margin-top:16px;color:#8CCB9A">winning branch</div></div>
+        </div>
+        <div id="recap-stage" class="clip recap" style="opacity:0" data-start="55" data-duration="40" data-track-index="1">
+          <div class="recap-title"><h2>why this worked</h2><p>recipes → slots → addresses → counts → writes</p></div>
+          <div class="pipeline">
+            <div id="recap-s1" class="step"><span class="num">01</span><h3>control the recipe</h3><code>printf(buf)</code><span class="icon">▣</span></div><div class="pipe"></div>
+            <div id="recap-s2" class="step"><span class="num">02</span><h3>read the slots</h3><code>%p / %x consume</code><span class="icon">↳</span></div><div class="pipe"></div>
+            <div id="recap-s3" class="step"><span class="num">03</span><h3>place the address</h3><code>p64(&amp;sus)</code><span class="icon">⌖</span></div><div class="pipe"></div>
+            <div id="recap-s4" class="step"><span class="num">04</span><h3>write the count</h3><code>%hn → sus</code><span class="icon">⇣</span></div>
+          </div>
+          <div id="recap-equation" class="equation">printf(buf) + controlled format string + &amp;sus + %hn = changed memory</div>
+        </div>
+      </div>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({paused:true});
+        tl.set('#final-result',{autoAlpha:0}).set('#final-gate',{autoAlpha:0,scale:.86}).set('#final-arrow',{scaleX:0,autoAlpha:0}).set('#final-ribbon',{autoAlpha:0}).set('#final-meter-fill',{scaleX:.02});
+        tl.fromTo('#final-terminal',{x:180,autoAlpha:0},{x:0,autoAlpha:1,duration:.75,ease:'power4.out'},0)
+          .fromTo('#final-meter',{x:140,autoAlpha:0},{x:0,autoAlpha:1,duration:.6,ease:'power3.out'},.3)
+          .fromTo('#final-bytes',{x:140,autoAlpha:0},{x:0,autoAlpha:1,duration:.6,ease:'power3.out'},.48)
+          .to('#final-ribbon',{autoAlpha:1,duration:.25},2).to('#final-ribbon-line',{x:-610,duration:5,ease:'none'},2)
+          .to('#final-counter',{innerText:26465,duration:5,snap:{innerText:1}},2).to('#final-meter-fill',{scaleX:.955,duration:5,ease:'none'},2)
+          .to('#final-arrow',{autoAlpha:1,scaleX:1,duration:.4,ease:'power3.out'},7.2).to('#final-b2',{color:'#8CCB9A',borderColor:'#8CCB9A',duration:.25},7.6).to('#final-b3',{color:'#8CCB9A',borderColor:'#8CCB9A',duration:.25},7.82)
+          .to('#final-b2',{innerText:'61',duration:.1},7.85).to('#final-b3',{innerText:'67',duration:.1},7.98).to('#final-ascii',{innerText:'s   u   a   g',duration:.1},8.08)
+          .to('#final-counter',{innerText:27750,duration:3.2,snap:{innerText:1}},9).to('#final-meter-fill',{scaleX:1,duration:3.2,ease:'none'},9).to('#final-ribbon-line',{x:-1220,duration:3.2,ease:'none'},9)
+          .to('#final-arrow',{scaleX:1.32,duration:.45,ease:'power3.in'},12.45).to('#final-b0',{color:'#8CCB9A',borderColor:'#8CCB9A',duration:.22},12.95).to('#final-b1',{color:'#8CCB9A',borderColor:'#8CCB9A',duration:.22},13.17)
+          .to('#final-b0',{innerText:'66',duration:.1},13.18).to('#final-b1',{innerText:'6c',duration:.1},13.3).to('#final-ascii',{innerText:'f   l   a   g',duration:.1},13.42)
+          .to('#final-gate',{autoAlpha:1,scale:1,duration:.7,ease:'back.out(1.5)'},14.1).to('#final-result',{autoAlpha:1,y:-12,duration:.55,ease:'power3.out'},15.4)
+          .to('#final-stage',{x:-130,duration:.7,ease:'power4.in'},54.3);
+        tl.set('#recap-stage',{autoAlpha:0},55).to('#recap-stage',{autoAlpha:1,duration:.01},55)
+          .fromTo('.recap-title',{x:170,autoAlpha:0},{x:0,autoAlpha:1,duration:.65,ease:'power4.out'},55.1)
+          .fromTo('#recap-s1',{x:120,autoAlpha:0},{x:0,autoAlpha:1,duration:.5,ease:'power3.out'},56)
+          .fromTo('#recap-s2',{x:120,autoAlpha:0},{x:0,autoAlpha:1,duration:.5,ease:'power3.out'},57.3)
+          .fromTo('#recap-s3',{x:120,autoAlpha:0},{x:0,autoAlpha:1,duration:.5,ease:'power3.out'},58.6)
+          .fromTo('#recap-s4',{x:120,autoAlpha:0},{x:0,autoAlpha:1,duration:.5,ease:'power3.out'},59.9)
+          .fromTo('#recap-equation',{y:65,autoAlpha:0},{y:0,autoAlpha:1,duration:.55,ease:'power3.out'},62)
+          .to('#recap-stage',{x:-130,duration:.7,ease:'power4.in'},94.3);
+        window.__timelines['final-run-recap']=tl;
+      </script>
+    </template>
+  </body>
+</html>

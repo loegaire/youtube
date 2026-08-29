@@ -1,0 +1,1670 @@
+[
+  {
+    "id": "intro-01",
+    "chapter": "00 · RECAP",
+    "start": 0,
+    "end": 5.166667,
+    "title": "Text is not always just text",
+    "kind": "memory",
+    "narration": "Hello again, hackers. Last time, we learned that text is not always just text.",
+    "items": [
+      "USER INPUT",
+      "AAAAAAAAAAAA",
+      "0x41  ·  01000001"
+    ],
+    "state": [
+      "character",
+      "byte",
+      "number"
+    ],
+    "footer": "ordinary text → machine value",
+    "startFrame": 0,
+    "endFrame": 124,
+    "frames": 124
+  },
+  {
+    "id": "intro-02",
+    "chapter": "00 · RECAP",
+    "start": 5.166667,
+    "end": 11.75,
+    "title": "Bytes can become control",
+    "kind": "memory",
+    "narration": "A name can become bytes. Bytes can become numbers. And if those numbers land in the wrong place, they can become control.",
+    "items": [
+      "[41][41][41][41]",
+      "buffer  →  saved EBP",
+      "return address  →  0x41414141"
+    ],
+    "state": [
+      "EIP",
+      "0x08048492",
+      "→ 0x41414141"
+    ],
+    "footer": "control flow leaves its intended route",
+    "startFrame": 124,
+    "endFrame": 282,
+    "frames": 158
+  },
+  {
+    "id": "intro-03",
+    "chapter": "00 · RECAP",
+    "start": 11.75,
+    "end": 19.5,
+    "title": "Control is only the beginning",
+    "kind": "flow",
+    "narration": "But a basic overflow is only the beginning. It gives us the steering wheel. It does not tell us where to drive.",
+    "items": [
+      "input bytes",
+      "saved return address",
+      "EIP",
+      "next instruction"
+    ],
+    "state": [
+      "BUG",
+      "overflow reaches return address",
+      "QUESTION: what should EIP become?"
+    ],
+    "footer": "steering acquired · destination unknown",
+    "startFrame": 282,
+    "endFrame": 468,
+    "frames": 186
+  },
+  {
+    "id": "intro-04",
+    "chapter": "00 · RECAP",
+    "start": 19.5,
+    "end": 28.208333,
+    "title": "Ret2win has one destination",
+    "kind": "code",
+    "narration": "In a ret2win challenge, the answer is simple. Point the return address at a nice little win function, and the program does the rest for us.",
+    "items": [
+      ".text",
+      "├─ main()",
+      "├─ vuln()",
+      "└─ win()  ✓"
+    ],
+    "state": [
+      "saved return",
+      "0x080485cb",
+      "EIP → win()"
+    ],
+    "footer": "[ padding ][ address of win() ]",
+    "startFrame": 468,
+    "endFrame": 677,
+    "frames": 209
+  },
+  {
+    "id": "intro-05",
+    "chapter": "00 · RECAP",
+    "start": 28.208333,
+    "end": 36.75,
+    "title": "Now remove the easy destination",
+    "kind": "terminal",
+    "narration": "Today, we take away the easy destination. No win function. No friendly flag function. No clean shortcut waiting in the binary.",
+    "items": [
+      "find: win",
+      "no symbol found",
+      "find: print_flag",
+      "no symbol found"
+    ],
+    "state": [
+      "find: system(\"/bin/sh\")",
+      "no direct call found"
+    ],
+    "footer": "only tiny assembly fragments remain",
+    "startFrame": 677,
+    "endFrame": 882,
+    "frames": 205
+  },
+  {
+    "id": "intro-06",
+    "chapter": "00 · RECAP",
+    "start": 36.75,
+    "end": 47.375,
+    "title": "Many imperfect fragments",
+    "kind": "gadget",
+    "narration": "So instead of returning to one perfect function, we return through many imperfect fragments. Tiny pieces of existing code, chained together by the stack.",
+    "items": [
+      "pop eax · ret",
+      "pop edx · ret",
+      "mov [edx], eax · ret",
+      "int 0x80"
+    ],
+    "state": [
+      "GADGET LIBRARY",
+      "address",
+      "data",
+      "address"
+    ],
+    "footer": "the stack chooses each fragment",
+    "startFrame": 882,
+    "endFrame": 1137,
+    "frames": 255
+  },
+  {
+    "id": "intro-07",
+    "chapter": "00 · RECAP",
+    "start": 47.375,
+    "end": 56.625,
+    "title": "The stack becomes a program",
+    "kind": "compare",
+    "narration": "This is return-oriented programming. ROP. Shellcode brings its own instructions. ROP steals instructions the program already has.",
+    "items": [
+      "SHELLCODE",
+      "input contains instructions",
+      "ROP",
+      "input contains addresses"
+    ],
+    "state": [
+      "0x080b81c6",
+      "0x0000000b",
+      "0x0806f02a"
+    ],
+    "footer": "RETURN-ORIENTED PROGRAMMING",
+    "startFrame": 1137,
+    "endFrame": 1359,
+    "frames": 222
+  },
+  {
+    "id": "return-01",
+    "chapter": "01 · THE RETURN MACHINE",
+    "start": 56.625,
+    "end": 63.166667,
+    "title": "ret is just state change",
+    "kind": "memory",
+    "narration": "Before ROP makes sense, we need to slow down and look at the smallest moving part: the return instruction.",
+    "items": [
+      "ret",
+      "ESP → [ 0x08048492 ]",
+      "[ 0xffffd150 ]",
+      "[ 0x00000000 ]"
+    ],
+    "state": [
+      "CURRENT STATE",
+      "EIP = 0x08048420",
+      "ESP = 0xffffd12c"
+    ],
+    "footer": "one instruction · two registers · one stack value",
+    "startFrame": 1359,
+    "endFrame": 1516,
+    "frames": 157
+  },
+  {
+    "id": "return-02",
+    "chapter": "01 · THE RETURN MACHINE",
+    "start": 63.166667,
+    "end": 71.833333,
+    "title": "A call stores the way back",
+    "kind": "code",
+    "narration": "When a function is called, the CPU stores a return address on the stack. That address means: after this function is done, continue here.",
+    "items": [
+      "int main() {",
+      "  greet();",
+      "  puts(\"bye\");",
+      "}"
+    ],
+    "state": [
+      "return to puts(\"bye\")",
+      "0x08048492",
+      "stack top"
+    ],
+    "footer": "next instruction after call",
+    "startFrame": 1516,
+    "endFrame": 1724,
+    "frames": 208
+  },
+  {
+    "id": "return-03",
+    "chapter": "01 · THE RETURN MACHINE",
+    "start": 71.833333,
+    "end": 82.916667,
+    "title": "ret trusts the stack",
+    "kind": "flow",
+    "narration": "When the function finishes, ret does not perform a ceremony. It does not ask whether the address is safe. It reads the top stack value, removes it, and copies it into EIP.",
+    "items": [
+      "1 · read [ESP]",
+      "2 · ESP = ESP + 4",
+      "3 · EIP = value"
+    ],
+    "state": [
+      "EIP = 0x08048492",
+      "ESP = 0xffffd130"
+    ],
+    "footer": "the top stack slot is consumed",
+    "startFrame": 1724,
+    "endFrame": 1990,
+    "frames": 266
+  },
+  {
+    "id": "return-04",
+    "chapter": "01 · THE RETURN MACHINE",
+    "start": 82.916667,
+    "end": 93.666667,
+    "title": "Valid does not mean intended",
+    "kind": "memory",
+    "narration": "That is the whole rule. Ret trusts the stack. If the stack says return to main, it returns to main. If the stack says return somewhere strange, it still obeys.",
+    "items": [
+      "0x08048492  normal return",
+      "0x080485cb  win function",
+      "0x080b81c6  gadget"
+    ],
+    "state": [
+      "valid state transition",
+      "valid state transition",
+      "valid state transition"
+    ],
+    "footer": "valid does not mean intended",
+    "startFrame": 1990,
+    "endFrame": 2248,
+    "frames": 258
+  },
+  {
+    "id": "return-05",
+    "chapter": "01 · THE RETURN MACHINE",
+    "start": 93.666667,
+    "end": 102.625,
+    "title": "The programmer's story breaks",
+    "kind": "compare",
+    "narration": "ROP lives inside that gap. The CPU follows valid rules, but the story those rules create is no longer the programmer's story.",
+    "items": [
+      "INTENDED",
+      "main → vuln → main",
+      "ROP",
+      "vuln → gadget → gadget → syscall"
+    ],
+    "state": [
+      "ret",
+      "ret",
+      "ret"
+    ],
+    "footer": "same CPU rules · different control-flow story",
+    "startFrame": 2248,
+    "endFrame": 2463,
+    "frames": 215
+  },
+  {
+    "id": "challenge-01",
+    "chapter": "02 · THE CHALLENGE",
+    "start": 102.625,
+    "end": 115.416667,
+    "title": "A tiny bug with no win button",
+    "kind": "terminal",
+    "narration": "Our challenge is picoCTF two thousand eighteen, can-you-gets-me. It is a good ROP lesson because the source is tiny, but the exploit is not just a single jump.",
+    "items": [
+      "picoCTF 2018",
+      "binary exploitation",
+      "can-you-gets-me"
+    ],
+    "state": [
+      "32-bit",
+      "gets()",
+      "NX enabled",
+      "PIE disabled"
+    ],
+    "footer": "small source · constructed exploit",
+    "startFrame": 2463,
+    "endFrame": 2770,
+    "frames": 307
+  },
+  {
+    "id": "challenge-02",
+    "chapter": "02 · THE CHALLENGE",
+    "start": 115.416667,
+    "end": 121.708333,
+    "title": "Sixteen bytes and gets",
+    "kind": "code",
+    "narration": "The vulnerable function is almost comically small. A sixteen byte buffer, a prompt, and gets.",
+    "items": [
+      "void vuln() {",
+      "  char buf[16];",
+      "  printf(\"GIVE ME YOUR NAME!\");",
+      "  return gets(buf);",
+      "}"
+    ],
+    "state": [
+      "buf = 16 bytes",
+      "gets = no length limiter",
+      "NO BOUNDS CHECK"
+    ],
+    "footer": "input rail has no stop condition",
+    "startFrame": 2770,
+    "endFrame": 2921,
+    "frames": 151
+  },
+  {
+    "id": "challenge-03",
+    "chapter": "02 · THE CHALLENGE",
+    "start": 121.708333,
+    "end": 132.458333,
+    "title": "gets keeps writing",
+    "kind": "memory",
+    "narration": "Gets does not ask how big the destination is. It keeps copying input until the line ends. The buffer can be full, and gets will still keep writing.",
+    "items": [
+      "A A A A A A A A",
+      "16 / 16 bytes",
+      "B B B B  → saved EBP",
+      "C C C C  → return address"
+    ],
+    "state": [
+      "20 / 16",
+      "24 / 16",
+      "overflow"
+    ],
+    "footer": "copy continues beyond the destination",
+    "startFrame": 2921,
+    "endFrame": 3179,
+    "frames": 258
+  },
+  {
+    "id": "challenge-04",
+    "chapter": "02 · THE CHALLENGE",
+    "start": 132.458333,
+    "end": 141.416667,
+    "title": "The overflow is the entrance",
+    "kind": "gadget",
+    "narration": "So yes, there is still a buffer overflow. But in this episode, the overflow is only the entrance. The real topic is what we put after the entrance.",
+    "items": [
+      "padding",
+      "first gadget",
+      "value",
+      "next gadget",
+      "value"
+    ],
+    "state": [
+      "buffer dims",
+      "return address active",
+      "chain begins"
+    ],
+    "footer": "[ padding ][ gadget ][ value ][ gadget ][ value ]",
+    "startFrame": 3179,
+    "endFrame": 3394,
+    "frames": 215
+  },
+  {
+    "id": "challenge-05",
+    "chapter": "02 · THE CHALLENGE",
+    "start": 141.416667,
+    "end": 149.458333,
+    "title": "Every ret asks what comes next",
+    "kind": "flow",
+    "narration": "The first gadget address becomes the fake return address. After that, every ret keeps asking the stack what comes next.",
+    "items": [
+      "saved return = 0x080b81c6",
+      "pop eax · ret",
+      "pop consumes data",
+      "ret consumes next address"
+    ],
+    "state": [
+      "next stack slot",
+      "next stack slot",
+      "ret loop begins"
+    ],
+    "footer": "address → gadget → data → address",
+    "startFrame": 3394,
+    "endFrame": 3587,
+    "frames": 193
+  },
+  {
+    "id": "nx-01",
+    "chapter": "03 · THE WALL",
+    "start": 149.458333,
+    "end": 158.166667,
+    "title": "The tempting shellcode plan",
+    "kind": "memory",
+    "narration": "At this point, the tempting plan is shellcode. Put machine code in the input, jump to the stack, and let the CPU execute our bytes.",
+    "items": [
+      "[ padding ]",
+      "[ 31 c0 50 68 2f 2f 73 68 ]",
+      "[ jump to stack ]"
+    ],
+    "state": [
+      "EIP",
+      "→ stack bytes",
+      "execute?"
+    ],
+    "footer": "payload contains new instructions",
+    "startFrame": 3587,
+    "endFrame": 3796,
+    "frames": 209
+  },
+  {
+    "id": "nx-02",
+    "chapter": "03 · THE WALL",
+    "start": 158.166667,
+    "end": 168.25,
+    "title": "Data becomes code only with execute",
+    "kind": "flow",
+    "narration": "That plan depends on one assumption: the stack must be executable. If the CPU is allowed to fetch instructions from the stack, then data becomes code.",
+    "items": [
+      "EIP points somewhere",
+      "CPU reads bytes there",
+      "CPU decodes instructions"
+    ],
+    "state": [
+      "stack",
+      "read: yes",
+      "write: yes",
+      "execute: ?"
+    ],
+    "footer": "permission decides whether bytes are instructions",
+    "startFrame": 3796,
+    "endFrame": 4038,
+    "frames": 242
+  },
+  {
+    "id": "nx-03",
+    "chapter": "03 · THE WALL",
+    "start": 168.25,
+    "end": 177.791667,
+    "title": "NX blocks execution from the stack",
+    "kind": "compare",
+    "narration": "But this binary has NX enabled. Non executable stack. The input can sit there as data, but the CPU cannot run it from there.",
+    "items": [
+      "CANARY  disabled",
+      "NX  enabled",
+      "PIE  disabled",
+      "stack permissions  rw-"
+    ],
+    "state": [
+      "EIP → stack",
+      "EXECUTE MISSING",
+      "BLOCKED"
+    ],
+    "footer": "data is allowed · instruction fetch is not",
+    "startFrame": 4038,
+    "endFrame": 4267,
+    "frames": 229
+  },
+  {
+    "id": "nx-04",
+    "chapter": "03 · THE WALL",
+    "start": 177.791667,
+    "end": 188.75,
+    "title": "Executable memory still exists",
+    "kind": "memory",
+    "narration": "So shellcode is blocked, but code execution is not impossible. NX does not say the CPU cannot execute anything. It says this memory region is not executable.",
+    "items": [
+      "0x08048000  .text   r-x",
+      "0x080ea000  .data   rw-",
+      "0xffffd000  stack   rw-"
+    ],
+    "state": [
+      ".text  ✓ execute",
+      ".data  no execute",
+      "stack  no execute"
+    ],
+    "footer": "use executable memory · not injected stack bytes",
+    "startFrame": 4267,
+    "endFrame": 4530,
+    "frames": 263
+  },
+  {
+    "id": "nx-05",
+    "chapter": "03 · THE WALL",
+    "start": 188.75,
+    "end": 199.041667,
+    "title": "Reuse what is already executable",
+    "kind": "gadget",
+    "narration": "The program's own instructions still live in executable memory. And if we can return into the right tiny instructions, NX has nothing to complain about.",
+    "items": [
+      ".text  r-x",
+      "pop eax",
+      "ret",
+      "accepted"
+    ],
+    "state": [
+      "stack = data",
+      ".text = instructions",
+      "EIP → gadget"
+    ],
+    "footer": "the stack is read · the text segment is executed",
+    "startFrame": 4530,
+    "endFrame": 4777,
+    "frames": 247
+  },
+  {
+    "id": "gadgets-01",
+    "chapter": "04 · GADGETS",
+    "start": 199.041667,
+    "end": 209.958333,
+    "title": "A tiny job, then back to the script",
+    "kind": "gadget",
+    "narration": "A gadget is a short sequence of existing instructions that ends in ret. Not because ret is powerful by itself, but because ret gives control back to our stack.",
+    "items": [
+      "add esp, 4",
+      "pop eax",
+      "ret",
+      "pop edx · ret"
+    ],
+    "state": [
+      "isolate sequence",
+      "cut gadget card",
+      "return to stack"
+    ],
+    "footer": "GADGET = useful effect + ret",
+    "startFrame": 4777,
+    "endFrame": 5039,
+    "frames": 262
+  },
+  {
+    "id": "gadgets-02",
+    "chapter": "04 · GADGETS",
+    "start": 209.958333,
+    "end": 219.791667,
+    "title": "pop loads · ret jumps",
+    "kind": "memory",
+    "narration": "Take pop EAX ret. Pop EAX reads the next four bytes from the stack and puts them into EAX. Then ret reads the next four bytes and jumps there.",
+    "items": [
+      "ESP → [ 0x0000000b ]",
+      "[ 0x0806f02a ]",
+      "pop eax",
+      "ret"
+    ],
+    "state": [
+      "EAX = 0x0000000b",
+      "EIP = 0x0806f02a",
+      "ESP += 8"
+    ],
+    "footer": "data slot · then address slot",
+    "startFrame": 5039,
+    "endFrame": 5275,
+    "frames": 236
+  },
+  {
+    "id": "gadgets-03",
+    "chapter": "04 · GADGETS",
+    "start": 219.791667,
+    "end": 228.208333,
+    "title": "Every gadget consumes stack",
+    "kind": "compare",
+    "narration": "So every gadget has two effects. The obvious effect is the instruction, like changing EAX. The hidden effect is stack consumption.",
+    "items": [
+      "VISIBLE EFFECT",
+      "EAX changes",
+      "HIDDEN EFFECT",
+      "ESP moves"
+    ],
+    "state": [
+      "ESP + 4",
+      "ESP + 4",
+      "slots consumed"
+    ],
+    "footer": "ROP is also stack accounting",
+    "startFrame": 5275,
+    "endFrame": 5477,
+    "frames": 202
+  },
+  {
+    "id": "gadgets-04",
+    "chapter": "04 · GADGETS",
+    "start": 228.208333,
+    "end": 239.916667,
+    "title": "The stack schedules executable fragments",
+    "kind": "flow",
+    "narration": "This is why the stack becomes a program. Not because the stack is executed, but because the stack decides which executable fragment runs next, and what data that fragment receives.",
+    "items": [
+      "addr: pop eax · ret",
+      "data: 0x0b",
+      "addr: pop edx · ret",
+      "data: 0x080ea060"
+    ],
+    "state": [
+      "schedule",
+      "+",
+      "constants"
+    ],
+    "footer": "stack = schedule + constants",
+    "startFrame": 5477,
+    "endFrame": 5758,
+    "frames": 281
+  },
+  {
+    "id": "gadgets-05",
+    "chapter": "04 · GADGETS",
+    "start": 239.916667,
+    "end": 248.375,
+    "title": "Same bytes · different meaning",
+    "kind": "compare",
+    "narration": "Instead of writing assembly directly, we write a list of addresses and values. Ret and pop interpret that list for us.",
+    "items": [
+      "c6 81 0b 08",
+      "0x080b81c6  pop eax · ret",
+      "0b 00 00 00",
+      "0x0000000b  value"
+    ],
+    "state": [
+      "raw bytes",
+      "decoded chunks",
+      "next gadget"
+    ],
+    "footer": "interpretation turns payload into a script",
+    "startFrame": 5758,
+    "endFrame": 5961,
+    "frames": 203
+  },
+  {
+    "id": "target-01",
+    "chapter": "05 · TARGET STATE",
+    "start": 248.375,
+    "end": 257,
+    "title": "ROP is building a CPU state",
+    "kind": "register",
+    "narration": "Now we need the chain to do something useful. For this challenge, the classic goal is to ask Linux to run slash bin slash sh.",
+    "items": [
+      "execve(\"/bin/sh\", 0, 0)",
+      "EAX = ?",
+      "EBX = ?",
+      "ECX = ?",
+      "EDX = ?"
+    ],
+    "state": [
+      "goal",
+      "run a program",
+      "/bin/sh"
+    ],
+    "footer": "desired operating-system request",
+    "startFrame": 5961,
+    "endFrame": 6168,
+    "frames": 207
+  },
+  {
+    "id": "target-02",
+    "chapter": "05 · TARGET STATE",
+    "start": 257,
+    "end": 269.625,
+    "title": "The syscall ABI is a register contract",
+    "kind": "flow",
+    "narration": "On thirty-two bit Linux, a syscall through int zero eighty uses registers as arguments. EAX chooses the syscall. EBX, ECX, and EDX hold the first three arguments.",
+    "items": [
+      "eax → syscall number",
+      "ebx → arg1",
+      "ecx → arg2",
+      "edx → arg3"
+    ],
+    "state": [
+      "eax → 0x0b",
+      "ebx → filename",
+      "ecx → 0",
+      "edx → 0"
+    ],
+    "footer": "int 0x80 reads the register file",
+    "startFrame": 6168,
+    "endFrame": 6471,
+    "frames": 303
+  },
+  {
+    "id": "target-03",
+    "chapter": "05 · TARGET STATE",
+    "start": 269.625,
+    "end": 279.875,
+    "title": "The final state is precise",
+    "kind": "register",
+    "narration": "So our desired final state is precise. EAX must be eleven. EBX must point to the string. ECX and EDX must be null.",
+    "items": [
+      "EAX = 0x0000000b",
+      "EBX = address of \"/bin/sh\"",
+      "ECX = 0x00000000",
+      "EDX = 0x00000000"
+    ],
+    "state": [
+      "TARGET STATE",
+      "NEXT = int 0x80",
+      "checklist 0 / 4"
+    ],
+    "footer": "each gadget will fill one requirement",
+    "startFrame": 6471,
+    "endFrame": 6717,
+    "frames": 246
+  },
+  {
+    "id": "target-04",
+    "chapter": "05 · TARGET STATE",
+    "start": 279.875,
+    "end": 290.5,
+    "title": "Construct state without new code",
+    "kind": "gadget",
+    "narration": "ROP is how we construct that state without writing new code. We need gadgets that load registers, gadgets that write memory, and one final gadget that triggers the syscall.",
+    "items": [
+      "LOAD · pop eax · ret",
+      "WRITE · mov [edx], eax · ret",
+      "SYSCALL · int 0x80"
+    ],
+    "state": [
+      "1 · write string",
+      "2 · point EBX",
+      "3 · syscall"
+    ],
+    "footer": "load → write → trigger",
+    "startFrame": 6717,
+    "endFrame": 6972,
+    "frames": 255
+  },
+  {
+    "id": "write-01",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 290.5,
+    "end": 299.625,
+    "title": "A pointer needs something to point at",
+    "kind": "write",
+    "narration": "The string slash bin slash sh needs to exist somewhere in memory. EBX cannot point to an idea. It needs a real address.",
+    "items": [
+      "EBX → \"/bin/sh\"",
+      "not in memory yet",
+      "0x080ea060: __ __ __ __ __ __ __ __"
+    ],
+    "state": [
+      "pointer",
+      "dotted",
+      "unresolved"
+    ],
+    "footer": "choose a writable destination",
+    "startFrame": 6972,
+    "endFrame": 7191,
+    "frames": 219
+  },
+  {
+    "id": "write-02",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 299.625,
+    "end": 306.125,
+    "title": "Write four bytes at a time",
+    "kind": "write",
+    "narration": "We choose a writable area, like data or BSS. Then the chain writes the string there four bytes at a time.",
+    "items": [
+      ".text  r-x",
+      ".data  rw-",
+      ".bss  rw-",
+      "0x080ea060  selected"
+    ],
+    "state": [
+      "\"/bin\"",
+      "\"//sh\"",
+      "\"\\0\\0\\0\\0\""
+    ],
+    "footer": "/bin//sh\\0 → 4 + 4 + 4 bytes",
+    "startFrame": 7191,
+    "endFrame": 7347,
+    "frames": 156
+  },
+  {
+    "id": "write-03",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 306.125,
+    "end": 318.083333,
+    "title": "The double slash makes clean chunks",
+    "kind": "compare",
+    "narration": "The double slash is not a typo. Slash bin slash slash sh is eight bytes, two clean four-byte chunks, and Linux treats repeated slashes in a path normally.",
+    "items": [
+      "/bin/sh · 7 bytes",
+      "awkward final chunk",
+      "/bin//sh · 8 bytes",
+      "[ / b i n ][ / / s h ]"
+    ],
+    "state": [
+      "4 bytes",
+      "+ 4 bytes",
+      "path remains valid"
+    ],
+    "footer": "alignment shapes the string",
+    "startFrame": 7347,
+    "endFrame": 7634,
+    "frames": 287
+  },
+  {
+    "id": "write-04",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 318.083333,
+    "end": 332.208333,
+    "title": "The first write is three steps",
+    "kind": "gadget",
+    "narration": "The first write is a tiny three-step program. Put slash bin into EAX. Put the writable address into EDX. Then store EAX into memory at EDX.",
+    "items": [
+      "pop eax · ret",
+      "\"/bin\"",
+      "pop edx · ret",
+      "0x080ea060",
+      "mov [edx], eax · ret"
+    ],
+    "state": [
+      "1 · EAX = \"/bin\"",
+      "2 · EDX = destination",
+      "3 · [EDX] = EAX"
+    ],
+    "footer": "a tiny data-movement program",
+    "startFrame": 7634,
+    "endFrame": 7973,
+    "frames": 339
+  },
+  {
+    "id": "write-05",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 332.208333,
+    "end": 342.208333,
+    "title": "A stack slot can be data",
+    "kind": "memory",
+    "narration": "First, ret enters pop EAX ret. Pop consumes the next stack slot. That slot is not an address. It is data for the gadget.",
+    "items": [
+      "EIP → pop eax · ret",
+      "ESP → [ \"/bin\" ]",
+      "[ pop edx · ret ]"
+    ],
+    "state": [
+      "EAX = 0x6e69622f",
+      "decoded: \"/bin\"",
+      "step 1 ✓"
+    ],
+    "footer": "pop interprets the next slot as a value",
+    "startFrame": 7973,
+    "endFrame": 8213,
+    "frames": 240
+  },
+  {
+    "id": "write-06",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 342.208333,
+    "end": 349,
+    "title": "ret selects the next gadget",
+    "kind": "flow",
+    "narration": "Then the ret at the end of that gadget reads the next address. That address sends execution to pop EDX ret.",
+    "items": [
+      "ret",
+      "stack top = 0x0806f02a",
+      "EIP = 0x0806f02a",
+      "pop edx · ret"
+    ],
+    "state": [
+      "ESP advances",
+      "address resolved",
+      "next gadget active"
+    ],
+    "footer": "control returns to the stack schedule",
+    "startFrame": 8213,
+    "endFrame": 8376,
+    "frames": 163
+  },
+  {
+    "id": "write-07",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 349,
+    "end": 357.166667,
+    "title": "EDX holds the destination",
+    "kind": "write",
+    "narration": "Pop EDX consumes the writable address. Now EDX is not the string. EDX is the place where the string will be written.",
+    "items": [
+      "ESP → [ 0x080ea060 ]",
+      "[ mov [edx], eax · ret ]",
+      "EDX → 0x080ea060"
+    ],
+    "state": [
+      "0x080ea060: __ __ __ __",
+      "destination pointer",
+      "step 2 ✓"
+    ],
+    "footer": "register holds an address · not the bytes",
+    "startFrame": 8376,
+    "endFrame": 8572,
+    "frames": 196
+  },
+  {
+    "id": "write-08",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 357.166667,
+    "end": 367.208333,
+    "title": "mov copies bytes into memory",
+    "kind": "write",
+    "narration": "Finally, mov bracket EDX comma EAX writes the four bytes from EAX into the memory address stored inside EDX.",
+    "items": [
+      "mov [edx], eax",
+      "EAX:  / b i n",
+      "EDX:  0x080ea060",
+      "memory: / b i n"
+    ],
+    "state": [
+      "source = EAX",
+      "destination = [EDX]",
+      "step 3 ✓"
+    ],
+    "footer": "four bytes cross into writable memory",
+    "startFrame": 8572,
+    "endFrame": 8813,
+    "frames": 241
+  },
+  {
+    "id": "write-09",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 367.208333,
+    "end": 376.291667,
+    "title": "Small boring moves compose",
+    "kind": "write",
+    "narration": "That is the first chunk. Not glamorous, but extremely important. Most real ROP chains are made from small boring moves like this.",
+    "items": [
+      "WRITE 4 BYTES",
+      "[edx] = eax",
+      "0x080ea060: / b i n __ __ __ __"
+    ],
+    "state": [
+      "chunk 1 / 3",
+      "memory changed",
+      "chain continues"
+    ],
+    "footer": "simple moves · useful composition",
+    "startFrame": 8813,
+    "endFrame": 9031,
+    "frames": 218
+  },
+  {
+    "id": "write-10",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 376.291667,
+    "end": 387.666667,
+    "title": "Repeat for the second chunk",
+    "kind": "write",
+    "narration": "Then we repeat the same pattern for the second chunk. EAX becomes slash slash sh. EDX becomes the writable address plus four.",
+    "items": [
+      "EAX = \"//sh\"",
+      "EDX = 0x080ea064",
+      "mov [edx], eax · ret",
+      "0x080ea060: / b i n / / s h"
+    ],
+    "state": [
+      "chunk 2 / 3",
+      "+4 bytes",
+      "memory changed"
+    ],
+    "footer": "same gadget pattern · new constants",
+    "startFrame": 9031,
+    "endFrame": 9304,
+    "frames": 273
+  },
+  {
+    "id": "write-11",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 387.666667,
+    "end": 395.041667,
+    "title": "C strings end at zero",
+    "kind": "write",
+    "narration": "And then we write zero after it. C strings do not carry their length around. They end when a zero byte appears.",
+    "items": [
+      "scan from 0x080ea060",
+      "read byte → read byte → read byte",
+      "stop at 00",
+      "/bin//sh 00 00 00 00"
+    ],
+    "state": [
+      "before: /bin//sh????",
+      "after: terminated",
+      "chunk 3 / 3"
+    ],
+    "footer": "zero marks the end of the path",
+    "startFrame": 9304,
+    "endFrame": 9481,
+    "frames": 177
+  },
+  {
+    "id": "write-12",
+    "chapter": "06 · WRITING MEMORY",
+    "start": 395.041667,
+    "end": 400.083333,
+    "title": "Now the string has an address",
+    "kind": "write",
+    "narration": "Now the string is real. It has an address. EBX can point to it.",
+    "items": [
+      "0x080ea060 → \"/bin//sh\\0\"",
+      "EBX = 0x080ea060",
+      "pointer resolved"
+    ],
+    "state": [
+      "string in memory ✓",
+      "address stable",
+      "next: registers"
+    ],
+    "footer": "an idea became bytes at a location",
+    "startFrame": 9481,
+    "endFrame": 9602,
+    "frames": 121
+  },
+  {
+    "id": "register-01",
+    "chapter": "07 · REGISTER STATE",
+    "start": 400.083333,
+    "end": 407.125,
+    "title": "The payload becomes assignments",
+    "kind": "register",
+    "narration": "With the string prepared, the chain changes jobs. It stops writing memory and starts shaping the register state.",
+    "items": [
+      "EAX = ?",
+      "EBX = ?",
+      "ECX = ?",
+      "EDX = ?"
+    ],
+    "state": [
+      "memory ready ✓",
+      "register setup begins",
+      "target faintly visible"
+    ],
+    "footer": "write phase → register phase",
+    "startFrame": 9602,
+    "endFrame": 9771,
+    "frames": 169
+  },
+  {
+    "id": "register-02",
+    "chapter": "07 · REGISTER STATE",
+    "start": 407.125,
+    "end": 417.625,
+    "title": "EAX selects execve",
+    "kind": "register",
+    "narration": "EAX needs the syscall number. So we reuse the same kind of gadget: pop EAX ret, followed by the value zero B.",
+    "items": [
+      "pop eax · ret",
+      "0x0000000b",
+      "EAX = 0x0000000b"
+    ],
+    "state": [
+      "11 decimal",
+      "execve",
+      "eax ✓"
+    ],
+    "footer": "the same load gadget · a new role",
+    "startFrame": 9771,
+    "endFrame": 10023,
+    "frames": 252
+  },
+  {
+    "id": "register-03",
+    "chapter": "07 · REGISTER STATE",
+    "start": 417.625,
+    "end": 426.541667,
+    "title": "EBX must be a pointer",
+    "kind": "compare",
+    "narration": "EBX needs the address of the filename string. Not the bytes slash bin slash sh themselves, but the address where we wrote those bytes.",
+    "items": [
+      "WRONG · EBX = \"/bin//sh\"",
+      "not a pointer",
+      "RIGHT · EBX = 0x080ea060",
+      "points to string"
+    ],
+    "state": [
+      "EBX → memory row",
+      "filename resolved",
+      "ebx ✓"
+    ],
+    "footer": "pass the address · not the contents",
+    "startFrame": 10023,
+    "endFrame": 10237,
+    "frames": 214
+  },
+  {
+    "id": "register-04",
+    "chapter": "07 · REGISTER STATE",
+    "start": 426.541667,
+    "end": 438.583333,
+    "title": "ECX and EDX become null",
+    "kind": "register",
+    "narration": "ECX and EDX represent ARGV and ENVP. For this minimal chain, they can point to zero, or be zero, depending on the gadgets we have.",
+    "items": [
+      "0x080ea068: 00 00 00 00",
+      "ECX = 0x080ea068 → 0",
+      "EDX = 0x080ea068 → 0"
+    ],
+    "state": [
+      "null pointer area",
+      "ecx ✓",
+      "edx ✓"
+    ],
+    "footer": "reuse the zero area after the string",
+    "startFrame": 10237,
+    "endFrame": 10526,
+    "frames": 289
+  },
+  {
+    "id": "register-05",
+    "chapter": "07 · REGISTER STATE",
+    "start": 438.583333,
+    "end": 447.708333,
+    "title": "A multi-pop gadget has an appetite",
+    "kind": "gadget",
+    "narration": "Sometimes a useful gadget sets several registers at once. That sounds convenient, but it means the stack must match the gadget's exact appetite.",
+    "items": [
+      "pop edx",
+      "pop ecx",
+      "pop ebx",
+      "ret"
+    ],
+    "state": [
+      "first slot → edx",
+      "second slot → ecx",
+      "third slot → ebx"
+    ],
+    "footer": "three inputs · fixed order",
+    "startFrame": 10526,
+    "endFrame": 10745,
+    "frames": 219
+  },
+  {
+    "id": "register-06",
+    "chapter": "07 · REGISTER STATE",
+    "start": 447.708333,
+    "end": 456.958333,
+    "title": "The CPU follows order, not intent",
+    "kind": "compare",
+    "narration": "If we accidentally place the EBX value first, it goes into EDX. The CPU will not fix our meaning. It only follows order.",
+    "items": [
+      "WRONG: filename pointer first",
+      "EDX receives filename · blocked",
+      "CORRECT: edx · ecx · ebx",
+      "all registers match"
+    ],
+    "state": [
+      "rewind",
+      "reorder slots",
+      "state valid ✓"
+    ],
+    "footer": "meaning comes from position",
+    "startFrame": 10745,
+    "endFrame": 10967,
+    "frames": 222
+  },
+  {
+    "id": "register-07",
+    "chapter": "07 · REGISTER STATE",
+    "start": 456.958333,
+    "end": 465.458333,
+    "title": "Predict the future stack",
+    "kind": "memory",
+    "narration": "This is the discipline of ROP. You are not only choosing gadgets. You are predicting how each gadget will consume the future stack.",
+    "items": [
+      "[ gadget address ] · used by ret",
+      "[ value ] · used by pop",
+      "[ value ] · used by pop",
+      "[ next gadget ] · used by ret"
+    ],
+    "state": [
+      "ESP ↓",
+      "slot consumed",
+      "future becomes current"
+    ],
+    "footer": "execution is controlled by consumption",
+    "startFrame": 10967,
+    "endFrame": 11171,
+    "frames": 204
+  },
+  {
+    "id": "register-08",
+    "chapter": "07 · REGISTER STATE",
+    "start": 465.458333,
+    "end": 471.041667,
+    "title": "Target state reached",
+    "kind": "register",
+    "narration": "When the setup is finished, the CPU state matches the execve syscall contract.",
+    "items": [
+      "EAX = 0x0000000b",
+      "EBX = 0x080ea060 → \"/bin//sh\"",
+      "ECX = 0x080ea068 → 0",
+      "EDX = 0x080ea068 → 0"
+    ],
+    "state": [
+      "TARGET STATE",
+      "4 / 4",
+      "REACHED ✓"
+    ],
+    "footer": "next address: int 0x80",
+    "startFrame": 11171,
+    "endFrame": 11305,
+    "frames": 134
+  },
+  {
+    "id": "syscall-01",
+    "chapter": "08 · SYSCALL",
+    "start": 471.041667,
+    "end": 479.958333,
+    "title": "The final gadget uses the state",
+    "kind": "syscall",
+    "narration": "The final address in the chain points to int zero eighty. This is the moment where the prepared state becomes an operating system request.",
+    "items": [
+      "stack final slot",
+      "0x08049563",
+      "EIP → int 0x80"
+    ],
+    "state": [
+      "register state ready",
+      "syscall gadget",
+      "trigger"
+    ],
+    "footer": "prepared state → operating-system request",
+    "startFrame": 11305,
+    "endFrame": 11519,
+    "frames": 214
+  },
+  {
+    "id": "syscall-02",
+    "chapter": "08 · SYSCALL",
+    "start": 479.958333,
+    "end": 492.958333,
+    "title": "The kernel decodes the registers",
+    "kind": "syscall",
+    "narration": "Int zero eighty crosses from user mode into kernel mode. The kernel looks at EAX, sees syscall eleven, and interprets the other registers as execve arguments.",
+    "items": [
+      "USER MODE",
+      "──────── int 0x80 ────────",
+      "KERNEL MODE",
+      "eax 0x0b → execve"
+    ],
+    "state": [
+      "ebx → filename",
+      "ecx → argv",
+      "edx → envp"
+    ],
+    "footer": "the ABI gives every register a meaning",
+    "startFrame": 11519,
+    "endFrame": 11831,
+    "frames": 312
+  },
+  {
+    "id": "syscall-03",
+    "chapter": "08 · SYSCALL",
+    "start": 492.958333,
+    "end": 498.916667,
+    "title": "Execute this program",
+    "kind": "syscall",
+    "narration": "And because EBX points at slash bin slash sh, the request becomes: execute this program.",
+    "items": [
+      "0x080ea060: / b i n / / s h 00",
+      "filename = \"/bin//sh\"",
+      "execve(\"/bin/sh\", 0, 0)"
+    ],
+    "state": [
+      "decoder",
+      "path normalized",
+      "request accepted ✓"
+    ],
+    "footer": "the pointer resolves into a filename",
+    "startFrame": 11831,
+    "endFrame": 11974,
+    "frames": 143
+  },
+  {
+    "id": "syscall-04",
+    "chapter": "08 · SYSCALL",
+    "start": 498.916667,
+    "end": 505.75,
+    "title": "The name was a return schedule",
+    "kind": "terminal",
+    "narration": "The vulnerable program asked for a name. But the bytes we gave it were not a name. They were a return schedule.",
+    "items": [
+      "GIVE ME YOUR NAME!",
+      "AAAA…AAAA  · padding",
+      "0x080b81c6 · first gadget",
+      "0x6e69622f · \"/bin\""
+    ],
+    "state": [
+      "name  ×",
+      "control-flow script",
+      "classification complete"
+    ],
+    "footer": "input syntax hid an execution plan",
+    "startFrame": 11974,
+    "endFrame": 12138,
+    "frames": 164
+  },
+  {
+    "id": "syscall-05",
+    "chapter": "08 · SYSCALL",
+    "start": 505.75,
+    "end": 512.416667,
+    "title": "ret keeps asking the same question",
+    "kind": "flow",
+    "narration": "The stack was never executed. The stack simply kept answering the same question: where should ret go next?",
+    "items": [
+      "ret asks stack",
+      "stack gives gadget",
+      "gadget changes state",
+      "ret asks again"
+    ],
+    "state": [
+      "EAX changes",
+      "EDX changes",
+      "memory changes",
+      "EIP changes"
+    ],
+    "footer": "question → answer → state change → repeat",
+    "startFrame": 12138,
+    "endFrame": 12298,
+    "frames": 160
+  },
+  {
+    "id": "syscall-06",
+    "chapter": "08 · SYSCALL",
+    "start": 512.416667,
+    "end": 521.125,
+    "title": "NX blocks injection, not reuse",
+    "kind": "compare",
+    "narration": "That is the strange power of ROP. NX blocks injected code, but it cannot block the program from executing its own code.",
+    "items": [
+      "SHELLCODE · EIP → stack rw- · blocked",
+      "ROP · EIP → .text r-x · allowed"
+    ],
+    "state": [
+      "stack = data source",
+      ".text = instruction source"
+    ],
+    "footer": "reuse stays inside executable memory",
+    "startFrame": 12298,
+    "endFrame": 12507,
+    "frames": 209
+  },
+  {
+    "id": "ret2win-01",
+    "chapter": "09 · NOT RET2WIN",
+    "start": 521.125,
+    "end": 527.958333,
+    "title": "One jump versus a chain",
+    "kind": "compare",
+    "narration": "This is not ret2win. Ret2win is one fake return address pointing to one useful function.",
+    "items": [
+      "RET2WIN",
+      "[ padding ]",
+      "[ win() ]",
+      "ret → win()"
+    ],
+    "state": [
+      "one overwrite",
+      "one destination",
+      "one jump"
+    ],
+    "footer": "a single useful function does the work",
+    "startFrame": 12507,
+    "endFrame": 12671,
+    "frames": 164
+  },
+  {
+    "id": "ret2win-02",
+    "chapter": "09 · NOT RET2WIN",
+    "start": 527.958333,
+    "end": 535.666667,
+    "title": "ROP moves the machine by degrees",
+    "kind": "gadget",
+    "narration": "ROP is many fake return addresses, mixed with values, each one moving the machine a little closer to the target state.",
+    "items": [
+      "pop eax · ret",
+      "0x0b",
+      "pop edx · ret",
+      "writable address",
+      "mov [edx], eax",
+      "int 0x80"
+    ],
+    "state": [
+      "EAX changed",
+      "memory changed",
+      "EDX changed",
+      "EIP changed"
+    ],
+    "footer": "many small state diffs",
+    "startFrame": 12671,
+    "endFrame": 12856,
+    "frames": 185
+  },
+  {
+    "id": "ret2win-03",
+    "chapter": "09 · NOT RET2WIN",
+    "start": 535.666667,
+    "end": 544.25,
+    "title": "Search for states, not a win function",
+    "kind": "terminal",
+    "narration": "Ret2win asks: where is the useful function. ROP asks: what useful machine states can I assemble from the fragments available.",
+    "items": [
+      "need: load eax → pop eax · ret",
+      "need: write memory → mov [edx], eax · ret",
+      "need: syscall → int 0x80"
+    ],
+    "state": [
+      "RET2WIN: where is win()?",
+      "ROP: which states can I build?"
+    ],
+    "footer": "the search target changes",
+    "startFrame": 12856,
+    "endFrame": 13062,
+    "frames": 206
+  },
+  {
+    "id": "ret2win-04",
+    "chapter": "09 · NOT RET2WIN",
+    "start": 544.25,
+    "end": 551.5,
+    "title": "The stack describes the future",
+    "kind": "compare",
+    "narration": "So the stack stops being a place where functions remember the past, and becomes a place where we describe the future.",
+    "items": [
+      "CALL HISTORY",
+      "return to main · return to caller",
+      "EXECUTION PLAN",
+      "set eax · write string · syscall"
+    ],
+    "state": [
+      "past",
+      "→",
+      "future"
+    ],
+    "footer": "memory of calls becomes a schedule of actions",
+    "startFrame": 13062,
+    "endFrame": 13236,
+    "frames": 174
+  },
+  {
+    "id": "deep-01",
+    "chapter": "10 · DEEP IDEA",
+    "start": 551.5,
+    "end": 564.208333,
+    "title": "Humans see intention · CPUs see state",
+    "kind": "compare",
+    "narration": "When programmers read code, we see functions, names, intentions, and structure. When the CPU runs code, it sees addresses, bytes, registers, and state transitions.",
+    "items": [
+      "HUMAN VIEW · vuln(); return;",
+      "function · intent · source structure",
+      "MACHINE VIEW · 8048428: ret",
+      "address · bytes · state change"
+    ],
+    "state": [
+      "source story",
+      "machine rules"
+    ],
+    "footer": "two descriptions of the same program",
+    "startFrame": 13236,
+    "endFrame": 13541,
+    "frames": 305
+  },
+  {
+    "id": "deep-02",
+    "chapter": "10 · DEEP IDEA",
+    "start": 564.208333,
+    "end": 576.291667,
+    "title": "The machine view is lower level",
+    "kind": "flow",
+    "narration": "ROP works because the machine view is lower level than the human story. If a byte sequence is executable and EIP points to it, the CPU will run it.",
+    "items": [
+      "IF memory[EIP] is executable",
+      "decode instruction",
+      "update state",
+      "ret: EIP = stack_top"
+    ],
+    "state": [
+      "ESP = ESP + 4",
+      "stack controls address",
+      "address selects code"
+    ],
+    "footer": "executable bytes + EIP → instruction",
+    "startFrame": 13541,
+    "endFrame": 13831,
+    "frames": 290
+  },
+  {
+    "id": "deep-03",
+    "chapter": "10 · DEEP IDEA",
+    "start": 576.291667,
+    "end": 583.458333,
+    "title": "The CPU is obeying perfectly",
+    "kind": "memory",
+    "narration": "The CPU is not confused. It is obeying perfectly. The exploit is that we changed the data it obeys.",
+    "items": [
+      "before: ESP → 0x080b81c6",
+      "EIP = ret",
+      "after: EIP = 0x080b81c6"
+    ],
+    "state": [
+      "correct transition ✓",
+      "unintended source !"
+    ],
+    "footer": "change the data · preserve the rules",
+    "startFrame": 13831,
+    "endFrame": 14003,
+    "frames": 172
+  },
+  {
+    "id": "deep-04",
+    "chapter": "10 · DEEP IDEA",
+    "start": 583.458333,
+    "end": 590.083333,
+    "title": "Code execution without code injection",
+    "kind": "compare",
+    "narration": "That is why ROP is such an important idea. It separates code execution from code injection.",
+    "items": [
+      "CODE INJECTION",
+      "bring new instructions",
+      "CODE REUSE",
+      "reorder existing instructions"
+    ],
+    "state": [
+      "ROP",
+      "return-driven",
+      "code reuse"
+    ],
+    "footer": "execution and injection are different ideas",
+    "startFrame": 14003,
+    "endFrame": 14162,
+    "frames": 159
+  },
+  {
+    "id": "outro-01",
+    "chapter": "11 · OUTRO",
+    "start": 590.083333,
+    "end": 600.083333,
+    "title": "The whole chain",
+    "kind": "flow",
+    "narration": "So, the whole chain is this: overflow to control the first return, use gadgets from executable memory, build the register state, and finish with a syscall.",
+    "items": [
+      "1 · overwrite saved return",
+      "2 · ret enters gadget",
+      "3 · build memory and registers",
+      "4 · int 0x80 asks for execve"
+    ],
+    "state": [
+      "overflow",
+      "gadgets",
+      "state",
+      "syscall"
+    ],
+    "footer": "four causal stages · one chain",
+    "startFrame": 14162,
+    "endFrame": 14402,
+    "frames": 240
+  },
+  {
+    "id": "outro-02",
+    "chapter": "11 · OUTRO",
+    "start": 600.083333,
+    "end": 609.333333,
+    "title": "ROP carries order, not instructions",
+    "kind": "compare",
+    "narration": "Shellcode says: let me bring my own instructions. ROP says: your binary already has enough instructions. I only need to choose the order.",
+    "items": [
+      "SHELLCODE",
+      "instructions in payload",
+      "ROP",
+      "order in payload"
+    ],
+    "state": [
+      "addresses",
+      "values",
+      "addresses",
+      "values"
+    ],
+    "footer": "the payload specifies sequence",
+    "startFrame": 14402,
+    "endFrame": 14624,
+    "frames": 222
+  },
+  {
+    "id": "outro-03",
+    "chapter": "11 · OUTRO",
+    "start": 609.333333,
+    "end": 617.333333,
+    "title": "One boring instruction, repeated",
+    "kind": "gadget",
+    "narration": "And the tiny instruction that makes the whole thing possible is ret. One boring instruction, repeated until the stack becomes a program.",
+    "items": [
+      "ret",
+      "ret",
+      "ret",
+      "ret",
+      "int 0x80"
+    ],
+    "state": [
+      "the stack",
+      "becomes",
+      "the program"
+    ],
+    "footer": "RETURN-ORIENTED PROGRAMMING",
+    "startFrame": 14624,
+    "endFrame": 14816,
+    "frames": 192
+  },
+  {
+    "id": "outro-04",
+    "chapter": "11 · OUTRO",
+    "start": 617.333333,
+    "end": 626.25,
+    "title": "Next: ret2libc",
+    "kind": "memory",
+    "narration": "Next time, we can go one layer deeper: leaking libc, calculating base addresses, and returning into the shared library every C program carries around.",
+    "items": [
+      "binary .text",
+      "binary .data",
+      "libc .text",
+      "puts@libc = 0xf7e5f140"
+    ],
+    "state": [
+      "libc base",
+      "=",
+      "leak − offset"
+    ],
+    "footer": "NEXT · RET2LIBC",
+    "startFrame": 14816,
+    "endFrame": 15030,
+    "frames": 214
+  },
+  {
+    "id": "outro-05",
+    "chapter": "11 · OUTRO",
+    "start": 626.25,
+    "end": 635.791667,
+    "title": "Not code injection · code scheduling",
+    "kind": "terminal",
+    "narration": "But for today, remember this: ROP is not putting code on the stack. ROP is using the stack to schedule code that already exists.",
+    "items": [
+      "ROP",
+      "Return-Oriented Programming",
+      "not code injection",
+      "code scheduling",
+      "$ exit"
+    ],
+    "state": [
+      "picoCTF 2018",
+      "can-you-gets-me",
+      "complete"
+    ],
+    "footer": "the stack becomes a program",
+    "startFrame": 15030,
+    "endFrame": 15259,
+    "frames": 229
+  }
+]

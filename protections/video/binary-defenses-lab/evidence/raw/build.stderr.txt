@@ -1,0 +1,55 @@
+/mnt/data/binary-defenses-lab/src/vuln.c: In function 'greet':
+/mnt/data/binary-defenses-lab/src/vuln.c:9:21: warning: 'read' writing 128 bytes into a region of size 32 overflows the destination [-Wstringop-overflow=]
+    9 |     ssize_t count = read(STDIN_FILENO, name, 128);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/data/binary-defenses-lab/src/vuln.c:6:10: note: destination object 'name' of size 32
+    6 |     char name[32];
+      |          ^~~~
+In file included from /mnt/data/binary-defenses-lab/src/vuln.c:2:
+/usr/include/unistd.h:371:16: note: in a call to function 'read' declared with attribute 'access (write_only, 2, 3)'
+  371 | extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur
+      |                ^~~~
+/mnt/data/binary-defenses-lab/src/vuln.c: In function 'greet':
+/mnt/data/binary-defenses-lab/src/vuln.c:9:21: warning: 'read' writing 128 bytes into a region of size 32 overflows the destination [-Wstringop-overflow=]
+    9 |     ssize_t count = read(STDIN_FILENO, name, 128);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/data/binary-defenses-lab/src/vuln.c:6:10: note: destination object 'name' of size 32
+    6 |     char name[32];
+      |          ^~~~
+In file included from /mnt/data/binary-defenses-lab/src/vuln.c:2:
+/usr/include/unistd.h:371:16: note: in a call to function 'read' declared with attribute 'access (write_only, 2, 3)'
+  371 | extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur
+      |                ^~~~
+/mnt/data/binary-defenses-lab/src/vuln.c: In function 'greet':
+/mnt/data/binary-defenses-lab/src/vuln.c:9:21: warning: 'read' writing 128 bytes into a region of size 32 overflows the destination [-Wstringop-overflow=]
+    9 |     ssize_t count = read(STDIN_FILENO, name, 128);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/data/binary-defenses-lab/src/vuln.c:6:10: note: destination object 'name' of size 32
+    6 |     char name[32];
+      |          ^~~~
+In file included from /mnt/data/binary-defenses-lab/src/vuln.c:2:
+/usr/include/unistd.h:371:16: note: in a call to function 'read' declared with attribute 'access (write_only, 2, 3)'
+  371 | extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur
+      |                ^~~~
+/mnt/data/binary-defenses-lab/src/vuln.c: In function 'greet':
+/mnt/data/binary-defenses-lab/src/vuln.c:9:21: warning: 'read' writing 128 bytes into a region of size 32 overflows the destination [-Wstringop-overflow=]
+    9 |     ssize_t count = read(STDIN_FILENO, name, 128);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/data/binary-defenses-lab/src/vuln.c:6:10: note: destination object 'name' of size 32
+    6 |     char name[32];
+      |          ^~~~
+In file included from /mnt/data/binary-defenses-lab/src/vuln.c:2:
+/usr/include/unistd.h:371:16: note: in a call to function 'read' declared with attribute 'access (write_only, 2, 3)'
+  371 | extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur
+      |                ^~~~
+/mnt/data/binary-defenses-lab/src/vuln.c: In function 'greet':
+/mnt/data/binary-defenses-lab/src/vuln.c:9:21: warning: 'read' writing 128 bytes into a region of size 32 overflows the destination [-Wstringop-overflow=]
+    9 |     ssize_t count = read(STDIN_FILENO, name, 128);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/data/binary-defenses-lab/src/vuln.c:6:10: note: destination object 'name' of size 32
+    6 |     char name[32];
+      |          ^~~~
+In file included from /mnt/data/binary-defenses-lab/src/vuln.c:2:
+/usr/include/unistd.h:371:16: note: in a call to function 'read' declared with attribute 'access (write_only, 2, 3)'
+  371 | extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur
+      |                ^~~~

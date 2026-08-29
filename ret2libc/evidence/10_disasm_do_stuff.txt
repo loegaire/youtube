@@ -1,0 +1,44 @@
+$ objdump -d -M intel ./vuln | sed -n "/<do_stuff>:/,/^$/p"
+00000000004006d8 <do_stuff>:
+  4006d8:	55                   	push   rbp
+  4006d9:	48 89 e5             	mov    rbp,rsp
+  4006dc:	48 81 ec 90 00 00 00 	sub    rsp,0x90
+  4006e3:	48 c7 45 f0 00 00 00 	mov    QWORD PTR [rbp-0x10],0x0
+  4006ea:	00 
+  4006eb:	48 8d 45 80          	lea    rax,[rbp-0x80]
+  4006ef:	48 89 c6             	mov    rsi,rax
+  4006f2:	48 8d 3d 3b 02 00 00 	lea    rdi,[rip+0x23b]        # 400934 <_IO_stdin_used+0x4>
+  4006f9:	b8 00 00 00 00       	mov    eax,0x0
+  4006fe:	e8 7d fe ff ff       	call   400580 <__isoc99_scanf@plt>
+  400703:	48 8d 85 7f ff ff ff 	lea    rax,[rbp-0x81]
+  40070a:	48 89 c6             	mov    rsi,rax
+  40070d:	48 8d 3d 26 02 00 00 	lea    rdi,[rip+0x226]        # 40093a <_IO_stdin_used+0xa>
+  400714:	b8 00 00 00 00       	mov    eax,0x0
+  400719:	e8 62 fe ff ff       	call   400580 <__isoc99_scanf@plt>
+  40071e:	48 c7 45 f8 00 00 00 	mov    QWORD PTR [rbp-0x8],0x0
+  400725:	00 
+  400726:	eb 33                	jmp    40075b <do_stuff+0x83>
+  400728:	48 8d 55 80          	lea    rdx,[rbp-0x80]
+  40072c:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  400730:	48 01 d0             	add    rax,rdx
+  400733:	0f b6 00             	movzx  eax,BYTE PTR [rax]
+  400736:	0f be c0             	movsx  eax,al
+  400739:	48 8b 55 f8          	mov    rdx,QWORD PTR [rbp-0x8]
+  40073d:	48 89 d6             	mov    rsi,rdx
+  400740:	89 c7                	mov    edi,eax
+  400742:	e8 30 ff ff ff       	call   400677 <convert_case>
+  400747:	89 c1                	mov    ecx,eax
+  400749:	48 8d 55 80          	lea    rdx,[rbp-0x80]
+  40074d:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  400751:	48 01 d0             	add    rax,rdx
+  400754:	88 08                	mov    BYTE PTR [rax],cl
+  400756:	48 83 45 f8 01       	add    QWORD PTR [rbp-0x8],0x1
+  40075b:	48 83 7d f8 63       	cmp    QWORD PTR [rbp-0x8],0x63
+  400760:	76 c6                	jbe    400728 <do_stuff+0x50>
+  400762:	48 8d 45 80          	lea    rax,[rbp-0x80]
+  400766:	48 89 c7             	mov    rdi,rax
+  400769:	e8 d2 fd ff ff       	call   400540 <puts@plt>
+  40076e:	90                   	nop
+  40076f:	c9                   	leave
+  400770:	c3                   	ret
+

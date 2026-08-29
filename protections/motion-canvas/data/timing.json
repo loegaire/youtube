@@ -1,0 +1,323 @@
+{
+  "duration": 1375.595,
+  "clips": [
+    {
+      "id": "scene-01",
+      "start": 0,
+      "end": 26.83,
+      "duration": 26.83
+    },
+    {
+      "id": "scene-02",
+      "start": 26.83,
+      "end": 53.3,
+      "duration": 26.47
+    },
+    {
+      "id": "scene-03",
+      "start": 53.3,
+      "end": 92.48,
+      "duration": 39.18
+    },
+    {
+      "id": "scene-04",
+      "start": 92.48,
+      "end": 114.39,
+      "duration": 21.91
+    },
+    {
+      "id": "scene-05",
+      "start": 114.39,
+      "end": 141.3,
+      "duration": 26.91
+    },
+    {
+      "id": "scene-06",
+      "start": 141.3,
+      "end": 163.61,
+      "duration": 22.31
+    },
+    {
+      "id": "scene-07",
+      "start": 163.61,
+      "end": 192.04,
+      "duration": 28.43
+    },
+    {
+      "id": "scene-08",
+      "start": 192.04,
+      "end": 213.915,
+      "duration": 21.875
+    },
+    {
+      "id": "scene-09",
+      "start": 213.915,
+      "end": 240.705,
+      "duration": 26.79
+    },
+    {
+      "id": "scene-10",
+      "start": 240.705,
+      "end": 264.135,
+      "duration": 23.43
+    },
+    {
+      "id": "scene-11",
+      "start": 264.135,
+      "end": 289.605,
+      "duration": 25.47
+    },
+    {
+      "id": "scene-12",
+      "start": 289.605,
+      "end": 313.715,
+      "duration": 24.11
+    },
+    {
+      "id": "scene-13",
+      "start": 313.715,
+      "end": 338.185,
+      "duration": 24.47
+    },
+    {
+      "id": "scene-14",
+      "start": 338.185,
+      "end": 363.095,
+      "duration": 24.91
+    },
+    {
+      "id": "scene-15",
+      "start": 363.095,
+      "end": 391.485,
+      "duration": 28.39
+    },
+    {
+      "id": "scene-16",
+      "start": 391.485,
+      "end": 415.595,
+      "duration": 24.11
+    },
+    {
+      "id": "scene-17",
+      "start": 415.595,
+      "end": 440.625,
+      "duration": 25.03
+    },
+    {
+      "id": "scene-18",
+      "start": 440.625,
+      "end": 469.855,
+      "duration": 29.23
+    },
+    {
+      "id": "scene-19",
+      "start": 469.855,
+      "end": 491.01,
+      "duration": 21.155
+    },
+    {
+      "id": "scene-20",
+      "start": 491.01,
+      "end": 512.92,
+      "duration": 21.91
+    },
+    {
+      "id": "scene-21",
+      "start": 512.92,
+      "end": 538.15,
+      "duration": 25.23
+    },
+    {
+      "id": "scene-22",
+      "start": 538.15,
+      "end": 563.3,
+      "duration": 25.15
+    },
+    {
+      "id": "scene-23",
+      "start": 563.3,
+      "end": 584.09,
+      "duration": 20.79
+    },
+    {
+      "id": "scene-24",
+      "start": 584.09,
+      "end": 609.4,
+      "duration": 25.31
+    },
+    {
+      "id": "scene-25",
+      "start": 609.4,
+      "end": 636.385,
+      "duration": 26.985
+    },
+    {
+      "id": "scene-26",
+      "start": 636.385,
+      "end": 661.015,
+      "duration": 24.63
+    },
+    {
+      "id": "scene-27",
+      "start": 661.015,
+      "end": 686.845,
+      "duration": 25.83
+    },
+    {
+      "id": "scene-28",
+      "start": 686.845,
+      "end": 709.595,
+      "duration": 22.75
+    },
+    {
+      "id": "scene-29",
+      "start": 709.595,
+      "end": 735.185,
+      "duration": 25.59
+    },
+    {
+      "id": "scene-30",
+      "start": 735.185,
+      "end": 760.215,
+      "duration": 25.03
+    },
+    {
+      "id": "scene-31",
+      "start": 760.215,
+      "end": 783.12,
+      "duration": 22.905
+    },
+    {
+      "id": "scene-32",
+      "start": 783.12,
+      "end": 817.105,
+      "duration": 33.985
+    },
+    {
+      "id": "scene-33",
+      "start": 817.105,
+      "end": 846.255,
+      "duration": 29.15
+    },
+    {
+      "id": "scene-34",
+      "start": 846.255,
+      "end": 867.41,
+      "duration": 21.155
+    },
+    {
+      "id": "scene-35",
+      "start": 867.41,
+      "end": 896.08,
+      "duration": 28.67
+    },
+    {
+      "id": "scene-36",
+      "start": 896.08,
+      "end": 912.635,
+      "duration": 16.555
+    },
+    {
+      "id": "scene-37",
+      "start": 912.635,
+      "end": 934.425,
+      "duration": 21.79
+    },
+    {
+      "id": "scene-38",
+      "start": 934.425,
+      "end": 965.655,
+      "duration": 31.23
+    },
+    {
+      "id": "scene-39",
+      "start": 965.655,
+      "end": 990.925,
+      "duration": 25.27
+    },
+    {
+      "id": "scene-40",
+      "start": 990.925,
+      "end": 1014.795,
+      "duration": 23.87
+    },
+    {
+      "id": "scene-41",
+      "start": 1014.795,
+      "end": 1034.03,
+      "duration": 19.235
+    },
+    {
+      "id": "scene-42",
+      "start": 1034.03,
+      "end": 1059.34,
+      "duration": 25.31
+    },
+    {
+      "id": "scene-43",
+      "start": 1059.34,
+      "end": 1086.25,
+      "duration": 26.91
+    },
+    {
+      "id": "scene-44",
+      "start": 1086.25,
+      "end": 1109.28,
+      "duration": 23.03
+    },
+    {
+      "id": "scene-45",
+      "start": 1109.28,
+      "end": 1133.865,
+      "duration": 24.585
+    },
+    {
+      "id": "scene-46",
+      "start": 1133.865,
+      "end": 1165.205,
+      "duration": 31.34
+    },
+    {
+      "id": "scene-47",
+      "start": 1165.205,
+      "end": 1192.995,
+      "duration": 27.79
+    },
+    {
+      "id": "scene-48",
+      "start": 1192.995,
+      "end": 1222.465,
+      "duration": 29.47
+    },
+    {
+      "id": "scene-49",
+      "start": 1222.465,
+      "end": 1250.295,
+      "duration": 27.83
+    },
+    {
+      "id": "scene-50",
+      "start": 1250.295,
+      "end": 1279.59,
+      "duration": 29.295
+    },
+    {
+      "id": "scene-51",
+      "start": 1279.59,
+      "end": 1311.9,
+      "duration": 32.31
+    },
+    {
+      "id": "scene-52",
+      "start": 1311.9,
+      "end": 1346.05,
+      "duration": 34.15
+    },
+    {
+      "id": "scene-53",
+      "start": 1346.05,
+      "end": 1375.595,
+      "duration": 29.545
+    }
+  ]
+}

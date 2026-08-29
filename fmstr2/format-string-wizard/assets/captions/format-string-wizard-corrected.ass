@@ -1,0 +1,361 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Caption,Inter,32,&H00FFFFFF,&H00000000,&H78000000,&H78000000,0,0,0,0,100,100,0,0,3,8,0,2,80,80,18,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.05,0:00:01.85,Caption,,0,0,0,,Hello once again, hackers.
+Dialogue: 0,0:00:01.91,0:00:02.92,Caption,,0,0,0,,Today we are pwning a
+Dialogue: 0,0:00:02.98,0:00:05.83,Caption,,0,0,0,,program with the humble print function.
+Dialogue: 0,0:00:05.89,0:00:07.75,Caption,,0,0,0,,print f looks innocent:
+Dialogue: 0,0:00:07.81,0:00:09.16,Caption,,0,0,0,,compile a tiny C file,
+Dialogue: 0,0:00:09.22,0:00:10.67,Caption,,0,0,0,,run it, and hello world
+Dialogue: 0,0:00:10.73,0:00:12.78,Caption,,0,0,0,,comes out. But that output
+Dialogue: 0,0:00:12.84,0:00:14.71,Caption,,0,0,0,,did not happen by magic.
+Dialogue: 0,0:00:14.77,0:00:16.47,Caption,,0,0,0,,Something interpreted a recipe.
+Dialogue: 0,0:00:16.89,0:00:18.14,Caption,,0,0,0,,Every language has a way
+Dialogue: 0,0:00:18.20,0:00:19.91,Caption,,0,0,0,,to make numbers human:
+Dialogue: 0,0:00:19.97,0:00:25.27,Caption,,0,0,0,,print, console.log, System.out.println, fmt.Println, println!, puts.
+Dialogue: 0,0:00:25.33,0:00:27.13,Caption,,0,0,0,,Our target is C's print
+Dialogue: 0,0:00:27.19,0:00:30.27,Caption,,0,0,0,,f, the formatted output function.
+Dialogue: 0,0:00:30.33,0:00:32.16,Caption,,0,0,0,,The word formatted is doing
+Dialogue: 0,0:00:32.22,0:00:33.59,Caption,,0,0,0,,almost all the work here.
+Dialogue: 0,0:00:33.77,0:00:34.90,Caption,,0,0,0,,The man page gives us
+Dialogue: 0,0:00:34.96,0:00:36.37,Caption,,0,0,0,,the whole crime scene in
+Dialogue: 0,0:00:36.43,0:00:39.95,Caption,,0,0,0,,one line: printf(const char *format, ...).
+Dialogue: 0,0:00:40.01,0:00:42.15,Caption,,0,0,0,,One argument is the recipe.
+Dialogue: 0,0:00:42.21,0:00:44.09,Caption,,0,0,0,,The dots are however many
+Dialogue: 0,0:00:44.15,0:00:47.15,Caption,,0,0,0,,extra values that recipe asks for.
+Dialogue: 0,0:00:47.21,0:00:49.55,Caption,,0,0,0,,Normal letters simply pass through.
+Dialogue: 0,0:00:49.61,0:00:51.18,Caption,,0,0,0,,A percent sign makes print
+Dialogue: 0,0:00:51.24,0:00:53.22,Caption,,0,0,0,,f stop being a typewriter
+Dialogue: 0,0:00:53.28,0:00:55.05,Caption,,0,0,0,,and become an interpreter.
+Dialogue: 0,0:00:55.21,0:00:57.59,Caption,,0,0,0,,Percent d prints a decimal.
+Dialogue: 0,0:00:57.65,0:00:59.87,Caption,,0,0,0,,Percent x prints hexadecimal.
+Dialogue: 0,0:00:59.93,0:01:02.51,Caption,,0,0,0,,Percent p prints an address-shaped value.
+Dialogue: 0,0:01:02.57,0:01:04.37,Caption,,0,0,0,,Percent s follows a pointer
+Dialogue: 0,0:01:04.43,0:01:05.56,Caption,,0,0,0,,and reads bytes until a
+Dialogue: 0,0:01:05.62,0:01:09.45,Caption,,0,0,0,,null byte. Percent c prints
+Dialogue: 0,0:01:09.51,0:01:11.47,Caption,,0,0,0,,one character, double percent prints
+Dialogue: 0,0:01:11.53,0:01:12.94,Caption,,0,0,0,,a literal percent, and widths
+Dialogue: 0,0:01:13.00,0:01:14.83,Caption,,0,0,0,,such as percent zero eight
+Dialogue: 0,0:01:14.89,0:01:16.51,Caption,,0,0,0,,x change padding.
+Dialogue: 0,0:01:16.57,0:01:18.11,Caption,,0,0,0,,Percent twenty c can add
+Dialogue: 0,0:01:18.17,0:01:20.33,Caption,,0,0,0,,twenty printed characters while showing
+Dialogue: 0,0:01:20.39,0:01:21.80,Caption,,0,0,0,,only one visible letter.
+Dialogue: 0,0:01:21.86,0:01:23.70,Caption,,0,0,0,,Then percent n does something different:
+Dialogue: 0,0:01:23.76,0:01:25.37,Caption,,0,0,0,,it writes the printed-character count
+Dialogue: 0,0:01:25.43,0:01:26.67,Caption,,0,0,0,,through a pointer.
+Dialogue: 0,0:01:26.75,0:01:29.69,Caption,,0,0,0,,That first argument is special.
+Dialogue: 0,0:01:29.75,0:01:33.02,Caption,,0,0,0,,printf("percent s", input) keeps input
+Dialogue: 0,0:01:33.08,0:01:36.08,Caption,,0,0,0,,as data; even the string
+Dialogue: 0,0:01:36.14,0:01:38.13,Caption,,0,0,0,,percent x percent x percent
+Dialogue: 0,0:01:38.19,0:01:41.11,Caption,,0,0,0,,x is printed literally.
+Dialogue: 0,0:01:41.17,0:01:43.73,Caption,,0,0,0,,But printf(input) promotes the same
+Dialogue: 0,0:01:43.79,0:01:45.91,Caption,,0,0,0,,user bytes into the recipe.
+Dialogue: 0,0:01:45.97,0:01:47.24,Caption,,0,0,0,,The wrong person is now
+Dialogue: 0,0:01:47.30,0:01:49.07,Caption,,0,0,0,,writing the recipe, so the
+Dialogue: 0,0:01:49.13,0:01:50.99,Caption,,0,0,0,,interpreter starts asking for arguments
+Dialogue: 0,0:01:51.05,0:01:52.98,Caption,,0,0,0,,the programmer never supplied.
+Dialogue: 0,0:01:53.25,0:01:55.53,Caption,,0,0,0,,Our challenge starts with a
+Dialogue: 0,0:01:55.59,0:01:58.32,Caption,,0,0,0,,global variable named suss, equal
+Dialogue: 0,0:01:58.38,0:01:59.89,Caption,,0,0,0,,to zero x two one
+Dialogue: 0,0:01:59.95,0:02:01.91,Caption,,0,0,0,,seven three seven five seven three.
+Dialogue: 0,0:02:01.97,0:02:03.80,Caption,,0,0,0,,It reads a word into
+Dialogue: 0,0:02:03.86,0:02:05.96,Caption,,0,0,0,,buff, prints a fixed label
+Dialogue: 0,0:02:06.02,0:02:08.77,Caption,,0,0,0,,safely, and then calls print
+Dialogue: 0,0:02:08.83,0:02:11.31,Caption,,0,0,0,,f, buff. Finally it opens
+Dialogue: 0,0:02:11.37,0:02:13.76,Caption,,0,0,0,,the wizard gate only if
+Dialogue: 0,0:02:13.82,0:02:15.94,Caption,,0,0,0,,suss equals zero x six
+Dialogue: 0,0:02:16.00,0:02:17.82,Caption,,0,0,0,,seven six one six c
+Dialogue: 0,0:02:17.88,0:02:19.53,Caption,,0,0,0,,six six. We do not
+Dialogue: 0,0:02:19.59,0:02:21.83,Caption,,0,0,0,,need to smash the whole program.
+Dialogue: 0,0:02:21.89,0:02:23.69,Caption,,0,0,0,,We only need to change
+Dialogue: 0,0:02:23.75,0:02:25.34,Caption,,0,0,0,,exactly this variable into exactly
+Dialogue: 0,0:02:25.40,0:02:26.24,Caption,,0,0,0,,that value.
+Dialogue: 0,0:02:26.45,0:02:28.59,Caption,,0,0,0,,The first number is not random.
+Dialogue: 0,0:02:28.65,0:02:31.34,Caption,,0,0,0,,In memory its bytes are
+Dialogue: 0,0:02:31.40,0:02:33.23,Caption,,0,0,0,,seventy-three, seventy-five, seventy-three, twenty-one:
+Dialogue: 0,0:02:33.29,0:02:35.19,Caption,,0,0,0,,s u s !.
+Dialogue: 0,0:02:35.25,0:02:37.42,Caption,,0,0,0,,The target integer looks like
+Dialogue: 0,0:02:37.48,0:02:38.18,Caption,,0,0,0,,g a l f when
+Dialogue: 0,0:02:38.23,0:02:39.68,Caption,,0,0,0,,read left to right, but
+Dialogue: 0,0:02:39.74,0:02:41.75,Caption,,0,0,0,,this is little endian.
+Dialogue: 0,0:02:41.81,0:02:45.04,Caption,,0,0,0,,In memory it becomes sixty-six,
+Dialogue: 0,0:02:45.10,0:02:46.64,Caption,,0,0,0,,six-c, sixty-one, sixty-seven:
+Dialogue: 0,0:02:46.70,0:02:47.75,Caption,,0,0,0,,f l a g.
+Dialogue: 0,0:02:47.81,0:02:49.88,Caption,,0,0,0,,Our question is now mechanical:
+Dialogue: 0,0:02:49.94,0:02:51.57,Caption,,0,0,0,,how can typed text write
+Dialogue: 0,0:02:51.63,0:02:53.06,Caption,,0,0,0,,these bytes into suss?
+Dialogue: 0,0:02:53.41,0:02:55.30,Caption,,0,0,0,,First we run normal input.
+Dialogue: 0,0:02:55.36,0:02:57.30,Caption,,0,0,0,,hello prints as hello, and
+Dialogue: 0,0:02:57.36,0:02:59.43,Caption,,0,0,0,,sus stays unchanged.
+Dialogue: 0,0:02:59.49,0:03:01.80,Caption,,0,0,0,,Then we probe with percent
+Dialogue: 0,0:03:01.86,0:03:04.12,Caption,,0,0,0,,p.percent p.percent p.percent p.
+Dialogue: 0,0:03:04.18,0:03:05.90,Caption,,0,0,0,,A safe program would print
+Dialogue: 0,0:03:05.96,0:03:08.51,Caption,,0,0,0,,those percent signs literally.
+Dialogue: 0,0:03:08.57,0:03:11.87,Caption,,0,0,0,,This target prints pointer-looking values instead.
+Dialogue: 0,0:03:11.93,0:03:14.71,Caption,,0,0,0,,That confirms a format string vulnerability:
+Dialogue: 0,0:03:14.77,0:03:16.36,Caption,,0,0,0,,the format recipe is walking
+Dialogue: 0,0:03:16.42,0:03:18.01,Caption,,0,0,0,,an argument shelf that was
+Dialogue: 0,0:03:18.07,0:03:20.00,Caption,,0,0,0,,never intended to be exposed.
+Dialogue: 0,0:03:20.17,0:03:22.04,Caption,,0,0,0,,The actual call is just
+Dialogue: 0,0:03:22.10,0:03:23.09,Caption,,0,0,0,,print f, buff.
+Dialogue: 0,0:03:23.15,0:03:25.25,Caption,,0,0,0,,But after reading our percent
+Dialogue: 0,0:03:25.31,0:03:27.63,Caption,,0,0,0,,p tokens, print f behaves
+Dialogue: 0,0:03:27.69,0:03:30.21,Caption,,0,0,0,,as if it saw printf("percent
+Dialogue: 0,0:03:30.27,0:03:35.71,Caption,,0,0,0,,p.percent p.percent p", arg1, arg2, arg3).
+Dialogue: 0,0:03:35.77,0:03:37.38,Caption,,0,0,0,,It is not evil and
+Dialogue: 0,0:03:37.44,0:03:39.35,Caption,,0,0,0,,it is not random.
+Dialogue: 0,0:03:39.41,0:03:41.59,Caption,,0,0,0,,The recipe requests ingredients;
+Dialogue: 0,0:03:41.65,0:03:42.84,Caption,,0,0,0,,the chef was never given
+Dialogue: 0,0:03:42.90,0:03:44.74,Caption,,0,0,0,,them, so the machine reads
+Dialogue: 0,0:03:44.80,0:03:46.78,Caption,,0,0,0,,from the places where arguments
+Dialogue: 0,0:03:46.84,0:03:48.27,Caption,,0,0,0,,normally live. Percent p prints
+Dialogue: 0,0:03:48.33,0:03:49.98,Caption,,0,0,0,,the value. Percent s follows it.
+Dialogue: 0,0:03:50.04,0:03:53.14,Caption,,0,0,0,,Percent n writes through it.
+Dialogue: 0,0:03:53.49,0:03:54.76,Caption,,0,0,0,,For control, we find where
+Dialogue: 0,0:03:54.82,0:03:57.07,Caption,,0,0,0,,our input lands in that shelf.
+Dialogue: 0,0:03:57.13,0:03:58.99,Caption,,0,0,0,,We place A B C
+Dialogue: 0,0:03:59.05,0:04:00.09,Caption,,0,0,0,,D E F G H
+Dialogue: 0,0:04:00.15,0:04:02.79,Caption,,0,0,0,,and try slots.
+Dialogue: 0,0:04:02.85,0:04:04.90,Caption,,0,0,0,,At slot fourteen, the target
+Dialogue: 0,0:04:04.96,0:04:06.90,Caption,,0,0,0,,returns zero x four eight
+Dialogue: 0,0:04:06.96,0:04:08.48,Caption,,0,0,0,,four seven four six four
+Dialogue: 0,0:04:08.54,0:04:10.07,Caption,,0,0,0,,five four four four three
+Dialogue: 0,0:04:10.13,0:04:11.34,Caption,,0,0,0,,four two four one.
+Dialogue: 0,0:04:11.40,0:04:13.92,Caption,,0,0,0,,Flip that little-endian number into
+Dialogue: 0,0:04:13.98,0:04:15.62,Caption,,0,0,0,,memory order and it spells
+Dialogue: 0,0:04:15.68,0:04:16.75,Caption,,0,0,0,,A through H.
+Dialogue: 0,0:04:16.81,0:04:17.92,Caption,,0,0,0,,So, in this local run,
+Dialogue: 0,0:04:17.98,0:04:19.77,Caption,,0,0,0,,argument fourteen is the first
+Dialogue: 0,0:04:19.83,0:04:21.79,Caption,,0,0,0,,controlled eight-byte block.
+Dialogue: 0,0:04:21.85,0:04:24.19,Caption,,0,0,0,,Alignment padding is not the exploit;
+Dialogue: 0,0:04:24.25,0:04:26.11,Caption,,0,0,0,,it makes the recipe read
+Dialogue: 0,0:04:26.17,0:04:27.84,Caption,,0,0,0,,exactly one clean eight-byte address.
+Dialogue: 0,0:04:28.51,0:04:30.27,Caption,,0,0,0,,suss is global, so this
+Dialogue: 0,0:04:30.33,0:04:33.34,Caption,,0,0,0,,local non-PIE target exposes it
+Dialogue: 0,0:04:33.40,0:04:35.29,Caption,,0,0,0,,in .data at zero x
+Dialogue: 0,0:04:35.35,0:04:37.39,Caption,,0,0,0,,four zero four zero six zero.
+Dialogue: 0,0:04:37.45,0:04:39.50,Caption,,0,0,0,,Two bytes higher is zero
+Dialogue: 0,0:04:39.56,0:04:41.34,Caption,,0,0,0,,x four zero four zero
+Dialogue: 0,0:04:41.40,0:04:43.24,Caption,,0,0,0,,six two. We will write
+Dialogue: 0,0:04:43.30,0:04:45.06,Caption,,0,0,0,,the high half, zero x
+Dialogue: 0,0:04:45.12,0:04:46.42,Caption,,0,0,0,,six seven six one, to
+Dialogue: 0,0:04:46.48,0:04:48.27,Caption,,0,0,0,,sus + 2, then the
+Dialogue: 0,0:04:48.33,0:04:49.82,Caption,,0,0,0,,low half, zero x six
+Dialogue: 0,0:04:49.88,0:04:57.19,Caption,,0,0,0,,c six six, to suss.
+Dialogue: 0,0:04:57.25,0:04:58.44,Caption,,0,0,0,,After the first write the
+Dialogue: 0,0:04:58.50,0:05:00.51,Caption,,0,0,0,,bytes begin to look like flag;
+Dialogue: 0,0:05:00.57,0:05:02.43,Caption,,0,0,0,,after the second, they are
+Dialogue: 0,0:05:02.49,0:05:02.83,Caption,,0,0,0,,exactly flag.
+Dialogue: 0,0:05:03.53,0:05:04.80,Caption,,0,0,0,,Percent n does not print
+Dialogue: 0,0:05:04.86,0:05:06.03,Caption,,0,0,0,,the letter n.
+Dialogue: 0,0:05:06.09,0:05:07.28,Caption,,0,0,0,,It takes a pointer and
+Dialogue: 0,0:05:07.34,0:05:09.28,Caption,,0,0,0,,writes the number of characters
+Dialogue: 0,0:05:09.34,0:05:11.16,Caption,,0,0,0,,printed so far.
+Dialogue: 0,0:05:11.22,0:05:14.18,Caption,,0,0,0,,printf("hellopercent n", &count) leaves count
+Dialogue: 0,0:05:14.24,0:05:15.63,Caption,,0,0,0,,equal to five.
+Dialogue: 0,0:05:15.69,0:05:18.22,Caption,,0,0,0,,The h modifier makes percent
+Dialogue: 0,0:05:18.28,0:05:19.66,Caption,,0,0,0,,h n copy only the
+Dialogue: 0,0:05:19.72,0:05:21.25,Caption,,0,0,0,,low two bytes.
+Dialogue: 0,0:05:21.31,0:05:23.14,Caption,,0,0,0,,If our fake argument shelf
+Dialogue: 0,0:05:23.20,0:05:24.50,Caption,,0,0,0,,contains the address of sus,
+Dialogue: 0,0:05:24.56,0:05:26.22,Caption,,0,0,0,,the same feature becomes our
+Dialogue: 0,0:05:26.28,0:05:28.47,Caption,,0,0,0,,controlled two-byte write.
+Dialogue: 0,0:05:28.81,0:05:30.61,Caption,,0,0,0,,One giant write would require
+Dialogue: 0,0:05:30.67,0:05:31.53,Caption,,0,0,0,,more than one point seven
+Dialogue: 0,0:05:31.59,0:05:33.47,Caption,,0,0,0,,billion printed characters.
+Dialogue: 0,0:05:33.53,0:05:34.99,Caption,,0,0,0,,That is ridiculous.
+Dialogue: 0,0:05:35.05,0:05:37.72,Caption,,0,0,0,,Instead, split the target:
+Dialogue: 0,0:05:37.78,0:05:39.17,Caption,,0,0,0,,zero x six seven six
+Dialogue: 0,0:05:39.23,0:05:41.09,Caption,,0,0,0,,one is twenty-six thousand four
+Dialogue: 0,0:05:41.15,0:05:43.03,Caption,,0,0,0,,hundred sixty-five, and zero x
+Dialogue: 0,0:05:43.09,0:05:45.11,Caption,,0,0,0,,six c six six is
+Dialogue: 0,0:05:45.17,0:05:47.07,Caption,,0,0,0,,twenty-seven thousand seven hundred fifty.
+Dialogue: 0,0:05:47.13,0:05:48.99,Caption,,0,0,0,,The first count is smaller,
+Dialogue: 0,0:05:49.05,0:05:50.52,Caption,,0,0,0,,and the second is only
+Dialogue: 0,0:05:50.58,0:05:51.46,Caption,,0,0,0,,one thousand two hundred eighty-five
+Dialogue: 0,0:05:51.52,0:05:53.35,Caption,,0,0,0,,more, so the counter moves
+Dialogue: 0,0:05:53.41,0:05:54.73,Caption,,0,0,0,,naturally upward.
+Dialogue: 0,0:05:54.91,0:06:01.61,Caption,,0,0,0,,The recipe is percent 14$26465cpercent
+Dialogue: 0,0:06:01.67,0:06:05.89,Caption,,0,0,0,,19$hnpercent 14$1285cpercent 20$hn.
+Dialogue: 0,0:06:05.95,0:06:08.06,Caption,,0,0,0,,First, a width field pumps
+Dialogue: 0,0:06:08.12,0:06:09.89,Caption,,0,0,0,,the count to zero x
+Dialogue: 0,0:06:09.95,0:06:11.72,Caption,,0,0,0,,six seven six one.
+Dialogue: 0,0:06:11.78,0:06:14.54,Caption,,0,0,0,,Slot nineteen contains packed sus
+Dialogue: 0,0:06:14.60,0:06:16.16,Caption,,0,0,0,,+ 2, so percent h
+Dialogue: 0,0:06:16.22,0:06:16.92,Caption,,0,0,0,,n writes the high half.
+Dialogue: 0,0:06:16.95,0:06:17.65,Caption,,0,0,0,,Then another width adds zero
+Dialogue: 0,0:06:17.69,0:06:18.39,Caption,,0,0,0,,x zero five zero five.
+Dialogue: 0,0:06:18.42,0:06:20.58,Caption,,0,0,0,,Slot twenty contains packed suss,
+Dialogue: 0,0:06:20.64,0:06:25.40,Caption,,0,0,0,,so the second percent h
+Dialogue: 0,0:06:25.46,0:06:28.86,Caption,,0,0,0,,n writes the low half.
+Dialogue: 0,0:06:28.92,0:06:30.18,Caption,,0,0,0,,The bytes after the recipe
+Dialogue: 0,0:06:30.24,0:06:30.98,Caption,,0,0,0,,are not text for humans.
+Dialogue: 0,0:06:31.04,0:06:31.78,Caption,,0,0,0,,They are address blocks placed
+Dialogue: 0,0:06:31.84,0:06:32.47,Caption,,0,0,0,,exactly where printf will misread
+Dialogue: 0,0:06:32.88,0:06:32.47,Caption,,0,0,0,,them as arguments.
+Dialogue: 0,0:06:32.93,0:06:34.49,Caption,,0,0,0,,During the final run, do
+Dialogue: 0,0:06:34.55,0:06:37.23,Caption,,0,0,0,,not imagine twenty-six thousand literal
+Dialogue: 0,0:06:37.29,0:06:38.83,Caption,,0,0,0,,spaces on screen.
+Dialogue: 0,0:06:38.89,0:06:40.83,Caption,,0,0,0,,Imagine a counter ribbon.
+Dialogue: 0,0:06:40.89,0:06:42.54,Caption,,0,0,0,,It reaches zero x six
+Dialogue: 0,0:06:42.60,0:06:43.97,Caption,,0,0,0,,seven six one, writes at
+Dialogue: 0,0:06:44.03,0:06:45.68,Caption,,0,0,0,,sus + 2, grows by
+Dialogue: 0,0:06:45.74,0:06:46.80,Caption,,0,0,0,,one thousand two hundred eighty-five,
+Dialogue: 0,0:06:46.86,0:06:48.74,Caption,,0,0,0,,and writes zero x six
+Dialogue: 0,0:06:48.80,0:06:50.27,Caption,,0,0,0,,c six six at sus.
+Dialogue: 0,0:06:50.33,0:06:52.51,Caption,,0,0,0,,The ordinary program then checks
+Dialogue: 0,0:06:52.57,0:06:54.05,Caption,,0,0,0,,its variable, finds zero x
+Dialogue: 0,0:06:54.11,0:06:54.89,Caption,,0,0,0,,six seven six one six
+Dialogue: 0,0:06:54.95,0:06:56.25,Caption,,0,0,0,,c six six, and opens
+Dialogue: 0,0:06:56.31,0:06:57.87,Caption,,0,0,0,,its own win branch.
+Dialogue: 0,0:06:57.93,0:06:58.81,Caption,,0,0,0,,The flag text here is
+Dialogue: 0,0:06:58.87,0:06:59.57,Caption,,0,0,0,,a demo placeholder, not a
+Dialogue: 0,0:06:58.87,0:07:03.29,Caption,,0,0,0,,claimed live flag.
+Dialogue: 0,0:07:03.53,0:07:05.39,Caption,,0,0,0,,The payload looks like wizard
+Dialogue: 0,0:07:05.45,0:07:07.75,Caption,,0,0,0,,language, but the mechanism is boring.
+Dialogue: 0,0:07:07.81,0:07:09.88,Caption,,0,0,0,,One: user input controls the
+Dialogue: 0,0:07:09.94,0:07:12.07,Caption,,0,0,0,,first printf argument.
+Dialogue: 0,0:07:12.13,0:07:15.63,Caption,,0,0,0,,Two: format tokens consume argument slots.
+Dialogue: 0,0:07:15.69,0:07:18.17,Caption,,0,0,0,,Three: our own bytes appear
+Dialogue: 0,0:07:18.23,0:07:20.03,Caption,,0,0,0,,in those slots.
+Dialogue: 0,0:07:20.09,0:07:21.36,Caption,,0,0,0,,Four: we place the address
+Dialogue: 0,0:07:21.42,0:07:23.11,Caption,,0,0,0,,of sus there.
+Dialogue: 0,0:07:23.17,0:07:24.98,Caption,,0,0,0,,Five: percent h n writes
+Dialogue: 0,0:07:25.04,0:07:28.01,Caption,,0,0,0,,the counter through that address.
+Dialogue: 0,0:07:28.07,0:07:30.61,Caption,,0,0,0,,Recipes, slots, addresses, counts, writes.
+Dialogue: 0,0:07:30.83,0:07:32.27,Caption,,0,0,0,,The fix is almost insulting
+Dialogue: 0,0:07:32.33,0:07:34.67,Caption,,0,0,0,,in how small it is:
+Dialogue: 0,0:07:34.73,0:07:36.62,Caption,,0,0,0,,never let untrusted input become
+Dialogue: 0,0:07:36.68,0:07:39.51,Caption,,0,0,0,,the format. Replace print f,
+Dialogue: 0,0:07:39.57,0:07:41.69,Caption,,0,0,0,,buff with print f, percent
+Dialogue: 0,0:07:41.75,0:07:43.79,Caption,,0,0,0,,s, buff. Feed it the
+Dialogue: 0,0:07:43.85,0:07:45.19,Caption,,0,0,0,,same scary input;
+Dialogue: 0,0:07:45.25,0:07:47.12,Caption,,0,0,0,,the machine reads one fixed
+Dialogue: 0,0:07:47.18,0:07:49.27,Caption,,0,0,0,,percent s socket, treats the
+Dialogue: 0,0:07:49.33,0:07:51.35,Caption,,0,0,0,,full string as green data,
+Dialogue: 0,0:07:51.41,0:07:53.79,Caption,,0,0,0,,prints it literally, and leaves
+Dialogue: 0,0:07:53.85,0:07:54.81,Caption,,0,0,0,,sus unchanged.
+Dialogue: 0,0:07:55.17,0:07:57.70,Caption,,0,0,0,,When solving these, sort specifiers
+Dialogue: 0,0:07:57.76,0:07:59.39,Caption,,0,0,0,,by what they give you.
+Dialogue: 0,0:07:59.45,0:08:01.32,Caption,,0,0,0,,Percent p and percent x
+Dialogue: 0,0:08:01.38,0:08:04.26,Caption,,0,0,0,,observe values. Percent s follows
+Dialogue: 0,0:08:04.32,0:08:05.56,Caption,,0,0,0,,a pointer to read a
+Dialogue: 0,0:08:05.62,0:08:07.95,Caption,,0,0,0,,string, if the address is valid.
+Dialogue: 0,0:08:08.01,0:08:10.45,Caption,,0,0,0,,Percent n, percent h n,
+Dialogue: 0,0:08:10.51,0:08:14.11,Caption,,0,0,0,,and percent h h n
+Dialogue: 0,0:08:14.17,0:08:17.25,Caption,,0,0,0,,write state. Leaks help us locate.
+Dialogue: 0,0:08:17.31,0:08:19.52,Caption,,0,0,0,,Writes change what the program does.
+Dialogue: 0,0:08:20.17,0:08:21.45,Caption,,0,0,0,,Percent n does not write
+Dialogue: 0,0:08:21.51,0:08:22.93,Caption,,0,0,0,,a number typed inside the
+Dialogue: 0,0:08:22.99,0:08:25.18,Caption,,0,0,0,,format string. It copies the
+Dialogue: 0,0:08:25.24,0:08:28.55,Caption,,0,0,0,,number of characters printed so far.
+Dialogue: 0,0:08:28.61,0:08:30.07,Caption,,0,0,0,,That is why the large
+Dialogue: 0,0:08:30.13,0:08:33.63,Caption,,0,0,0,,widths exist: they are counter fuel.
+Dialogue: 0,0:08:33.69,0:08:36.35,Caption,,0,0,0,,Keyboard bytes become a printf recipe;
+Dialogue: 0,0:08:36.41,0:08:38.23,Caption,,0,0,0,,the recipe creates output;
+Dialogue: 0,0:08:38.29,0:08:40.47,Caption,,0,0,0,,the output creates a counter;
+Dialogue: 0,0:08:40.53,0:08:42.39,Caption,,0,0,0,,then percent h n copies
+Dialogue: 0,0:08:42.45,0:08:44.22,Caption,,0,0,0,,the counter into memory.
+Dialogue: 0,0:08:44.61,0:08:47.04,Caption,,0,0,0,,The dollar syntax makes this precise.
+Dialogue: 0,0:08:47.10,0:08:49.54,Caption,,0,0,0,,Non-positional tokens walk one shelf
+Dialogue: 0,0:08:49.60,0:08:51.19,Caption,,0,0,0,,slot after another.
+Dialogue: 0,0:08:51.25,0:08:54.21,Caption,,0,0,0,,percent 19$hn jumps directly to
+Dialogue: 0,0:08:54.27,0:08:57.53,Caption,,0,0,0,,slot nineteen; percent 20$hn jumps
+Dialogue: 0,0:08:57.59,0:08:58.95,Caption,,0,0,0,,to slot twenty.
+Dialogue: 0,0:08:59.01,0:09:02.42,Caption,,0,0,0,,And because scanf("percent 1024s", buf)
+Dialogue: 0,0:09:02.48,0:09:04.65,Caption,,0,0,0,,stops at whitespace, we do
+Dialogue: 0,0:09:04.71,0:09:07.16,Caption,,0,0,0,,not type literal spaces.
+Dialogue: 0,0:09:07.22,0:09:09.56,Caption,,0,0,0,,Width specifiers make printf create
+Dialogue: 0,0:09:09.62,0:09:10.24,Caption,,0,0,0,,them for us.
+Dialogue: 0,0:09:10.57,0:09:12.39,Caption,,0,0,0,,print f did not get hacked.
+Dialogue: 0,0:09:12.45,0:09:13.72,Caption,,0,0,0,,It followed the recipe it
+Dialogue: 0,0:09:13.78,0:09:15.27,Caption,,0,0,0,,was given. The bug was
+Dialogue: 0,0:09:15.33,0:09:17.67,Caption,,0,0,0,,letting the user write that recipe.
+Dialogue: 0,0:09:17.73,0:09:20.96,Caption,,0,0,0,,Safe code makes data become output.
+Dialogue: 0,0:09:21.02,0:09:22.21,Caption,,0,0,0,,Unsafe code lets data become
+Dialogue: 0,0:09:22.27,0:09:25.53,Caption,,0,0,0,,a recipe, interpretation become memory
+Dialogue: 0,0:09:25.59,0:09:27.51,Caption,,0,0,0,,access, and with percent n,
+Dialogue: 0,0:09:27.57,0:09:30.87,Caption,,0,0,0,,memory access become memory modification.
+Dialogue: 0,0:09:30.93,0:09:33.03,Caption,,0,0,0,,Fix it with print f,
+Dialogue: 0,0:09:33.09,0:09:34.91,Caption,,0,0,0,,percent s, buff.
+Dialogue: 0,0:09:34.97,0:09:36.00,Caption,,0,0,0,,See you in the next
+Dialogue: 0,0:09:36.06,0:09:36.71,Caption,,0,0,0,,one, hackers.
+Dialogue: 0,0:09:37.13,0:09:38.93,Caption,,0,0,0,,Before we leave, replay the
+Dialogue: 0,0:09:38.99,0:09:40.05,Caption,,0,0,0,,exploit as a checklist you
+Dialogue: 0,0:09:40.11,0:09:41.10,Caption,,0,0,0,,could use on the next
+Dialogue: 0,0:09:41.16,0:09:43.15,Caption,,0,0,0,,format string challenge.
+Dialogue: 0,0:09:43.21,0:09:44.40,Caption,,0,0,0,,First, read the source and
+Dialogue: 0,0:09:44.46,0:09:45.67,Caption,,0,0,0,,find the call site.
+Dialogue: 0,0:09:45.73,0:09:47.53,Caption,,0,0,0,,The dangerous shape is not
+Dialogue: 0,0:09:47.59,0:09:48.65,Caption,,0,0,0,,merely a percent sign in
+Dialogue: 0,0:09:48.71,0:09:50.09,Caption,,0,0,0,,user input. It is user
+Dialogue: 0,0:09:50.15,0:09:52.05,Caption,,0,0,0,,input becoming the first argument
+Dialogue: 0,0:09:52.11,0:09:53.86,Caption,,0,0,0,,to printf. Second, run one
+Dialogue: 0,0:09:53.92,0:09:56.53,Caption,,0,0,0,,harmless probe. A sequence such
+Dialogue: 0,0:09:56.59,0:09:58.56,Caption,,0,0,0,,as percent p, dot, percent
+Dialogue: 0,0:09:58.62,0:10:00.96,Caption,,0,0,0,,p tells you whether the
+Dialogue: 0,0:10:01.02,0:10:02.20,Caption,,0,0,0,,program is interpreting your input
+Dialogue: 0,0:10:02.26,0:10:03.27,Caption,,0,0,0,,or printing it literally.
+Dialogue: 0,0:10:03.33,0:10:05.27,Caption,,0,0,0,,Third, put an eight-byte marker
+Dialogue: 0,0:10:05.33,0:10:06.21,Caption,,0,0,0,,in the input and scan
+Dialogue: 0,0:10:06.27,0:10:07.95,Caption,,0,0,0,,the positional slots.
+Dialogue: 0,0:10:08.01,0:10:09.10,Caption,,0,0,0,,When the marker comes back
+Dialogue: 0,0:10:09.16,0:10:10.22,Caption,,0,0,0,,as a hexadecimal value, you
+Dialogue: 0,0:10:10.28,0:10:10.98,Caption,,0,0,0,,know where your own bytes
+Dialogue: 0,0:10:10.28,0:10:13.48,Caption,,0,0,0,,sit from printf's point of view.
+Dialogue: 0,0:10:13.66,0:10:16.43,Caption,,0,0,0,,Fourth, identify the state you
+Dialogue: 0,0:10:16.49,0:10:17.27,Caption,,0,0,0,,actually need to change.
+Dialogue: 0,0:10:17.33,0:10:18.60,Caption,,0,0,0,,In this target, that state
+Dialogue: 0,0:10:18.66,0:10:20.85,Caption,,0,0,0,,is the global variable sus.
+Dialogue: 0,0:10:20.91,0:10:23.08,Caption,,0,0,0,,The winning comparison asks for
+Dialogue: 0,0:10:23.14,0:10:24.82,Caption,,0,0,0,,one precise integer, and the
+Dialogue: 0,0:10:24.88,0:10:26.63,Caption,,0,0,0,,byte view reveals that the
+Dialogue: 0,0:10:26.69,0:10:28.99,Caption,,0,0,0,,value spells flag in memory.
+Dialogue: 0,0:10:29.05,0:10:30.92,Caption,,0,0,0,,Fifth, remember that percent n
+Dialogue: 0,0:10:30.98,0:10:32.66,Caption,,0,0,0,,does not magically write a
+Dialogue: 0,0:10:32.72,0:10:34.75,Caption,,0,0,0,,number typed in the payload.
+Dialogue: 0,0:10:34.81,0:10:36.00,Caption,,0,0,0,,It copies the number of
+Dialogue: 0,0:10:36.06,0:10:38.12,Caption,,0,0,0,,output characters printed so far
+Dialogue: 0,0:10:38.18,0:10:39.64,Caption,,0,0,0,,through a pointer.
+Dialogue: 0,0:10:39.70,0:10:41.48,Caption,,0,0,0,,Width specifiers are how we
+Dialogue: 0,0:10:41.54,0:10:44.38,Caption,,0,0,0,,steer that counter.
+Dialogue: 0,0:10:44.44,0:10:47.85,Caption,,0,0,0,,Positional specifiers are how we
+Dialogue: 0,0:10:47.91,0:10:48.91,Caption,,0,0,0,,select the address.
+Dialogue: 0,0:10:48.97,0:10:49.76,Caption,,0,0,0,,Packed bytes in the tail
+Dialogue: 0,0:10:49.82,0:10:50.52,Caption,,0,0,0,,of the input are how
+Dialogue: 0,0:10:50.32,0:10:51.02,Caption,,0,0,0,,we place that address in
+Dialogue: 0,0:10:50.32,0:10:51.38,Caption,,0,0,0,,a slot.
+Dialogue: 0,0:10:51.73,0:10:53.26,Caption,,0,0,0,,For the write itself, choose
+Dialogue: 0,0:10:53.32,0:10:54.44,Caption,,0,0,0,,a size that makes the
+Dialogue: 0,0:10:54.50,0:10:57.07,Caption,,0,0,0,,arithmetic boring. Two halfword writes
+Dialogue: 0,0:10:57.13,0:10:58.56,Caption,,0,0,0,,are easier to reason about
+Dialogue: 0,0:10:58.62,0:11:00.26,Caption,,0,0,0,,than one giant integer.
+Dialogue: 0,0:11:00.32,0:11:01.52,Caption,,0,0,0,,Write the smaller half first,
+Dialogue: 0,0:11:01.58,0:11:03.44,Caption,,0,0,0,,then add only the difference
+Dialogue: 0,0:11:03.50,0:11:05.11,Caption,,0,0,0,,before the second write.
+Dialogue: 0,0:11:05.17,0:11:06.98,Caption,,0,0,0,,Watch the byte row after
+Dialogue: 0,0:11:07.04,0:11:09.41,Caption,,0,0,0,,every operation. If the little-endian
+Dialogue: 0,0:11:09.47,0:11:10.47,Caption,,0,0,0,,bytes say f, l, a,
+Dialogue: 0,0:11:10.53,0:11:12.74,Caption,,0,0,0,,g, the integer comparison will
+Dialogue: 0,0:11:12.80,0:11:15.25,Caption,,0,0,0,,see the value the branch expects.
+Dialogue: 0,0:11:15.65,0:11:17.84,Caption,,0,0,0,,That method is useful because
+Dialogue: 0,0:11:17.90,0:11:21.27,Caption,,0,0,0,,it replaces mystery with observations:
+Dialogue: 0,0:11:21.33,0:11:23.20,Caption,,0,0,0,,inspect the recipe, leak the
+Dialogue: 0,0:11:23.26,0:11:25.33,Caption,,0,0,0,,shelf, find the marker, locate
+Dialogue: 0,0:11:25.39,0:11:27.70,Caption,,0,0,0,,the target, count carefully, and
+Dialogue: 0,0:11:27.76,0:11:30.06,Caption,,0,0,0,,write only what the challenge
+Dialogue: 0,0:11:30.12,0:11:32.13,Caption,,0,0,0,,asks for. And the defensive
+Dialogue: 0,0:11:32.19,0:11:34.15,Caption,,0,0,0,,lesson remains tiny.
+Dialogue: 0,0:11:34.21,0:11:37.30,Caption,,0,0,0,,Keep the format string fixed.
+Dialogue: 0,0:11:37.36,0:11:40.39,Caption,,0,0,0,,Pass untrusted input as data.
+Dialogue: 0,0:11:40.45,0:11:42.32,Caption,,0,0,0,,When the program owns the
+Dialogue: 0,0:11:42.38,0:11:44.93,Caption,,0,0,0,,recipe, printf is just output again.

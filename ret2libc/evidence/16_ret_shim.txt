@@ -1,0 +1,15 @@
+$ objdump -d -M intel --start-address=0x400518 --stop-address=0x400530 ./vuln
+
+./vuln:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+0000000000400518 <_init>:
+  400518:	48 83 ec 08          	sub    rsp,0x8
+  40051c:	48 8b 05 d5 0a 20 00 	mov    rax,QWORD PTR [rip+0x200ad5]        # 600ff8 <__gmon_start__>
+  400523:	48 85 c0             	test   rax,rax
+  400526:	74 02                	je     40052a <_init+0x12>
+  400528:	ff d0                	call   rax
+  40052a:	48 83 c4 08          	add    rsp,0x8
+  40052e:	c3                   	ret

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#21352A" stroke-width="2"/></pattern>
+    <linearGradient id="fade" x1="0" x2="1"><stop stop-color="#06100B"/><stop offset="1" stop-color="#0A1811"/></linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#fade)"/>
+  <rect width="1920" height="1080" fill="url(#grid)" opacity=".48"/>
+  <rect x="80" y="70" width="1760" height="70" rx="14" fill="#0D1510" stroke="#2D4437" stroke-width="3"/>
+  <circle cx="122" cy="105" r="10" fill="#CA6763"/><circle cx="152" cy="105" r="10" fill="#E4CF82"/><circle cx="182" cy="105" r="10" fill="#8CCB9A"/>
+  <text x="222" y="117" fill="#8CCB9A" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="28" font-weight="700" letter-spacing="4">BINARY DEFENSES // LINUX x86-64</text>
+  <text x="100" y="310" fill="#F1F3EE" font-family="Inter, DejaVu Sans, sans-serif" font-size="162" font-weight="800" letter-spacing="-8">ONE BUG.</text>
+  <text x="100" y="470" fill="#8CCB9A" font-family="Inter, DejaVu Sans, sans-serif" font-size="162" font-weight="800" letter-spacing="-8">FIVE WALLS.</text>
+  <rect x="100" y="545" width="880" height="240" rx="24" fill="#0D1510" stroke="#2D4437" stroke-width="4"/>
+  <text x="145" y="620" fill="#A2ADA5" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="30" font-weight="700">char name[32];</text>
+  <text x="145" y="693" fill="#CA6763" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="47" font-weight="800">read(0, name, 128);</text>
+  <text x="145" y="748" fill="#E4CF82" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="25" font-weight="700">same overflow • different failure point</text>
+  <text x="100" y="880" fill="#A7DDE0" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="27" font-weight="700">REAL ELF EVIDENCE → DISASSEMBLY → LIVE PROCESS MAP</text>
+  <g font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-weight="800">
+    <rect x="1110" y="240" width="680" height="116" rx="18" fill="#12231A" stroke="#8CCB9A" stroke-width="4"/><text x="1160" y="312" fill="#8CCB9A" font-size="52">01  NX</text><text x="1430" y="312" fill="#D9E5DD" font-size="32">NO EXECUTE</text>
+    <rect x="1110" y="382" width="680" height="116" rx="18" fill="#272418" stroke="#E4CF82" stroke-width="4"/><text x="1160" y="454" fill="#E4CF82" font-size="52">02  CANARY</text><text x="1530" y="454" fill="#D9E5DD" font-size="32">GUARD</text>
+    <rect x="1110" y="524" width="680" height="116" rx="18" fill="#171E25" stroke="#A7DDE0" stroke-width="4"/><text x="1160" y="596" fill="#A7DDE0" font-size="52">03  ASLR</text><text x="1490" y="596" fill="#D9E5DD" font-size="32">MOVE</text>
+    <rect x="1110" y="666" width="680" height="116" rx="18" fill="#211C28" stroke="#9B87B4" stroke-width="4"/><text x="1160" y="738" fill="#9B87B4" font-size="52">04  PIE</text><text x="1470" y="738" fill="#D9E5DD" font-size="32">RELOCATE</text>
+    <rect x="1110" y="808" width="680" height="116" rx="18" fill="#12231A" stroke="#8CCB9A" stroke-width="4"/><text x="1160" y="880" fill="#8CCB9A" font-size="52">05  RELRO</text><text x="1530" y="880" fill="#D9E5DD" font-size="32">LOCK</text>
+  </g>
+  <rect x="80" y="970" width="1760" height="38" rx="12" fill="#8CCB9A" opacity=".85"/>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" fill="none" stroke="#8CCB9A" stroke-opacity=".07" stroke-width="2"/>
+    </pattern>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="15" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8CCB9A" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#8CCB9A" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#050B08"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <circle cx="1515" cy="510" r="420" fill="#8CCB9A" opacity=".035"/>
+  <path d="M1020 915C1260 730 1450 595 1790 340" fill="none" stroke="url(#beam)" stroke-width="5"/>
+
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="110" y="112" fill="#8CCB9A" font-size="30" font-weight="700" letter-spacing="7">PICOCTF · ROP</text>
+    <text x="105" y="278" fill="#F1F3EE" font-size="132" font-weight="800" letter-spacing="-5">THE STACK</text>
+    <text x="105" y="414" fill="#F1F3EE" font-size="132" font-weight="800" letter-spacing="-5">BECOMES A</text>
+    <text x="105" y="550" fill="#E4CF82" font-size="146" font-weight="850" letter-spacing="-6">PROGRAM</text>
+    <text x="112" y="645" fill="#91A097" font-size="36" font-weight="500">Return-oriented programming, visually explained</text>
+  </g>
+
+  <g transform="translate(1030 110) rotate(-8 380 410)" font-family="'JetBrains Mono',monospace">
+    <g transform="translate(0 555)">
+      <rect width="520" height="116" rx="18" fill="#142019" stroke="#9B87B4" stroke-width="3"/>
+      <text x="36" y="49" fill="#91A097" font-size="24">STACK[0]</text>
+      <text x="36" y="88" fill="#F1F3EE" font-size="34" font-weight="700">0x080b81c6</text>
+    </g>
+    <g transform="translate(95 405)">
+      <rect width="520" height="116" rx="18" fill="#142019" stroke="#C89563" stroke-width="3"/>
+      <text x="36" y="49" fill="#C89563" font-size="24">GADGET</text>
+      <text x="36" y="88" fill="#F1F3EE" font-size="34" font-weight="700">pop eax; ret</text>
+    </g>
+    <g transform="translate(190 255)">
+      <rect width="520" height="116" rx="18" fill="#142019" stroke="#8CCB9A" stroke-width="3"/>
+      <text x="36" y="49" fill="#8CCB9A" font-size="24">STATE CHANGE</text>
+      <text x="36" y="88" fill="#E4CF82" font-size="34" font-weight="700">EAX = 0x0b</text>
+    </g>
+    <g transform="translate(285 105)">
+      <rect width="520" height="116" rx="18" fill="#142019" stroke="#C89563" stroke-width="3"/>
+      <text x="36" y="49" fill="#C89563" font-size="24">NEXT GADGET</text>
+      <text x="36" y="88" fill="#F1F3EE" font-size="34" font-weight="700">int 0x80</text>
+    </g>
+    <g fill="#8CCB9A" filter="url(#glow)">
+      <path d="M260 548l-18-25h36z"/>
+      <path d="M355 398l-18-25h36z"/>
+      <path d="M450 248l-18-25h36z"/>
+    </g>
+  </g>
+
+  <g transform="translate(110 835)" font-family="'JetBrains Mono',monospace">
+    <rect width="735" height="116" rx="20" fill="#0D1510" stroke="#26332B" stroke-width="3"/>
+    <text x="36" y="48" fill="#91A097" font-size="24">ret asks the stack</text>
+    <text x="36" y="88" fill="#8CCB9A" font-size="32" font-weight="700">where should EIP go next?</text>
+  </g>
+</svg>

@@ -1,0 +1,38 @@
+$ readelf -W -l bin/exec-probe-rwx
+
+Elf file type is EXEC (Executable file)
+Entry point 0x401050
+There are 13 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  PHDR           0x000040 0x0000000000400040 0x0000000000400040 0x0002d8 0x0002d8 R   0x8
+  INTERP         0x00035c 0x000000000040035c 0x000000000040035c 0x00001c 0x00001c R   0x1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+  LOAD           0x000000 0x0000000000400000 0x0000000000400000 0x000500 0x000500 R   0x1000
+  LOAD           0x001000 0x0000000000401000 0x0000000000401000 0x000199 0x000199 R E 0x1000
+  LOAD           0x002000 0x0000000000402000 0x0000000000402000 0x000144 0x000144 R   0x1000
+  LOAD           0x002148 0x0000000000403148 0x0000000000403148 0x000228 0x000230 RW  0x1000
+  DYNAMIC        0x002158 0x0000000000403158 0x0000000000403158 0x0001d0 0x0001d0 RW  0x8
+  NOTE           0x000318 0x0000000000400318 0x0000000000400318 0x000020 0x000020 R   0x8
+  NOTE           0x000338 0x0000000000400338 0x0000000000400338 0x000024 0x000024 R   0x4
+  NOTE           0x002124 0x0000000000402124 0x0000000000402124 0x000020 0x000020 R   0x4
+  GNU_PROPERTY   0x000318 0x0000000000400318 0x0000000000400318 0x000020 0x000020 R   0x8
+  GNU_EH_FRAME   0x002054 0x0000000000402054 0x0000000000402054 0x00002c 0x00002c R   0x4
+  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RWE 0x10
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .note.gnu.property .note.gnu.build-id .interp .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt 
+   03     .init .plt .text .fini 
+   04     .rodata .eh_frame_hdr .eh_frame .note.ABI-tag 
+   05     .init_array .fini_array .dynamic .got .got.plt .data .bss 
+   06     .dynamic 
+   07     .note.gnu.property 
+   08     .note.gnu.build-id 
+   09     .note.ABI-tag 
+   10     .note.gnu.property 
+   11     .eh_frame_hdr 
+   12     

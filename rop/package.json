@@ -1,0 +1,34 @@
+{
+  "name": "return-oriented-programming-motion-canvas",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "build:preview": "vite build --config vite.preview.config.ts",
+    "typecheck": "tsc --noEmit",
+    "narration:budget": "node scripts/build-production-data.mjs",
+    "narration:pilot": ".chatterbox-venv/bin/python scripts/generate-chatterbox.py --ids intro-01,return-03,write-06 --force",
+    "narration:generate": "node scripts/run-chatterbox-batches.mjs",
+    "timing:retime": "node scripts/retime-to-speech.mjs",
+    "narration:finalize": "node scripts/finalize-narration.mjs",
+    "music:mix": "node scripts/mix-music.mjs",
+    "captions:build": "node scripts/build-captions.mjs",
+    "captions:style": "python3 scripts/srt_to_house_ass.py output/rop-captions.srt output/rop-captions.ass --font-size 50 --outline 10 --margin-h 120 --margin-v 30",
+    "video:encode": "nice -n 10 ffmpeg -y -hide_banner -loglevel warning -stats -framerate 24 -start_number 0 -i output/project/%06d.png -i audio/final-mix.wav -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -threads 2 -c:a aac -b:a 192k -shortest -movflags +faststart output/rop-clean.mp4",
+    "video:caption": "ffmpeg -y -hide_banner -loglevel warning -stats -i output/rop-clean.mp4 -vf ass=output/rop-captions.ass -c:v libx264 -preset veryfast -crf 18 -pix_fmt yuv420p -threads 2 -c:a copy -movflags +faststart output/rop-captioned.mp4"
+  },
+  "dependencies": {
+    "@motion-canvas/2d": "3.17.2",
+    "@motion-canvas/core": "3.17.2",
+    "@motion-canvas/ffmpeg": "^3.17.2",
+    "@motion-canvas/ui": "3.17.2",
+    "@motion-canvas/vite-plugin": "3.17.2"
+  },
+  "devDependencies": {
+    "@motion-canvas/player": "^3.17.2",
+    "chrome-remote-interface": "^0.34.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
+  }
+}

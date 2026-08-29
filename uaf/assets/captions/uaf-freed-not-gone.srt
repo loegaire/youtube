@@ -1,0 +1,285 @@
+1
+00:00:00,000 --> 00:00:02,734
+Hello again,
+hackers.
+Before we name the
+
+2
+00:00:02,734 --> 00:00:05,126
+bug,
+picture a program's memory as a
+
+3
+00:00:05,126 --> 00:00:07,603
+wall of numbered spaces.
+A value can
+
+4
+00:00:07,603 --> 00:00:10,166
+live in one space.
+The number written
+
+5
+00:00:10,166 --> 00:00:12,729
+on its door is an address.
+Everything
+
+6
+00:00:12,729 --> 00:00:15,292
+else in this story follows from that.
+
+7
+00:00:15,292 --> 00:00:17,286
+An address is not the value.
+It
+
+8
+00:00:17,286 --> 00:00:19,612
+is a direction:
+go to this location.
+
+9
+00:00:19,612 --> 00:00:22,105
+A pointer is just a variable holding
+
+10
+00:00:22,105 --> 00:00:24,846
+that direction.
+Copy the pointer,
+and you
+
+11
+00:00:24,846 --> 00:00:28,003
+have copied the direction,
+not duplicated the
+
+12
+00:00:28,003 --> 00:00:29,167
+thing it reaches.
+
+13
+00:00:29,167 --> 00:00:31,660
+On the heap,
+programs ask for a
+
+14
+00:00:31,660 --> 00:00:34,777
+fresh patch of storage,
+then build an
+
+15
+00:00:34,777 --> 00:00:38,517
+object inside it.
+This challenge calls that
+
+16
+00:00:38,517 --> 00:00:42,257
+object user.
+It contains two directions:
+one
+
+17
+00:00:42,257 --> 00:00:44,334
+to a function,
+and one to a
+
+18
+00:00:44,334 --> 00:00:44,750
+name.
+
+19
+00:00:44,750 --> 00:00:47,040
+Some objects have a lifetime:
+they are
+
+20
+00:00:47,040 --> 00:00:49,995
+created,
+used,
+and eventually released.
+Free says
+
+21
+00:00:49,995 --> 00:00:52,654
+the program has finished with that storage.
+
+22
+00:00:52,654 --> 00:00:55,166
+It does not magically erase every copied
+
+23
+00:00:55,166 --> 00:00:58,416
+pointer elsewhere.
+Those directions can outlive the
+
+24
+00:00:58,416 --> 00:01:00,042
+object they meant to reach.
+
+25
+00:01:00,042 --> 00:01:02,140
+Now we earn the real challenge.
+The
+
+26
+00:01:02,140 --> 00:01:04,689
+local source defines cmd with a function
+
+27
+00:01:04,689 --> 00:01:07,612
+pointer named whatToDo followed by a username
+
+28
+00:01:07,612 --> 00:01:10,686
+pointer.
+The program's menu chooses whatToDo,
+then
+
+29
+00:01:10,686 --> 00:01:13,984
+doProcess calls whichever function address sits in
+
+30
+00:01:13,984 --> 00:01:14,958
+the first field.
+
+31
+00:01:14,958 --> 00:01:17,950
+That indirect call is ordinary behavior.
+Pick
+
+32
+00:01:17,950 --> 00:01:20,391
+Subscribe,
+and the first field holds s.
+
+33
+00:01:20,391 --> 00:01:22,989
+doProcess reads that field,
+then calls s.
+
+34
+00:01:22,989 --> 00:01:25,587
+The surprise is not the instruction.
+The
+
+35
+00:01:25,587 --> 00:01:28,185
+surprise is allowing the same memory to
+
+36
+00:01:28,185 --> 00:01:29,917
+later mean something else.
+
+37
+00:01:29,917 --> 00:01:33,348
+Delete is the lifetime mistake.
+It runs
+
+38
+00:01:33,348 --> 00:01:35,708
+free on user,
+but user is not
+
+39
+00:01:35,708 --> 00:01:38,818
+cleared.
+The main loop keeps the old
+
+40
+00:01:38,818 --> 00:01:43,108
+direction.
+The program has released the storage,
+
+41
+00:01:43,108 --> 00:01:46,861
+yet still believes that old address names
+
+42
+00:01:46,861 --> 00:01:48,792
+a live command object.
+
+43
+00:01:48,792 --> 00:01:51,272
+Later,
+Leave a message asks for eight
+
+44
+00:01:51,272 --> 00:01:53,999
+bytes.
+The allocator is allowed to reuse
+
+45
+00:01:53,999 --> 00:01:56,975
+compatible freed storage.
+If it returns the
+
+46
+00:01:56,975 --> 00:01:59,290
+old user space,
+the message and the
+
+47
+00:01:59,290 --> 00:02:02,265
+stale user pointer describe the same bytes
+
+48
+00:02:02,265 --> 00:02:04,167
+from two different stories.
+
+49
+00:02:04,167 --> 00:02:06,820
+Writing the message changes bytes the old
+
+50
+00:02:06,820 --> 00:02:09,169
+pointer reads as a command.
+Four bytes
+
+51
+00:02:09,169 --> 00:02:12,125
+become the function destination.
+The next four
+
+52
+00:02:12,125 --> 00:02:14,778
+fill the second field.
+When doProcess runs
+
+53
+00:02:14,778 --> 00:02:17,128
+again,
+stale data sends control to the
+
+54
+00:02:17,128 --> 00:02:18,417
+challenge function.
+
+55
+00:02:18,417 --> 00:02:21,710
+That is use-after-free:
+use happens after the
+
+56
+00:02:21,710 --> 00:02:25,645
+object's lifetime ends.
+The repair is architectural:
+
+57
+00:02:25,645 --> 00:02:28,664
+retire every owner after free,
+use clear
+
+58
+00:02:28,664 --> 00:02:32,415
+lifetime rules,
+and validate before indirect use.
+
+59
+00:02:32,415 --> 00:02:35,709
+Make addresses and ownership tell the same
+
+60
+00:02:35,709 --> 00:02:36,167
+story.
+

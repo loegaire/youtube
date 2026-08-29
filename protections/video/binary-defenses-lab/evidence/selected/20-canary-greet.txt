@@ -1,0 +1,41 @@
+$ objdump -d -M intel -S --disassemble=greet bin/vuln-canary
+0000000000401166 <greet>:
+#include <stdio.h>
+#include <unistd.h>
+
+__attribute__((noinline))
+static void greet(void) {
+  401166:	55                   	push   rbp
+  401167:	48 89 e5             	mov    rbp,rsp
+  40116a:	48 83 ec 40          	sub    rsp,0x40
+  40116e:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+  401175:	00 00 
+  401177:	48 89 45 f8          	mov    QWORD PTR [rbp-0x8],rax
+  40117b:	31 c0                	xor    eax,eax
+    char name[32];
+
+    puts("name:");
+  40117d:	bf 04 20 40 00       	mov    edi,0x402004
+  401182:	e8 a9 fe ff ff       	call   401030 <puts@plt>
+    ssize_t count = read(STDIN_FILENO, name, 128);
+  401187:	48 8d 45 d0          	lea    rax,[rbp-0x30]
+  40118b:	ba 80 00 00 00       	mov    edx,0x80
+  401190:	48 89 c6             	mov    rsi,rax
+  401193:	bf 00 00 00 00       	mov    edi,0x0
+  401198:	e8 c3 fe ff ff       	call   401060 <read@plt>
+  40119d:	48 89 45 c8          	mov    QWORD PTR [rbp-0x38],rax
+    printf("read %zd bytes\n", count);
+  4011a1:	48 8b 45 c8          	mov    rax,QWORD PTR [rbp-0x38]
+  4011a5:	48 89 c6             	mov    rsi,rax
+  4011a8:	bf 0a 20 40 00       	mov    edi,0x40200a
+  4011ad:	b8 00 00 00 00       	mov    eax,0x0
+  4011b2:	e8 99 fe ff ff       	call   401050 <printf@plt>
+}
+  4011b7:	90                   	nop
+  4011b8:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  4011bc:	64 48 2b 04 25 28 00 	sub    rax,QWORD PTR fs:0x28
+  4011c3:	00 00 
+  4011c5:	74 05                	je     4011cc <greet+0x66>
+  4011c7:	e8 74 fe ff ff       	call   401040 <__stack_chk_fail@plt>
+  4011cc:	c9                   	leave
+  4011cd:	c3                   	ret

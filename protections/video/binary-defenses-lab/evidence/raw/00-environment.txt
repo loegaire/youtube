@@ -1,0 +1,11 @@
+$ uname -a
+Linux 18e6c513ed38 6.12.13 #1 SMP Wed Jul 22 00:33:13 UTC 2026 x86_64 GNU/Linux
+
+$ gcc --version | head -n 1
+gcc (Debian 14.2.0-19) 14.2.0
+
+$ ld --version | head -n 1
+GNU ld (GNU Binutils for Debian) 2.44
+
+$ cat /proc/sys/kernel/randomize_va_space
+2

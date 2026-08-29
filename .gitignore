@@ -1,4 +1,35 @@
+# deps / builds / caches
 node_modules
-sha-video/node_modules
-sha/node_modules
-sha/dist
+node_modules.sibling-link
+dist/
+.vite/
+.vite-cache/
+.cache/
+static-dist/
+audit-dist/
+
+# generated media & render artifacts
+output/
+renders/
+audio/
+review/
+snapshots/
+snapshots-review*/
+assets/music/
+*.mp4
+*.m4a
+*.mp3
+*.wav
+*.zip
+
+# ML / TTS local caches
+.chatterbox-venv
+.chatterbox-models
+.chatterbox-standard
+.chatterbox-standard-models
+
+# python & editor cruft
+__pycache__/
+*.pyc
+*.log
+*~

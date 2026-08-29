@@ -1,0 +1,8 @@
+$ nm -D /usr/lib/x86_64-linux-gnu/libc.so.6 | grep " puts@@"
+00000000000805a0 W puts@@GLIBC_2.2.5
+
+$ python3 - <<PY  # using evidence/raw/32-process-maps.txt
+libc_base   = 0x7f704aa1e000
+libc_puts   = 0x7f704aa9e5a0
+puts_offset = libc_puts - libc_base = 0x805a0
+check       = 0x7f704aa1e000 + 0x805a0 = 0x7f704aa9e5a0

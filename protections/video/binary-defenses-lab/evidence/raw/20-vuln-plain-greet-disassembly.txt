@@ -1,0 +1,44 @@
+$ objdump -d -M intel -S --disassemble=greet bin/vuln-plain
+
+/mnt/data/binary-defenses-lab/bin/vuln-plain:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000401156 <greet>:
+#include <stdio.h>
+#include <unistd.h>
+
+__attribute__((noinline))
+static void greet(void) {
+  401156:	55                   	push   rbp
+  401157:	48 89 e5             	mov    rbp,rsp
+  40115a:	48 83 ec 30          	sub    rsp,0x30
+    char name[32];
+
+    puts("name:");
+  40115e:	bf 04 20 40 00       	mov    edi,0x402004
+  401163:	e8 c8 fe ff ff       	call   401030 <puts@plt>
+    ssize_t count = read(STDIN_FILENO, name, 128);
+  401168:	48 8d 45 d0          	lea    rax,[rbp-0x30]
+  40116c:	ba 80 00 00 00       	mov    edx,0x80
+  401171:	48 89 c6             	mov    rsi,rax
+  401174:	bf 00 00 00 00       	mov    edi,0x0
+  401179:	e8 d2 fe ff ff       	call   401050 <read@plt>
+  40117e:	48 89 45 f8          	mov    QWORD PTR [rbp-0x8],rax
+    printf("read %zd bytes\n", count);
+  401182:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+  401186:	48 89 c6             	mov    rsi,rax
+  401189:	bf 0a 20 40 00       	mov    edi,0x40200a
+  40118e:	b8 00 00 00 00       	mov    eax,0x0
+  401193:	e8 a8 fe ff ff       	call   401040 <printf@plt>
+}
+  401198:	90                   	nop
+  401199:	c9                   	leave
+  40119a:	c3                   	ret
+
+Disassembly of section .fini:
