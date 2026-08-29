@@ -5,6 +5,15 @@
 Pipeline validated end-to-end. `output.wav` (3.04s, 48kHz mono PCM) generated from
 embedded 15s reference + test text, kernel v4, 2x T4, ~4 min wall time.
 
+## Git (2026-08-28)
+
+`~/proj/youtube` is now the canonical repo (git@github.com:loegaire/youtube.git),
+branch `main`, HEAD `68ed82b`. Merged remote sha/ motion canvas project into local
+tree + all video project sources (bof1, ret2libc, rop, uaf, heap_over_under_flow,
+integer_vulns, fmstr2, aes, shellcode, protections, rsa, NASA, motion-repertoire,
+bg-music). `.gitignore` excludes node_modules/venvs/model caches/renders/media and
+dep-sharing symlinks. kaggle-tts is tracked; only generated wavs/output/ are ignored.
+
 ## Layout
 
 - `~/proj/youtube/sha/kaggle-tts/`
