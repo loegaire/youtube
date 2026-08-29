@@ -18,7 +18,7 @@ import zipfile
 from pathlib import Path
 
 SEGMENTS_JSON = __SEGMENTS_JSON__
-REF_OPUS_B64 = "__REF_B64__"
+VOICE_B64 = "__VOICE_B64__"
 
 
 def sh(cmd):
@@ -29,6 +29,7 @@ def sh(cmd):
 sh([sys.executable, "-m", "pip", "install", "-q", "-U", "voxcpm", "soundfile", "faster-whisper"])
 
 import torch  # noqa: E402
+import numpy as np  # noqa: E402
 import soundfile as sf  # noqa: E402
 from voxcpm import VoxCPM  # noqa: E402
 
@@ -38,27 +39,78 @@ work = Path("/kaggle/working")
 out_dir = work / "audio"
 out_dir.mkdir(exist_ok=True)
 
-ref_opus = work / "ref.opus"
-ref_wav = work / "reference.wav"
-ref_opus.write_bytes(base64.b64decode(REF_OPUS_B64))
+voice_m4a = work / "voice.m4a"
+voice_wav = work / "voice_full.wav"
+voice_m4a.write_bytes(base64.b64decode(VOICE_B64))
 sh([
     "ffmpeg", "-y", "-v", "error",
-    "-i", str(ref_opus),
-    "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le",
-    str(ref_wav),
+    "-i", str(voice_m4a),
+    "-vn", "-ac", "1", "-ar", "24000", "-c:a", "pcm_s16le",
+    str(voice_wav),
 ])
+
+
+def f0_of(path, sr=24000):
+    import wave
+    w = wave.open(path)
+    sr = w.getframerate()
+    x = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32) / 32768
+    frame = int(0.05 * sr)
+    hop = int(0.025 * sr)
+    f0s = []
+    for i in range(0, max(1, len(x) - frame), hop):
+        f = x[i:i + frame]
+        if np.sqrt((f ** 2).mean()) < 0.02:
+            continue
+        f = f - f.mean()
+        ac = np.correlate(f, f, "full")[frame - 1:]
+        lo, hi = int(sr / 400), min(int(sr / 60), len(ac) - 1)
+        if hi <= lo:
+            continue
+        pk = np.argmax(ac[lo:hi]) + lo
+        if ac[pk] > 0.3 * ac[0]:
+            f0s.append(sr / pk)
+    return float(np.median(f0s)) if f0s else 0.0
+
 
 # VoxCPM2 voice cloning requires prompt_wav_path AND prompt_text (exact
 # transcript of the prompt wav) together, plus reference_wav_path for max
-# similarity. Transcribe the reference window so conditioning is correct.
+# similarity. Cut a sentence-aligned ~15s window from the reference audio
+# using whisper word timestamps so prompt_text matches the audio exactly.
 from faster_whisper import WhisperModel  # noqa: E402
 
 wm = WhisperModel("small", device="cuda", compute_type="float16")
-wsegs, _ = wm.transcribe(str(ref_wav), language="en", beam_size=5)
-prompt_text = " ".join(s.text.strip() for s in wsegs).strip()
+wsegs, _ = wm.transcribe(str(voice_wav), language="en", beam_size=5, word_timestamps=True)
+wsegs = list(wsegs)
+print("FULL TRANSCRIPT:", " ".join(s.text.strip() for s in wsegs), flush=True)
+
+cands = []
+for i in range(len(wsegs)):
+    for j in range(i, len(wsegs)):
+        d = wsegs[j].end - wsegs[i].start
+        if 12.0 <= d <= 18.0:
+            cands.append((abs(d - 15.0), i, j))
+        elif d > 18.0:
+            break
+if not cands:
+    raise RuntimeError("no valid sentence-aligned prompt window in reference audio")
+_, wi, wj = min(cands)
+p0, p1 = wsegs[wi].start, wsegs[wj].end
+prompt_text = " ".join(wsegs[k].text.strip() for k in range(wi, wj + 1)).strip()
+print(f"PROMPT_WINDOW: [{p0:.3f} -> {p1:.3f}] dur={p1 - p0:.2f}s", flush=True)
 print("PROMPT_TEXT:", repr(prompt_text), flush=True)
 if not prompt_text:
     raise RuntimeError("empty whisper transcript of reference audio")
+
+prompt_wav = work / "prompt.wav"
+sh([
+    "ffmpeg", "-y", "-v", "error",
+    "-ss", f"{p0:.3f}", "-to", f"{p1:.3f}",
+    "-i", str(voice_wav),
+    "-vn", "-ac", "1", "-ar", "24000", "-c:a", "pcm_s16le",
+    str(prompt_wav),
+])
+print(f"F0 prompt: {f0_of(str(prompt_wav)):.1f} Hz", flush=True)
 
 try:
     model = VoxCPM.from_pretrained(
@@ -87,9 +139,9 @@ for i, seg in enumerate(segments):
         try:
             wav = model.generate(
                 text=text,
-                prompt_wav_path=str(ref_wav),
+                prompt_wav_path=str(prompt_wav),
                 prompt_text=prompt_text,
-                reference_wav_path=str(ref_wav),
+                reference_wav_path=str(prompt_wav),
                 cfg_value=2.0,
                 inference_timesteps=20,
                 normalize=True,
@@ -128,10 +180,11 @@ print(f"DONE segments={len(durations)} failed={len(failed)} total_audio={total:.
 def main():
     segments_file = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "manifest" / "segments.json"
     segments = json.loads(segments_file.read_text())
-    ref_b64 = (ROOT / "reference" / "ref.opus.b64").read_text(encoding="ascii").strip()
+    import base64 as _b64
+    voice_b64 = _b64.b64encode(Path("/home/thinh/proj/youtube/voice.m4a").read_bytes()).decode("ascii")
 
     seg_json = json.dumps(segments, ensure_ascii=True, separators=(",", ":"))
-    src = TEMPLATE.replace("__SEGMENTS_JSON__", repr(seg_json)).replace("__REF_B64__", ref_b64)
+    src = TEMPLATE.replace("__SEGMENTS_JSON__", repr(seg_json)).replace("__VOICE_B64__", voice_b64)
 
     out_dir = ROOT / "kernel-batch"
     out_dir.mkdir(exist_ok=True)

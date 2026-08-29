@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_98} scene={17} shot="98" y={-20} />
     </Node>
   );
-  yield* all(stage_98().opacity(1, 0.7164), stage_98().position.x(-55, 2.3880, easeInOutCubic), stage_98().scale(1.04, 2.3880, easeInOutCubic), visual_98().animateData(2.3880));
-  yield* waitFor(0.7164);
-  yield* stage_98().opacity(0, 0.8756);
+  yield* all(stage_98().opacity(1, 0.5148), stage_98().position.x(-55, 1.7160, easeInOutCubic), stage_98().scale(1.04, 1.7160, easeInOutCubic), visual_98().animateData(1.7160));
+  yield* waitFor(0.5148);
+  yield* stage_98().opacity(0, 0.6292);
   stage_98().remove();
 
   // Shot 99
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_99} scene={17} shot="99" y={-20} />
     </Node>
   );
-  yield* all(stage_99().opacity(1, 2.6460), stage_99().position.x(55, 8.8200, easeInOutCubic), stage_99().scale(1.04, 8.8200, easeInOutCubic), visual_99().animateData(8.8200));
-  yield* waitFor(2.6460);
-  yield* stage_99().opacity(0, 3.2340);
+  yield* all(stage_99().opacity(1, 2.2140), stage_99().position.x(55, 7.3800, easeInOutCubic), stage_99().scale(1.04, 7.3800, easeInOutCubic), visual_99().animateData(7.3800));
+  yield* waitFor(2.2140);
+  yield* stage_99().opacity(0, 2.7060);
   stage_99().remove();
 
   // Shot 100
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_100} scene={17} shot="100" y={-20} />
     </Node>
   );
-  yield* all(stage_100().opacity(1, 1.2348), stage_100().position.x(-55, 4.1160, easeInOutCubic), stage_100().scale(1.04, 4.1160, easeInOutCubic), visual_100().animateData(4.1160));
-  yield* waitFor(1.2348);
-  yield* stage_100().opacity(0, 1.5092);
+  yield* all(stage_100().opacity(1, 1.0908), stage_100().position.x(-55, 3.6360, easeInOutCubic), stage_100().scale(1.04, 3.6360, easeInOutCubic), visual_100().animateData(3.6360));
+  yield* waitFor(1.0908);
+  yield* stage_100().opacity(0, 1.3332);
   stage_100().remove();
 
 });

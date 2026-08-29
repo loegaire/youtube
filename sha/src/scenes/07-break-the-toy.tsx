@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_46} scene={7} shot="46" y={-20} />
     </Node>
   );
-  yield* all(stage_46().opacity(1, 1.8684), stage_46().position.x(-55, 6.2280, easeInOutCubic), stage_46().scale(1.04, 6.2280, easeInOutCubic), visual_46().animateData(6.2280));
-  yield* waitFor(1.8684);
-  yield* stage_46().opacity(0, 2.2836);
+  yield* all(stage_46().opacity(1, 1.4364), stage_46().position.x(-55, 4.7880, easeInOutCubic), stage_46().scale(1.04, 4.7880, easeInOutCubic), visual_46().animateData(4.7880));
+  yield* waitFor(1.4364);
+  yield* stage_46().opacity(0, 1.7556);
   stage_46().remove();
 
   // Shot 47
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_47} scene={7} shot="47" y={-20} />
     </Node>
   );
-  yield* all(stage_47().opacity(1, 1.0908), stage_47().position.x(55, 3.6360, easeInOutCubic), stage_47().scale(1.04, 3.6360, easeInOutCubic), visual_47().animateData(3.6360));
-  yield* waitFor(1.0908);
-  yield* stage_47().opacity(0, 1.3332);
+  yield* all(stage_47().opacity(1, 0.8028), stage_47().position.x(55, 2.6760, easeInOutCubic), stage_47().scale(1.04, 2.6760, easeInOutCubic), visual_47().animateData(2.6760));
+  yield* waitFor(0.8028);
+  yield* stage_47().opacity(0, 0.9812);
   stage_47().remove();
 
   // Shot 48
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_48} scene={7} shot="48" y={-20} />
     </Node>
   );
-  yield* all(stage_48().opacity(1, 2.0124), stage_48().position.x(-55, 6.7080, easeInOutCubic), stage_48().scale(1.04, 6.7080, easeInOutCubic), visual_48().animateData(6.7080));
-  yield* waitFor(2.0124);
-  yield* stage_48().opacity(0, 2.4596);
+  yield* all(stage_48().opacity(1, 1.7820), stage_48().position.x(-55, 5.9400, easeInOutCubic), stage_48().scale(1.04, 5.9400, easeInOutCubic), visual_48().animateData(5.9400));
+  yield* waitFor(1.7820);
+  yield* stage_48().opacity(0, 2.1780);
   stage_48().remove();
 
 });

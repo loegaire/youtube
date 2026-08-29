@@ -1,0 +1,28 @@
+{
+  "prompt_window": [
+    20.36,
+    35.36
+  ],
+  "prompt_text": "to the complex technical requirements of modern digital synthesis. Whether we are discussing the intricate mechanics of light, reflecting all the simple, grounding comfort of a well-brewed cup of tea,",
+  "f0_ref": 220.1834862385321,
+  "clones": {
+    "A": {
+      "dur": 15.84,
+      "f0": 218.1818181818182,
+      "transcript": "First, Shai 256 computes T1 from H, the sigma function of E, the choose function around constant and the current message word, then T2 is computed from the sigma function of A and the majority function of T1.",
+      "leading_junk": ""
+    },
+    "B": {
+      "dur": 7.04,
+      "f0": 220.1834862385321,
+      "transcript": "This gives us a fixed output size of 256 bits no matter how large the input is.",
+      "leading_junk": ""
+    },
+    "C": {
+      "dur": 4.64,
+      "f0": 203.38983050847457,
+      "transcript": "Let's hash the text A, B, C and watch every byte move.",
+      "leading_junk": ""
+    }
+  }
+}

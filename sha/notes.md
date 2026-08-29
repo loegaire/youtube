@@ -11,3 +11,11 @@
 - Caption-cut probes at shots 16 / 30 / 111: on-time (no −8.45 shift).
 - Audio tail: speech to ~1058.9s, silence after ~1060s — nothing truncated.
 - Probe technique: `ffmpeg -ss lo -i file -frames:v 27 -vf scale=480:270,format=gray -f rawvideo` + numpy frame-diff max (never use `-to` after input seeking — it is output-relative).
+
+## Session 3: voice.m4a redo (2026-08-29)
+
+- **Echo artifact root cause**: old prompt_text was a loose whisper guess of a mid-sentence window; mismatch between prompt audio and prompt_text made VoxCPM2 vocalize garbled prompt words before each segment ("directory or inventory"-sounding). Fix: cut a sentence-aligned ~15s window using whisper WORD TIMESTAMPS so prompt_text matches the audio exactly. Validation showed zero leading junk in generated clips.
+- New reference: voice.m4a (70s, F0 220.2 Hz). Validation v12 (3 clones, F0 ±1.3 st, transcripts exact) → user approved → batch v13: **112/112 segments, 0 failures, 845.9s**. Per-segment F0 spot-checks within ±0.5 st.
+- assemble --apply: timeline 882.22s, narration.wav 883.22s. Fresh dev server → editor duration [26476] (fresh caches). Render: 882.581s h264+aac.
+- Verified: caption cuts on time (shots 16/50/90/111), speech ends ~879s, silence after — nothing truncated.
+- pkill lesson: `pkill -f vite` kills its own shell (self-match) — use `pkill -f "[v]ite"`.
