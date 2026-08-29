@@ -1,0 +1,22 @@
+[
+ {
+  "id": "037",
+  "text": "For the E side of the state, the rotations are different."
+ },
+ {
+  "id": "039",
+  "text": "First, SHA-256 computes T one from H, the sigma function of E, the Choose function, a round constant, and the current message word."
+ },
+ {
+  "id": "040",
+  "text": "Then T two is computed from the sigma function of A and the Majority function."
+ },
+ {
+  "id": "054",
+  "text": "Let's hash the text A, B, C and watch every byte move."
+ },
+ {
+  "id": "090",
+  "text": "For this deliberately tiny function, the letter Y and the string containing a space followed by the at sign, both produce the same eight-bit result: hex eight A."
+ }
+]

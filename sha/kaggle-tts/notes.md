@@ -62,3 +62,28 @@ One command; poll loop handles queue + run (~4-30 min); result lands in `latest.
 - Kernel: `hajjilla/sha-tts` (private, script, 2x T4 via `machine_shape: NvidiaTeslaT4`)
 - Dataset `hajjilla/sha-tts-reference` exists (reference.m4a + text.txt) but is
   currently UNUSED (mount broken). Kept as archive.
+
+## Batch run results (2026-08-28)
+
+- `build_batch_kernel.py` embeds manifest JSON (112 segments) + base64 reference
+  into one kernel; generates `audio/seg_NNN.wav` + `durations.json` + `audio.zip`.
+- v5 batch: 106/112 ok, 11.5 min audio, ~68 min on T4.
+- **5 failures (037/039/040/054/090), all `AssertionError()`**: common factor is
+  backticked single-char tokens (`e`, `h`, `T1`, `y`, `@`, `0x8a`) — ultra-short
+  audio trips VoxCPM2's internal assert. Fix: rewrite those 5 texts to be
+  speakable ("T one", "hex eight A", "the letter Y", ...) and re-run a tiny
+  retry kernel (v6, ~8 min). 111/111 speech segments recovered.
+- Lesson: screen manifest text for lone symbols/short tokens BEFORE pushing;
+  replace with word forms.
+- `assemble.py` retimes `// Shot <id>` blocks (0.6/0.18/0.18/0.22 ratios over
+  d_total = max(speech + 0.3, 1.5)) and assembles `sha/narration.wav` (48kHz,
+  sequential placements, no overlap). Zero-padded manifest ids are matched to
+  scene comment ids via int-normalization.
+- `project.ts` gets `audio: '/narration.wav'`; ffmpeg exporter picks it up via
+  settings "include audio" (auto-checked when project.audio is set).
+- Editor render: Video Settings panel → expand the **Rendering** group (it is
+  collapsed by default) → exporter "Video (FFmpeg)", fps 30, include audio ✓ →
+  Render. Output: `sha/output/project.mp4` (renamed sha-explainer.mp4).
+- **Do NOT delete/modify `output/project.mp4` while a render is running** —
+  ffmpeg keeps writing to the unlinked inode and the output is lost.
+- Final: 12:42 h264+aac 1080p30, 30.7MB. Speech verified at t=0 and mid-video.

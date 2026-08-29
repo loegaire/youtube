@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_1} scene={1} shot="1" y={-20} />
     </Node>
   );
-  yield* all(stage_1().opacity(1, 1.44), stage_1().position.x(55, 4.8, easeInOutCubic), stage_1().scale(1.04, 4.8, easeInOutCubic), visual_1().animateData(4.8));
-  yield* waitFor(1.44);
-  yield* stage_1().opacity(0, 1.76);
+  yield* all(stage_1().opacity(1, 1.6668), stage_1().position.x(55, 5.5560, easeInOutCubic), stage_1().scale(1.04, 5.5560, easeInOutCubic), visual_1().animateData(5.5560));
+  yield* waitFor(1.6668);
+  yield* stage_1().opacity(0, 2.0372);
   stage_1().remove();
 
   // Shot 2
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_2} scene={1} shot="2" y={-20} />
     </Node>
   );
-  yield* all(stage_2().opacity(1, 1.7999999999999998), stage_2().position.x(-55, 6.0, easeInOutCubic), stage_2().scale(1.04, 6.0, easeInOutCubic), visual_2().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_2().opacity(0, 2.2);
+  yield* all(stage_2().opacity(1, 1.9260), stage_2().position.x(-55, 6.4200, easeInOutCubic), stage_2().scale(1.04, 6.4200, easeInOutCubic), visual_2().animateData(6.4200));
+  yield* waitFor(1.9260);
+  yield* stage_2().opacity(0, 2.3540);
   stage_2().remove();
 
   // Shot 3
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_3} scene={1} shot="3" y={-20} />
     </Node>
   );
-  yield* all(stage_3().opacity(1, 2.16), stage_3().position.x(55, 7.199999999999999, easeInOutCubic), stage_3().scale(1.04, 7.199999999999999, easeInOutCubic), visual_3().animateData(7.199999999999999));
-  yield* waitFor(2.16);
-  yield* stage_3().opacity(0, 2.64);
+  yield* all(stage_3().opacity(1, 2.3292), stage_3().position.x(55, 7.7640, easeInOutCubic), stage_3().scale(1.04, 7.7640, easeInOutCubic), visual_3().animateData(7.7640));
+  yield* waitFor(2.3292);
+  yield* stage_3().opacity(0, 2.8468);
   stage_3().remove();
 
   // Shot 4
@@ -64,9 +64,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_4} scene={1} shot="4" y={-20} />
     </Node>
   );
-  yield* all(stage_4().opacity(1, 1.44), stage_4().position.x(-55, 4.8, easeInOutCubic), stage_4().scale(1.04, 4.8, easeInOutCubic), visual_4().animateData(4.8));
-  yield* waitFor(1.44);
-  yield* stage_4().opacity(0, 1.76);
+  yield* all(stage_4().opacity(1, 1.2924), stage_4().position.x(-55, 4.3080, easeInOutCubic), stage_4().scale(1.04, 4.3080, easeInOutCubic), visual_4().animateData(4.3080));
+  yield* waitFor(1.2924);
+  yield* stage_4().opacity(0, 1.5796);
   stage_4().remove();
 
 });

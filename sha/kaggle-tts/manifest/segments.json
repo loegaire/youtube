@@ -1,0 +1,450 @@
+[
+ {
+  "id": "01",
+  "text": "Hello again, hackers. Have you ever wondered how your laptop can check your password without needing to keep the actual password sitting inside the machine?"
+ },
+ {
+  "id": "02",
+  "text": "You type characters. The computer turns those characters into numbers. And those numbers are transformed again and again until what comes out looks nothing like what you typed."
+ },
+ {
+  "id": "03",
+  "text": "That process is hashing. And one particular family of hash functions has been hiding inside operating systems, software downloads, signatures, protocols, and security tools for years: SHA."
+ },
+ {
+  "id": "04",
+  "text": "But before we touch SHA-256, we need to understand what a hash is actually doing."
+ },
+ {
+  "id": "05",
+  "text": "The first example is the obvious one: passwords."
+ },
+ {
+  "id": "06",
+  "text": "A properly designed password system should not need to store your password as readable text. It stores a verifier instead, allowing a future login attempt to be checked against the stored result."
+ },
+ {
+  "id": "07",
+  "text": "There is an important catch, though: SHA-256 itself is not the right tool for storing passwords. It is deliberately fast."
+ },
+ {
+  "id": "08",
+  "text": "The second use is file integrity. You download a file, calculate its hash, and compare that result with a trusted value."
+ },
+ {
+  "id": "09",
+  "text": "Change even one bit of the message, and the resulting digest should change dramatically."
+ },
+ {
+  "id": "10",
+  "text": "Hashes also sit underneath digital signatures. The hash compresses the message into a fixed-size digest, and the signature mechanism protects that digest."
+ },
+ {
+  "id": "11",
+  "text": "So the hash by itself is not the identity of the publisher. The signature and its public-key verification are what provide authenticity."
+ },
+ {
+  "id": "12",
+  "text": "They also appear in integrity checks around systems and networks, where the hash acts like a compact fingerprint of some larger piece of data."
+ },
+ {
+  "id": "13",
+  "text": "And then there is the much broader world of hash tables."
+ },
+ {
+  "id": "14",
+  "text": "Hash tables use hashing to quickly choose a bucket. That is the same broad idea, but a normal hash-table hash does not automatically have the security properties of a cryptographic hash."
+ },
+ {
+  "id": "15",
+  "text": "So now we have the vocabulary. Let's build a hash from the ground up."
+ },
+ {
+  "id": "16",
+  "text": "Forget SHA-256 for a moment. Imagine the entire hash function is just this: count the number of one-bits."
+ },
+ {
+  "id": "17",
+  "text": "If the count is odd, output one. If it is even, output zero."
+ },
+ {
+  "id": "18",
+  "text": "That is technically a hash."
+ },
+ {
+  "id": "19",
+  "text": "But it is a terrible cryptographic hash, because millions of different inputs can produce exactly the same answer."
+ },
+ {
+  "id": "20",
+  "text": "This gives us the first security lesson: compression is not enough. Security comes from how difficult it is to manipulate that compressed result in useful ways."
+ },
+ {
+  "id": "21",
+  "text": "A cryptographic hash is expected to make finding a chosen input, a second matching input, or a useful collision computationally infeasible."
+ },
+ {
+  "id": "22",
+  "text": "Now replace our pathetic one-bit toy with SHA-256."
+ },
+ {
+  "id": "23",
+  "text": "SHA-256 accepts an arbitrary-length message, processes it in 512-bit blocks, and produces a 256-bit message digest."
+ },
+ {
+  "id": "24",
+  "text": "Internally, the 256-bit state is represented as eight 32-bit words."
+ },
+ {
+  "id": "25",
+  "text": "Before the real compression begins, SHA-256 pads the message."
+ },
+ {
+  "id": "26",
+  "text": "The padding ends with the original message length, encoded as a 64-bit value, so the final block carries both the data and information about how long that data originally was."
+ },
+ {
+  "id": "27",
+  "text": "That 512-bit block is split into sixteen 32-bit words."
+ },
+ {
+  "id": "28",
+  "text": "But SHA-256 does not stop at sixteen. It expands that data into a message schedule containing sixty-four 32-bit words."
+ },
+ {
+  "id": "29",
+  "text": "Each later word is derived from earlier words using rotations, shifts, and modular addition."
+ },
+ {
+  "id": "30",
+  "text": "Now the interesting part. SHA-256 starts with eight predefined 32-bit state values."
+ },
+ {
+  "id": "31",
+  "text": "Call them `a`, `b`, `c`, `d`, `e`, `f`, `g`, and `h`."
+ },
+ {
+  "id": "32",
+  "text": "SHA-256 uses small Boolean functions to mix individual bits together."
+ },
+ {
+  "id": "33",
+  "text": "The Choose function selects bits from one input or another."
+ },
+ {
+  "id": "34",
+  "text": "The Majority function looks at three inputs and chooses the bit value that appears most often."
+ },
+ {
+  "id": "35",
+  "text": "These are tiny operations. The difficulty comes from repeating them across many rounds while constantly changing the state."
+ },
+ {
+  "id": "36",
+  "text": "SHA-256 also uses large sigma functions built from bit rotations and XOR."
+ },
+ {
+  "id": "37",
+  "text": "For the `e` side of the state, the rotations are different."
+ },
+ {
+  "id": "38",
+  "text": "Now watch one complete round."
+ },
+ {
+  "id": "39",
+  "text": "First, SHA-256 computes `T1` from `h`, the sigma function of `e`, the Choose function, a round constant, and the current message word."
+ },
+ {
+  "id": "40",
+  "text": "Then `T2` is computed from the sigma function of `a` and the Majority function."
+ },
+ {
+  "id": "41",
+  "text": "The registers then shift forward, while the new values enter the front of the chain."
+ },
+ {
+  "id": "42",
+  "text": "Then the next round starts immediately."
+ },
+ {
+  "id": "43",
+  "text": "And this happens sixty-four times for each 512-bit block."
+ },
+ {
+  "id": "44",
+  "text": "Do not imagine a password simply passing through one magic box. Think of it as a tightly controlled avalanche of bit operations."
+ },
+ {
+  "id": "45",
+  "text": "The same engine processes the next block, carrying the previous hash state forward."
+ },
+ {
+  "id": "46",
+  "text": "After the final block, the eight 32-bit state words are concatenated into the 256-bit digest."
+ },
+ {
+  "id": "47",
+  "text": "For the message `abc`, SHA-256 produces this."
+ },
+ {
+  "id": "48",
+  "text": "Sixty-four hexadecimal characters. Two hundred and fifty-six bits. And absolutely no visible resemblance to the three characters that went in."
+ },
+ {
+  "id": "49",
+  "text": "Now let's build something ourselves. Not SHA-256, because reproducing a secure production hash from scratch is a cryptography project, but a deliberately tiny teaching hash that lets us watch every operation."
+ },
+ {
+  "id": "50",
+  "text": "Call it `ToyHash8`."
+ },
+ {
+  "id": "51",
+  "text": "We start with an eight-bit state."
+ },
+ {
+  "id": "52",
+  "text": "For every input byte, XOR it with the state, add a constant, then rotate the result left by three bits."
+ },
+ {
+  "id": "53",
+  "text": "That is the entire function."
+ },
+ {
+  "id": "54",
+  "text": "Let's hash the text `abc` and watch every byte move."
+ },
+ {
+  "id": "55",
+  "text": "First byte: `0x61`."
+ },
+ {
+  "id": "56",
+  "text": "XOR the byte with the current state."
+ },
+ {
+  "id": "57",
+  "text": "Add `0x3d`, then keep only the lowest eight bits."
+ },
+ {
+  "id": "58",
+  "text": "Then rotate left by three."
+ },
+ {
+  "id": "59",
+  "text": "That output becomes the state for the next byte."
+ },
+ {
+  "id": "60",
+  "text": "Second byte: `0x62`. Same machinery. New state."
+ },
+ {
+  "id": "61",
+  "text": "Third byte: `0x63`."
+ },
+ {
+  "id": "62",
+  "text": "And the final eight-bit state becomes our digest."
+ },
+ {
+  "id": "63",
+  "text": "Notice what we just built: fixed-size output, repeated mixing, bitwise operations, and state that changes as the input is processed."
+ },
+ {
+  "id": "64",
+  "text": "But it is nowhere near the security design of SHA-256."
+ },
+ {
+  "id": "65",
+  "text": "The point of the toy is not security. The point is being able to see the algorithm."
+ },
+ {
+  "id": "66",
+  "text": "Now here is where hashing gets counterintuitive: SHA-256 is fast."
+ },
+ {
+  "id": "67",
+  "text": "That speed is excellent for verifying files and processing data, but it is exactly why raw SHA-256 is a poor password-storage primitive."
+ },
+ {
+  "id": "68",
+  "text": "A password database should therefore use a password-hashing scheme designed to make each guess deliberately expensive, such as Argon2id, with salt and appropriate cost parameters."
+ },
+ {
+  "id": "69",
+  "text": "Compare that with simply saving the password."
+ },
+ {
+  "id": "70",
+  "text": "If an attacker gains read access to that database, the secret is already there. No cracking is necessary."
+ },
+ {
+  "id": "71",
+  "text": "Hashing changes the situation: stealing the verifier does not immediately reveal the password, although weak passwords can still be guessed offline."
+ },
+ {
+  "id": "72",
+  "text": "And this distinction matters for side-channel and accidental-leak scenarios too: plaintext copies are dangerous wherever the secret can leak, including configuration, logs, backups, memory, or diagnostic data."
+ },
+ {
+  "id": "73",
+  "text": "The correct lesson is not 'SHA is safer than plaintext because SHA is hard.' The lesson is 'use the primitive that matches the threat model.'"
+ },
+ {
+  "id": "74",
+  "text": "So can SHA be broken?"
+ },
+ {
+  "id": "75",
+  "text": "The answer depends on what attack you mean."
+ },
+ {
+  "id": "76",
+  "text": "A collision means finding two different messages that produce the same digest."
+ },
+ {
+  "id": "77",
+  "text": "This is the classic failure that eventually destroyed confidence in SHA-1."
+ },
+ {
+  "id": "78",
+  "text": "Google and CWI demonstrated a practical SHA-1 collision in 2017, and NIST had already deprecated SHA-1 for collision-sensitive applications."
+ },
+ {
+  "id": "79",
+  "text": "A preimage attack is different: here the attacker is given a target digest and tries to find an input that produces it."
+ },
+ {
+  "id": "80",
+  "text": "For SHA-256, the idealized generic preimage work is on the order of 2 to the 256 possibilities, which is fundamentally different from a practical collision attack's roughly 2 to the 128 birthday scale."
+ },
+ {
+  "id": "81",
+  "text": "A second-preimage attack starts with one known message and tries to find a different message with the same digest."
+ },
+ {
+  "id": "82",
+  "text": "This distinction matters because SHA-1 and SHA-256 are not interchangeable just because both start with the letters S-H-A."
+ },
+ {
+  "id": "83",
+  "text": "NIST currently lists SHA-256 among the acceptable SHA-2 hash functions, and its published security-strength guidance gives SHA-256 128-bit collision strength and 256-bit preimage strength."
+ },
+ {
+  "id": "84",
+  "text": "So the story is not 'SHA is broken.' The story is that different versions, attack goals, and applications have different security margins."
+ },
+ {
+  "id": "85",
+  "text": "Now we can actually break something on screen."
+ },
+ {
+  "id": "86",
+  "text": "Our toy hash outputs only eight bits."
+ },
+ {
+  "id": "87",
+  "text": "That gives us only 256 possible outputs."
+ },
+ {
+  "id": "88",
+  "text": "So instead of attempting some sophisticated cryptanalysis, we can simply generate candidates and search for a collision."
+ },
+ {
+  "id": "89",
+  "text": "The first collision we care about is any two different inputs with the same eight-bit result."
+ },
+ {
+  "id": "90",
+  "text": "For this deliberately tiny function, `y` and the string containing a space followed by `@` both produce the same eight-bit result: `0x8a`."
+ },
+ {
+  "id": "91",
+  "text": "Same digest. Different input. That is a collision."
+ },
+ {
+  "id": "92",
+  "text": "And because the output is only eight bits, this was never a serious challenge."
+ },
+ {
+  "id": "93",
+  "text": "This is why output size matters: shrinking a hash from 256 bits to 8 bits does not merely make the digest shorter. It makes generic collision searching astronomically easier."
+ },
+ {
+  "id": "94",
+  "text": "And here is the part people often miss: real-world hash failures are frequently caused by using a good primitive incorrectly."
+ },
+ {
+  "id": "95",
+  "text": "A cryptographically strong hash does not turn a weak password into a strong password."
+ },
+ {
+  "id": "96",
+  "text": "A plain fast hash also does not provide the work factor required for modern password storage."
+ },
+ {
+  "id": "97",
+  "text": "And collisions do not let an attacker magically recover an original password from SHA-256. Collision resistance, preimage resistance, and password guessing are different problems."
+ },
+ {
+  "id": "98",
+  "text": "So go back to the real machine."
+ },
+ {
+  "id": "99",
+  "text": "The data is padded. The block is expanded into a message schedule. Eight state words enter a sixty-four-round compression loop. The state is accumulated. The process repeats for every block."
+ },
+ {
+  "id": "100",
+  "text": "Then, after the final block, eight words become the digest you recognize."
+ },
+ {
+  "id": "101",
+  "text": "A hash takes arbitrary-length input and produces a fixed-length digest."
+ },
+ {
+  "id": "102",
+  "text": "SHA-256 does it with 512-bit blocks, 32-bit words, eight working variables, a sixty-four-word message schedule, and sixty-four compression rounds."
+ },
+ {
+  "id": "103",
+  "text": "Its security is about making certain attacks computationally infeasible, not about making the output impossible to compute."
+ },
+ {
+  "id": "104",
+  "text": "SHA-1 is a useful warning: when practical collision attacks arrive, an old hash can become the wrong primitive even if the basic idea of hashing remains sound."
+ },
+ {
+  "id": "105",
+  "text": "And for passwords, remember the distinction: never store plaintext passwords, but also do not replace plaintext with a raw fast SHA-256 hash. Use a dedicated password-hashing scheme such as Argon2id with a unique salt and appropriately tuned cost."
+ },
+ {
+  "id": "106",
+  "text": "The final mental model is simple: the input goes in, the state gets mixed over and over, and a fixed-size digest comes out."
+ },
+ {
+  "id": "107",
+  "text": "The magic is not that the computer cannot calculate the hash."
+ },
+ {
+  "id": "108",
+  "text": "The magic is that, when the construction is sound, calculating the digest is easy, and producing the right kind of input from the digest, or producing a useful collision, is supposed to be hard."
+ },
+ {
+  "id": "109",
+  "text": "That is the core idea behind cryptographic hashing."
+ },
+ {
+  "id": "110",
+  "text": "And once you understand the bits moving through the machine, SHA-256 stops looking like a magic incantation and starts looking like what it really is: a carefully engineered state machine."
+ },
+ {
+  "id": "111",
+  "text": "One input. One fixed-size digest. A lot of very deliberate mathematics in between."
+ },
+ {
+  "id": "112",
+  "text": ""
+ }
+]

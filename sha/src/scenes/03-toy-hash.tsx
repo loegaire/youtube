@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_16} scene={3} shot="16" y={-20} />
     </Node>
   );
-  yield* all(stage_16().opacity(1, 1.7999999999999998), stage_16().position.x(-55, 6.0, easeInOutCubic), stage_16().scale(1.04, 6.0, easeInOutCubic), visual_16().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_16().opacity(0, 2.2);
+  yield* all(stage_16().opacity(1, 1.5804), stage_16().position.x(-55, 5.2680, easeInOutCubic), stage_16().scale(1.04, 5.2680, easeInOutCubic), visual_16().animateData(5.2680));
+  yield* waitFor(1.5804);
+  yield* stage_16().opacity(0, 1.9316);
   stage_16().remove();
 
   // Shot 17
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_17} scene={3} shot="17" y={-20} />
     </Node>
   );
-  yield* all(stage_17().opacity(1, 2.16), stage_17().position.x(55, 7.199999999999999, easeInOutCubic), stage_17().scale(1.04, 7.199999999999999, easeInOutCubic), visual_17().animateData(7.199999999999999));
-  yield* waitFor(2.16);
-  yield* stage_17().opacity(0, 2.64);
+  yield* all(stage_17().opacity(1, 0.8604), stage_17().position.x(55, 2.8680, easeInOutCubic), stage_17().scale(1.04, 2.8680, easeInOutCubic), visual_17().animateData(2.8680));
+  yield* waitFor(0.8604);
+  yield* stage_17().opacity(0, 1.0516);
   stage_17().remove();
 
   // Shot 18
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_18} scene={3} shot="18" y={-20} />
     </Node>
   );
-  yield* all(stage_18().opacity(1, 1.08), stage_18().position.x(-55, 3.5999999999999996, easeInOutCubic), stage_18().scale(1.04, 3.5999999999999996, easeInOutCubic), visual_18().animateData(3.5999999999999996));
-  yield* waitFor(1.08);
-  yield* stage_18().opacity(0, 1.32);
+  yield* all(stage_18().opacity(1, 0.3996), stage_18().position.x(-55, 1.3320, easeInOutCubic), stage_18().scale(1.04, 1.3320, easeInOutCubic), visual_18().animateData(1.3320));
+  yield* waitFor(0.3996);
+  yield* stage_18().opacity(0, 0.4884);
   stage_18().remove();
 
   // Shot 19
@@ -64,9 +64,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_19} scene={3} shot="19" y={-20} />
     </Node>
   );
-  yield* all(stage_19().opacity(1, 2.16), stage_19().position.x(55, 7.199999999999999, easeInOutCubic), stage_19().scale(1.04, 7.199999999999999, easeInOutCubic), visual_19().animateData(7.199999999999999));
-  yield* waitFor(2.16);
-  yield* stage_19().opacity(0, 2.64);
+  yield* all(stage_19().opacity(1, 1.4076), stage_19().position.x(55, 4.6920, easeInOutCubic), stage_19().scale(1.04, 4.6920, easeInOutCubic), visual_19().animateData(4.6920));
+  yield* waitFor(1.4076);
+  yield* stage_19().opacity(0, 1.7204);
   stage_19().remove();
 
   // Shot 20
@@ -78,9 +78,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_20} scene={3} shot="20" y={-20} />
     </Node>
   );
-  yield* all(stage_20().opacity(1, 2.16), stage_20().position.x(-55, 7.199999999999999, easeInOutCubic), stage_20().scale(1.04, 7.199999999999999, easeInOutCubic), visual_20().animateData(7.199999999999999));
-  yield* waitFor(2.16);
-  yield* stage_20().opacity(0, 2.64);
+  yield* all(stage_20().opacity(1, 1.6092), stage_20().position.x(-55, 5.3640, easeInOutCubic), stage_20().scale(1.04, 5.3640, easeInOutCubic), visual_20().animateData(5.3640));
+  yield* waitFor(1.6092);
+  yield* stage_20().opacity(0, 1.9668);
   stage_20().remove();
 
   // Shot 21
@@ -92,9 +92,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_21} scene={3} shot="21" y={-20} />
     </Node>
   );
-  yield* all(stage_21().opacity(1, 2.52), stage_21().position.x(55, 8.4, easeInOutCubic), stage_21().scale(1.04, 8.4, easeInOutCubic), visual_21().animateData(8.4));
-  yield* waitFor(2.52);
-  yield* stage_21().opacity(0, 3.08);
+  yield* all(stage_21().opacity(1, 1.5516), stage_21().position.x(55, 5.1720, easeInOutCubic), stage_21().scale(1.04, 5.1720, easeInOutCubic), visual_21().animateData(5.1720));
+  yield* waitFor(1.5516);
+  yield* stage_21().opacity(0, 1.8964);
   stage_21().remove();
 
 });

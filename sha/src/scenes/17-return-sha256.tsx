@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_98} scene={17} shot="98" y={-20} />
     </Node>
   );
-  yield* all(stage_98().opacity(1, 1.7999999999999998), stage_98().position.x(-55, 6.0, easeInOutCubic), stage_98().scale(1.04, 6.0, easeInOutCubic), visual_98().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_98().opacity(0, 2.2);
+  yield* all(stage_98().opacity(1, 0.4860), stage_98().position.x(-55, 1.6200, easeInOutCubic), stage_98().scale(1.04, 1.6200, easeInOutCubic), visual_98().animateData(1.6200));
+  yield* waitFor(0.4860);
+  yield* stage_98().opacity(0, 0.5940);
   stage_98().remove();
 
   // Shot 99
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_99} scene={17} shot="99" y={-20} />
     </Node>
   );
-  yield* all(stage_99().opacity(1, 2.52), stage_99().position.x(55, 8.4, easeInOutCubic), stage_99().scale(1.04, 8.4, easeInOutCubic), visual_99().animateData(8.4));
-  yield* waitFor(2.52);
-  yield* stage_99().opacity(0, 3.08);
+  yield* all(stage_99().opacity(1, 1.9260), stage_99().position.x(55, 6.4200, easeInOutCubic), stage_99().scale(1.04, 6.4200, easeInOutCubic), visual_99().animateData(6.4200));
+  yield* waitFor(1.9260);
+  yield* stage_99().opacity(0, 2.3540);
   stage_99().remove();
 
   // Shot 100
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_100} scene={17} shot="100" y={-20} />
     </Node>
   );
-  yield* all(stage_100().opacity(1, 1.7999999999999998), stage_100().position.x(-55, 6.0, easeInOutCubic), stage_100().scale(1.04, 6.0, easeInOutCubic), visual_100().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_100().opacity(0, 2.2);
+  yield* all(stage_100().opacity(1, 0.8604), stage_100().position.x(-55, 2.8680, easeInOutCubic), stage_100().scale(1.04, 2.8680, easeInOutCubic), visual_100().animateData(2.8680));
+  yield* waitFor(0.8604);
+  yield* stage_100().opacity(0, 1.0516);
   stage_100().remove();
 
 });

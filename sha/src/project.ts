@@ -20,4 +20,5 @@ import scene18 from './scenes/18-final-summary?scene';
 
 export default makeProject({
   scenes: [scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12, scene13, scene14, scene15, scene16, scene17, scene18],
+  audio: '/narration.wav',
 });

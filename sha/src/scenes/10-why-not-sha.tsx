@@ -22,9 +22,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_63} scene={10} shot="63" y={-20} />
     </Node>
   );
-  yield* all(stage_63().opacity(1, 1.7999999999999998), stage_63().position.x(55, 6.0, easeInOutCubic), stage_63().scale(1.04, 6.0, easeInOutCubic), visual_63().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_63().opacity(0, 2.2);
+  yield* all(stage_63().opacity(1, 1.3500), stage_63().position.x(55, 4.5000, easeInOutCubic), stage_63().scale(1.04, 4.5000, easeInOutCubic), visual_63().animateData(4.5000));
+  yield* waitFor(1.3500);
+  yield* stage_63().opacity(0, 1.6500);
   stage_63().remove();
 
   // Shot 64
@@ -36,9 +36,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_64} scene={10} shot="64" y={-20} />
     </Node>
   );
-  yield* all(stage_64().opacity(1, 1.7999999999999998), stage_64().position.x(-55, 6.0, easeInOutCubic), stage_64().scale(1.04, 6.0, easeInOutCubic), visual_64().animateData(6.0));
-  yield* waitFor(1.7999999999999998);
-  yield* stage_64().opacity(0, 2.2);
+  yield* all(stage_64().opacity(1, 1.1484), stage_64().position.x(-55, 3.8280, easeInOutCubic), stage_64().scale(1.04, 3.8280, easeInOutCubic), visual_64().animateData(3.8280));
+  yield* waitFor(1.1484);
+  yield* stage_64().opacity(0, 1.4036);
   stage_64().remove();
 
   // Shot 65
@@ -50,9 +50,9 @@ export default makeScene2D(function* (view) {
       <ScriptShot ref={visual_65} scene={10} shot="65" y={-20} />
     </Node>
   );
-  yield* all(stage_65().opacity(1, 1.08), stage_65().position.x(55, 3.5999999999999996, easeInOutCubic), stage_65().scale(1.04, 3.5999999999999996, easeInOutCubic), visual_65().animateData(3.5999999999999996));
-  yield* waitFor(1.08);
-  yield* stage_65().opacity(0, 1.32);
+  yield* all(stage_65().opacity(1, 0.9468), stage_65().position.x(55, 3.1560, easeInOutCubic), stage_65().scale(1.04, 3.1560, easeInOutCubic), visual_65().animateData(3.1560));
+  yield* waitFor(0.9468);
+  yield* stage_65().opacity(0, 1.1572);
   stage_65().remove();
 
 });
